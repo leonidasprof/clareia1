@@ -1,33 +1,40 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galeria de Imagens - Clareia</title>
-<!-- Utilizando Tailwind CSS para agilizar a formatação visual -->
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-body {
-font-family: 'DM Sans', sans-serif;
-background-color: #f8fafc;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Imagens - Clareia</title>
+    <!-- Utilizando Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .foto-perfil {
+            object-fit: cover;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
 </head>
 <body class="p-6 md:p-12 text-slate-800">
 
 <div class="max-w-7xl mx-auto">
-    <!-- Cabeçalho atualizado com botão de Upload -->
+    <!-- Cabeçalho -->
     <header class="mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
             <h1 class="text-3xl font-bold text-[#0056b3] mb-2">Ativos Visuais - Clareia</h1>
-            <p class="text-slate-500">Visualize as imagens enviadas e copie o código HTML para usá-las no seu projeto.</p>
+            <p class="text-slate-500">Visualize os 12 ativos principais e copie o código HTML para o seu projeto.</p>
         </div>
         <div>
-            <!-- Input de arquivo escondido -->
             <input type="file" id="uploadInput" accept="image/*" class="hidden">
-            <!-- Botão que aciona o input -->
             <button onclick="document.getElementById('uploadInput').click()" class="bg-[#10b981] hover:bg-[#059669] text-white py-2 px-6 rounded-lg font-semibold transition-colors shadow-sm flex items-center gap-2 w-full md:w-auto justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
@@ -37,166 +44,150 @@ background-color: #f8fafc;
         </div>
     </header>
 
-    <!-- Grid de Imagens (ID adicionado para o Javascript conseguir injetar novos cards) -->
+    <!-- Grid de Imagens (Total 12) -->
     <div id="imageGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-        <!-- Card: Imagem Principal -->
+        <!-- 1. Imagem Principal -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
-                <img src="imagem.png" alt="Senhora com advogado" class="max-h-full max-w-full object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="imagem.png" alt="Senhora com advogado" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=imagem.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="imagem.png">imagem.png</p>
-                <button onclick="copyToClipboard('<img src=\'imagem.png\' alt=\'Cliente em atendimento\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">imagem.png</p>
+                <button onclick="copyToClipboard('<img src=\'imagem.png\' alt=\'Cliente em atendimento\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Mockup 1 -->
+        <!-- 2. Mockup 1 -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
-                <img src="mockup_clareia21.png" alt="Mockup Clareia com homem" class="max-h-full max-w-full object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="mockup_clareia21.png" alt="Mockup Clareia" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=mockup_clareia21.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="mockup_clareia21.png">mockup_clareia21.png</p>
-                <button onclick="copyToClipboard('<img src=\'mockup_clareia21.png\' alt=\'Aplicativo Clareia em uso\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">mockup_clareia21.png</p>
+                <button onclick="copyToClipboard('<img src=\'mockup_clareia21.png\' alt=\'Mockup aplicativo\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Mockup 2 -->
+        <!-- 3. Mockup 2 -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
-                <img src="Clareia_mock2.png" alt="Mockup Clareia tela do celular" class="max-h-full max-w-full object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Clareia_mock2.png" alt="Mockup Whatsapp" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Clareia_mock2.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Clareia_mock2.png">Clareia_mock2.png</p>
-                <button onclick="copyToClipboard('<img src=\'Clareia_mock2.png\' alt=\'Tela do Whatsapp do Clareia\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Clareia_mock2.png</p>
+                <button onclick="copyToClipboard('<img src=\'Clareia_mock2.png\' alt=\'Mockup Whatsapp\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Logo -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+        <!-- 4. Mockup 03 (Clarinha Chat) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md border-blue-100">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
-                <img src="logo_clareia_icone.png" alt="Logo do Clareia" class="max-h-full max-w-full object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="mockup_03.png" alt="Mockup Clarinha" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=mockup_03.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="logo_clareia_icone.png">logo_clareia_icone.png</p>
-                <button onclick="copyToClipboard('<img src=\'logo_clareia_icone.png\' alt=\'Logo Clareia\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">mockup_03.png</p>
+                <button onclick="copyToClipboard('<img src=\'mockup_03.png\' alt=\'Chat da Clarinha\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Mascote Coruja -->
+        <!-- 5. Logo Ícone -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="logo_clareia_icone.png" alt="Logo Ícone" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=logo_clareia_icone.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">logo_clareia_icone.png</p>
+                <button onclick="copyToClipboard('<img src=\'logo_clareia_icone.png\' alt=\'Logo Clareia\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 6. Mascote Coruja -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-[#0a0a0a] flex items-center justify-center p-4 relative">
-                <img src="clareia_coruja.png" alt="Mascote Coruja Clareia" class="max-h-full max-w-full object-contain drop-shadow-sm" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="clareia_coruja.png" alt="Mascote Coruja" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=clareia_coruja.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="clareia_coruja.png">clareia_coruja.png</p>
-                <button onclick="copyToClipboard('<img src=\'clareia_coruja.png\' alt=\'Mascote Coruja Clareia\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">clareia_coruja.png</p>
+                <button onclick="copyToClipboard('<img src=\'clareia_coruja.png\' alt=\'Mascote Coruja\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Aynoã -->
+        <!-- 7. Aynoã -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="Aynoã.jpg" alt="Aynoã" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Aynoã.jpg" alt="Aynoã" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Aynoã.jpg'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Aynoã.jpg">Aynoã.jpg</p>
-                <button onclick="copyToClipboard('<img src=\'Aynoã.jpg\' alt=\'Foto de Aynoã\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Aynoã.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Aynoã.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Leonidas -->
+        <!-- 8. Leonidas -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="Leonidas.jpg" alt="Leonidas" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Leonidas.jpg" alt="Leonidas" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Leonidas.jpg'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Leonidas.jpg">Leonidas.jpg</p>
-                <button onclick="copyToClipboard('<img src=\'Leonidas.jpg\' alt=\'Foto de Leonidas\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Leonidas.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Leonidas.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Cauã -->
+        <!-- 9. Cauã -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="Cauã.png" alt="Cauã" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Cauã.png" alt="Cauã" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Cauã.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Cauã.png">Cauã.png</p>
-                <button onclick="copyToClipboard('<img src=\'Cauã.png\' alt=\'Foto de Cauã\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Cauã.png</p>
+                <button onclick="copyToClipboard('<img src=\'Cauã.png\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Danilo -->
+        <!-- 10. Danilo -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="Danilo.jpg" alt="Danilo" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Danilo.jpg" alt="Danilo" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Danilo.jpg'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Danilo.jpg">Danilo.jpg</p>
-                <button onclick="copyToClipboard('<img src=\'Danilo.jpg\' alt=\'Foto de Danilo\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Danilo.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Danilo.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Marcela -->
+        <!-- 11. Marcela -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="Marcela.jpg" alt="Marcela" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Marcela.jpg" alt="Marcela" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Marcela.jpg'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Marcela.jpg">Marcela.jpg</p>
-                <button onclick="copyToClipboard('<img src=\'Marcela.jpg\' alt=\'Foto de Marcela\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Marcela.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Marcela.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
-        <!-- Card: Beatriz -->
+        <!-- 12. Beatriz -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
             <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="Beatriz.png" alt="Beatriz" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
+                <img src="Beatriz.png" alt="Beatriz" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Beatriz.png'">
             </div>
             <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="Beatriz.png">Beatriz.png</p>
-                <button onclick="copyToClipboard('<img src=\'Beatriz.png\' alt=\'Foto de Beatriz\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Beatriz.png</p>
+                <button onclick="copyToClipboard('<img src=\'Beatriz.png\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
             </div>
         </div>
 
     </div>
 </div>
 
-<!-- Notificação de Sucesso (Toast) -->
+<!-- Toast -->
 <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-6 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-    </svg>
-    <span class="font-medium">Tag HTML copiada com sucesso!</span>
+    <span class="font-medium">Tag HTML copiada!</span>
 </div>
 
-<!-- Script para conectar ao Backend Node.js -->
 <script>
-    // Função de copiar
     function copyToClipboard(text) {
         const textarea = document.createElement('textarea');
         textarea.value = text;
@@ -204,93 +195,42 @@ background-color: #f8fafc;
         textarea.style.top = '-9999px';
         document.body.appendChild(textarea);
         textarea.select();
-        
         try {
             document.execCommand('copy');
             showToast();
         } catch (err) {
-            console.error('Falha ao copiar:', err);
+            console.error('Erro:', err);
         } finally {
             document.body.removeChild(textarea);
         }
     }
 
-    // Função de exibir notificação
     function showToast() {
         const toast = document.getElementById('toast');
         toast.classList.remove('translate-y-20', 'opacity-0');
-        setTimeout(() => {
-            toast.classList.add('translate-y-20', 'opacity-0');
-        }, 3000);
+        setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2500);
     }
 
-    // Função que desenha um novo card na tela
-    function adicionarCardNaTela(imageUrl, fileName) {
-        const newCardHTML = `
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
-            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
-                <img src="${imageUrl}" alt="${fileName}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'">
-            </div>
-            <div class="p-5 flex-1 flex flex-col justify-between">
-                <p class="text-sm font-medium text-slate-700 mb-3 truncate" title="${fileName}">${fileName}</p>
-                <button onclick="copyToClipboard('<img src=\\'${imageUrl}\\' alt=\\'${fileName}\\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2">
-                    Copiar Tag HTML
-                </button>
-            </div>
-        </div>
-        `;
-        document.getElementById('imageGrid').insertAdjacentHTML('beforeend', newCardHTML);
-    }
-
-    // Busca as imagens salvas na pasta "/uploads" do servidor Node ao carregar a página
-    window.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const response = await fetch('/api/images');
-            if (response.ok) {
-                const files = await response.json();
-                files.forEach(fileName => {
-                    // Passa a URL gerada pelo servidor e o nome
-                    adicionarCardNaTela(`/uploads/${fileName}`, fileName);
-                });
-            }
-        } catch (error) {
-            console.log('Nenhuma imagem no backend ou servidor não está rodando.', error);
-        }
-    });
-
-    // Evento que dispara quando o usuário seleciona um arquivo no botão
-    document.getElementById('uploadInput').addEventListener('change', async function(event) {
-        const file = event.target.files[0];
+    document.getElementById('uploadInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
         if (!file) return;
-
-        // Prepara os dados para mandar pro servidor
-        const formData = new FormData();
-        formData.append('image', file);
-
-        try {
-            // Envia a imagem para a rota /api/upload configurada no seu server.js
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                // Cria o card com a imagem vinda diretamente do servidor
-                adicionarCardNaTela(data.url, data.filename);
-            } else {
-                throw new Error('Falha ao enviar arquivo');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Erro ao fazer upload. Verifique se o servidor (node server.js) está ligado e rodando em http://localhost:3000');
-        }
-        
-        // Limpa o input file para permitir subir a mesma imagem novamente se necessário
-        event.target.value = '';
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const html = `
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md animate-fade-in">
+                <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                    <img src="${event.target.result}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between">
+                    <p class="text-sm font-medium text-slate-700 mb-3 truncate">${file.name}</p>
+                    <button onclick="copyToClipboard('<img src=\\'${file.name}\\' alt=\\'${file.name}\\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+                </div>
+            </div>`;
+            document.getElementById('imageGrid').insertAdjacentHTML('afterbegin', html);
+        };
+        reader.readAsDataURL(file);
     });
 </script>
-
 
 </body>
 </html>
