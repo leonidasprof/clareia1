@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Clareia Jurídico</title>
+    <link rel="icon" href="https://clareia1.vercel.app/logo_clareia_icone.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --brand-blue: #005691; 
+            --accent-blue: #1ca0da;
+            --brand-cyan: #0ea5e9;
+            --clareia-blue: #0a3b8c;
+            --blob-color: #4bb5db;
+            --bg-light: #FBFBFD;
+            --light-blue: #f0f9ff;
+            --border-blue: #bae6fd;
+            --text-main: #1e293b;
+            --text-body: #475569;
+            --wa-bg: #efeae2;
+            --wa-bubble-sent: #e2f7cb;
+            --wa-meta: #667781;
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            --brand-gradient: linear-gradient(100deg, #1ca0da 0%, #177bc9 100%);
+            
+            /* Vars do MVP WhatsApp */
+            --wa-teal: #4a81d4;
+            --wa-bubble-received: #ffffff;
+            --wa-text: #111b21;
+        }
+
+        body { 
+            font-family: 'DM Sans', sans-serif; 
+            background-color: #ffffff; 
+            color: var(--text-main); 
+            scroll-behavior: smooth; 
+        }
+
+        .glass-nav { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(20px); 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+            z-index: 100; 
+        }
+
+        /* --- DESAFIO / O QUE RESOLVE --- */
+        .icon-box {
+            margin-bottom: 40px; display: inline-flex; justify-content: center; align-items: center;
+            width: 80px; height: 80px; background: rgba(0, 86, 179, 0.1); border-radius: 50%;
+            position: relative; animation: pulseIcon 3s infinite;
+        }
+        @keyframes pulseIcon { 
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 86, 179, 0.2); } 
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(0, 86, 179, 0); } 
+            100% { transform: scale(1); } 
+        }
+        
+        /* Adições para o Modo Escuro da Secção Problema */
+        @keyframes pulseIconLight { 
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.25); } 
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); } 
+            100% { transform: scale(1); } 
+        }
+        .icon-box-light {
+            background: rgba(255, 255, 255, 0.15) !important;
+            animation: pulseIconLight 3s infinite !important;
+        }
+        .icon-box-light svg { fill: #ffffff; width: 40px; height: 40px; }
+        
+        .term-light {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+        }
+        .term-light:hover {
+            background: #ffffff !important;
+            color: var(--clareia-blue) !important;
+        }
+
+        .term {
+            display: inline-block; color: var(--text-main); font-weight: 700; padding: 2px 8px;
+            background: #f1f5f9; border-radius: 4px; cursor: help; transition: var(--transition);
+        }
+        .term:hover { color: var(--brand-blue); background: rgba(14, 165, 233, 0.1); border-color: var(--brand-cyan); transform: translateY(-2px); }
+
+        /* --- FAQ REFINADO --- */
+        .faq-icon-wrapper { position: relative; display: inline-flex; }
+        .coruja-pousada {
+            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+            height: 44px; z-index: 20; pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            animation: flutuarFaq 4s ease-in-out infinite;
+        }
+        @keyframes flutuarFaq { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -4px); } }
+
+        details.faq-item {
+            border: 1px solid var(--brand-blue); border-radius: 14px;
+            background-color: var(--brand-blue); transition: 0.3s; cursor: pointer; overflow: hidden;
+        }
+        details.faq-item:hover { transform: translateX(4px); filter: brightness(1.05); }
+        details.faq-item summary { list-style: none; padding: 20px 24px; font-size: 16px; font-weight: 500; color: #ffffff; display: flex; justify-content: space-between; align-items: center; outline: none; }
+        .status-icon-faq { width: 14px; height: 14px; position: relative; transition: 0.3s; flex-shrink: 0; }
+        .status-icon-faq::before, .status-icon-faq::after { content: ''; position: absolute; background: white; }
+        .status-icon-faq::before { width: 100%; height: 2px; top: 6px; }
+        .status-icon-faq::after { width: 2px; height: 100%; left: 6px; }
+        details[open] .status-icon-faq { transform: rotate(45deg); }
+        .answer-body { padding: 22px 26px; font-size: 15px; color: var(--text-body); background-color: #ffffff; border-top: 1px solid var(--border-blue); }
+
+        /* --- TIME SECTION (CÓDIGO RISCA) --- */
+        @keyframes floatMember { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        .avatar-container { position: relative; width: 220px; height: 220px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
+        .blob-bg { position: absolute; width: 125%; height: 125%; z-index: -1; fill: var(--blob-color); filter: blur(4px); opacity: 0.12; transition: var(--transition); }
+        .avatar-circle { width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background-color: #f1f5f9; box-shadow: 0 20px 40px rgba(0, 86, 145, 0.12); border: 6px solid #ffffff; position: relative; z-index: 1; }
+        .avatar-circle img { display: block; width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+        .mini-logo-wrapper { position: absolute; bottom: 12px; right: 12px; width: 50px; height: 50px; background: #ffffff; border-radius: 50%; z-index: 10; display: flex; justify-content: center; align-items: center; border: 2px solid #e2e8f0; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
+        .mini-logo-img { width: 75%; height: 75%; object-fit: contain; }
+        .team-card:hover .blob-bg { transform: scale(1.1) rotate(15deg); opacity: 0.35; }
+        .team-card:hover .avatar-circle img { transform: scale(1.08); }
+
+        /* --- ENTREGÁVEIS (STRICT STYLES) --- */
+        .icon-svg { width: 45px; height: 45px; flex-shrink: 0; }
+        .menu-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 22px; background-color: #ffffff; border: 1px solid var(--border-blue);
+            border-radius: 12px; text-decoration: none; color: var(--brand-blue);
+            font-size: 16px; font-weight: 500; transition: var(--transition);
+        }
+        .menu-item:hover { background-color: var(--light-blue); border-color: var(--brand-cyan); transform: translateX(5px); box-shadow: 4px 4px 10px rgba(14, 165, 233, 0.1); }
+        .menu-item::after { content: '↗'; font-size: 18px; color: var(--brand-cyan); opacity: 0.5; }
+        .menu-item.highlight { background-color: #e0f2fe; border-color: var(--brand-cyan); }
+        .menu-item.highlight:hover { background-color: #bae6fd; }
+
+        /* --- ESTILOS DA SESSÃO DE FERRAMENTAS TÉCNICAS E ENTREGÁVEIS --- */
+        .links-grid { display: flex; flex-direction: column; gap: 12px; }
+        .tech-category { margin-bottom: 40px; background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid var(--border-blue); box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.05); transition: var(--transition); }
+        .tech-category:hover { box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15); border-color: var(--brand-cyan); }
+        .tech-category-title { font-size: 20px; color: var(--brand-blue); margin: 0 0 8px 0; display: flex; align-items: center; gap: 10px; }
+        .tech-category-desc { font-size: 15px; color: var(--text-body); margin: 0 0 24px 0; line-height: 1.5; }
+        .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .tool-card { display: flex; align-items: flex-start; gap: 16px; padding: 16px; background: var(--light-blue); border-radius: 12px; border: 1px solid transparent; transition: var(--transition); }
+        .tool-card:hover { background: #ffffff; border-color: var(--brand-cyan); transform: translateY(-4px); box-shadow: 0 8px 15px rgba(14, 165, 233, 0.1); }
+        .tool-icon-wrapper { width: 44px; height: 44px; background: #ffffff; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border-blue); transition: var(--transition); }
+        .tool-card:hover .tool-icon-wrapper { transform: scale(1.05); }
+        .tool-icon { max-width: 26px; max-height: 26px; object-fit: contain; border-radius: 5px; }
+        .tool-info { display: flex; flex-direction: column; gap: 4px; }
+        .tool-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .tool-name { font-weight: 700; font-size: 15px; color: var(--brand-blue); margin: 0; }
+        .tool-badge { background: #e0f2fe; color: var(--brand-blue); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border-blue); letter-spacing: 0.5px; }
+        .tool-desc { font-size: 13px; color: var(--text-body); margin: 0; line-height: 1.4; }
+        .tech-note { font-size: 13px; color: #64748b; text-align: center; margin-top: 20px; font-style: italic; }
+        
+        @media (max-width: 768px) { .tools-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 650px) { .tech-category { padding: 16px; } .tool-card { padding: 12px; } }
+
+        /* --- MVP WHATSAPP / PROTÓTIPO --- */
+        .phone-container {
+            width: 100%; max-width: 380px; height: 750px; background-color: var(--wa-bg);
+            border: 12px solid #1f2937; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative; overflow: hidden; display: flex; flex-direction: column; margin: 0 auto;
+        }
+        .chat-bg {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.06;
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
+            background-size: 300px; z-index: 0; pointer-events: none;
+        }
+        .chat-area {
+            flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 1; scroll-behavior: smooth;
+        }
+        .chat-area::-webkit-scrollbar { display: none; }
+        .chat-area { -ms-overflow-style: none; scrollbar-width: none; }
+        .bubble {
+            max-width: 85%; padding: 6px 8px 8px 10px; border-radius: 8px; position: relative;
+            font-size: 14.5px; line-height: 19px; color: var(--wa-text); box-shadow: 0 1px 0.5px rgba(11,20,26,.13);
+            display: inline-block; word-wrap: break-word;
+        }
+        .bubble-received { background-color: var(--wa-bubble-received); align-self: flex-start; border-top-left-radius: 0; }
+        .bubble-received::before { content: ""; position: absolute; top: 0; left: -8px; border-top: 10px solid var(--wa-bubble-received); border-left: 10px solid transparent; }
+        .bubble-sent { background-color: var(--wa-bubble-sent); align-self: flex-end; border-top-right-radius: 0; }
+        .bubble-sent::before { content: ""; position: absolute; top: 0; right: -8px; border-top: 10px solid var(--wa-bubble-sent); border-right: 10px solid transparent; }
+        .meta-text { font-size: 11px; color: var(--wa-meta); float: right; margin-top: 4px; margin-left: 10px; display: flex; align-items: center; gap: 4px; }
+        .blue-tick { color: #53bdeb; }
+        .system-badge {
+            background-color: rgba(225, 245, 254, 0.9); color: #455a64; font-size: 12px; text-align: center;
+            padding: 6px 12px; border-radius: 8px; align-self: center; margin: 10px 0; max-width: 90%; z-index: 1;
+        }
+        .typing-active { display: block; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* --- ESTILOS DOS CARDS DA AVALIAÇÃO --- */
+        .step-card {
+            background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px 24px 24px;
+            position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-5px); }
+        .step-number {
+            position: absolute; top: -20px; left: 24px; width: 40px; height: 40px; background: white;
+            border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; color: var(--clareia-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        @keyframes bounce-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- EFEITOS ESPECIAIS (BOTÃO E ESSÊNCIA) --- */
+        .btn-glow {
+            background: linear-gradient(135deg, var(--brand-cyan), var(--brand-blue));
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg);
+            transition: all 0.7s ease;
+            z-index: -1;
+        }
+        .btn-glow:hover::before {
+            left: 200%;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- CULTURA / ESSÊNCIA (NOVO DESIGN) --- */
+        .culture-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .culture-card { border-radius: 14px; background: var(--brand-gradient); transition: var(--transition); cursor: pointer; list-style: none; border: none; }
+        .culture-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(23, 123, 201, 0.3); filter: brightness(1.05); }
+        .coruja-cultura { position: absolute; top: -46px; right: 30px; height: 60px; z-index: 10; pointer-events: none; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)); animation: pouso 0.6s ease-out, flutuarCultura 4s ease-in-out infinite 0.6s; }
+        @keyframes pouso { 0% { transform: translateY(-15px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes flutuarCultura { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+        .culture-card summary { position: relative; list-style: none; padding: 22px 24px; display: flex; align-items: center; outline: none; color: #ffffff; font-weight: 700; font-size: 16px; user-select: none; border-radius: 14px; }
+        .culture-card summary::-webkit-details-marker { display: none; }
+        .icon-wrapper-cultura { width: 32px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin-right: 8px; }
+        .card-icon-white { width: 22px; height: 22px; fill: #ffffff; }
+        .culture-content { padding: 35px 40px; font-size: 16px; color: var(--text-body); background-color: #ffffff; line-height: 1.8; text-align: center; border-top: 2px solid rgba(255, 255, 255, 0.2); animation: fadeInCard 0.4s ease; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: inset 0 4px 6px -4px rgba(0,0,0,0.05); }
+        .culture-card[open] { grid-column: span 2; border: 2px solid var(--brand-blue); }
+        .culture-content .highlight { color: #177bc9; font-weight: 700; }
+        .values-list { display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 550px; margin: 0 auto; }
+        .value-item b { color: #177bc9; display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+        @keyframes fadeInCard { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .culture-grid { grid-template-columns: 1fr; } .culture-card[open] { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+    <nav class="glass-nav fixed top-0 w-full py-4">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Logo" class="w-8 h-8">
+                <span class="text-xl font-bold tracking-tight text-[#0a3b8c]">Clareia</span>
+            </div>
+            <div class="hidden lg:flex gap-8 text-sm font-bold text-gray-500">
+                <a href="#o-que-resolve" class="hover:text-blue-600 transition-colors">Problema</a>
+                <a href="#solucoes" class="hover:text-blue-600 transition-colors">Solução</a>
+                <a href="#team-clareia" class="hover:text-blue-600 transition-colors">Time</a>
+                <a href="#mvp-v1" class="hover:text-blue-600 transition-colors">MVP</a>
+            </div>
+            <a href="#entregaveis" class="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-blue-700 transition-all shadow-md">Acesse os Entregáveis</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-40 pb-20 px-6">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <h1 class="text-4xl md:text-6xl font-bold text-[#0a3b8c] leading-tight mb-8">Receba atualizações do seu processo sem ansiedade.</h1>
+                <p class="text-xl text-gray-600 mb-12 leading-relaxed font-medium bg-white p-6 rounded-3xl border-l-4 border-blue-600 shadow-sm">
+                    O acesso às informações sobre processos judiciais ainda é burocrático, técnico e pouco transparente para o cidadão comum. Muitos usuários não compreendem o juridiquês, dependem integralmente do advogado para entender atualizações e encontram dificuldades para acompanhar seus processos com autonomia.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center gap-8">
+                    <a href="#mvp-v1" class="btn-glow text-white px-10 py-5 rounded-2xl text-lg font-bold shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:shadow-[0_0_30px_rgba(14,165,233,0.7)] hover:-translate-y-1 transition-all duration-300">Valide nosso protótipo</a>
+                    <p class="text-sm font-bold text-blue-500 uppercase tracking-widest animate-pulse">Sua avaliação é muito importante para nós</p>
+                </div>
+            </div>
+            <div class="reveal flex justify-center">
+                <img src="https://clareia1.vercel.app/imagem.png" alt="Desafio" class="rounded-[40px] shadow-2xl max-w-full lg:max-w-lg border-8 border-white">
+            </div>
+        </div>
+    </section>
+
+    <!-- Problema (O que resolve?) -->
+    <section id="o-que-resolve" class="py-24 px-6 bg-[#0a3b8c] overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center reveal">
+            <div class="icon-box icon-box-light"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-12 leading-tight">O "Juridiquês" afasta você dos seus direitos.</h2>
+            <p class="text-xl md:text-2xl text-blue-100 mb-10 max-w-3xl mx-auto">Hoje, <strong class="text-white">80 milhões</strong> de brasileiros vivem a angústia de ter um processo na justiça e não entender o que está acontecendo.</p>
+            <p class="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+                Termos como <span class="term term-light" title="Novo documento no processo">"Juntada de Petição"</span> ou 
+                <span class="term term-light" title="Pronto para o juiz decidir">"Concluso para Despacho"</span> 
+                geram insegurança e dependência total de terceiros.
+            </p>
+            <div class="text-2xl font-bold text-[#4bb5db] border-t border-white/20 pt-8 mt-8">A Clareia nasceu para quebrar essa barreira.</div>
+        </div>
+    </section>
+
+    <!-- Solução -->
+    <section id="solucoes" class="py-24 px-6 bg-[#FBFBFD]">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal">
+                    <h2 class="text-4xl font-bold text-[#0056b3] mb-8 leading-tight">Sua dúvida jurídica, em português claro</h2>
+                    <p class="text-lg text-gray-500 mb-10">Nossa plataforma utiliza Inteligência Artificial para monitorar tribunais e enviar mensagens automáticas para o seu celular:</p>
+                    <div class="space-y-6">
+                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="eye"></i></div><div><h4 class="font-bold text-lg text-blue-900">Monitoramento</h4><p class="text-sm text-gray-500">Identificamos qualquer movimentação no seu processo nos sistemas PJe, ESAJ e PROJUDI.</p></div></div>
+                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="languages"></i></div><div><h4 class="font-bold text-lg text-blue-900">Tradução</h4><p class="text-sm text-gray-500">Nossa IA interpreta o evento técnico e remove a complexidade do "juridiquês".</p></div></div>
+                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="message-circle"></i></div><div><h4 class="font-bold text-lg text-blue-900">Notificação</h4><p class="text-sm text-gray-500">Você recebe um resumo no WhatsApp explicando o que aconteceu e qual o próximo passo.</p></div></div>
+                    </div>
+                </div>
+                <div class="reveal flex justify-center"><img src="https://clareia1.vercel.app/mockup_clareia21.png" alt="Mockup Solução" class="max-w-full drop-shadow-2xl mix-blend-multiply"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nosso Protótipo / MVP -->
+    <div id="mvp-v1" class="bg-white border-t border-gray-100 relative">
+        <!-- HEADER / HERO SECTION -->
+        <section class="max-w-7xl mx-auto px-6 md:px-12 py-24">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Esquerda: Copywriting -->
+                <div class="reveal">
+                    <span class="text-[#4a81d4] font-bold tracking-wider uppercase text-sm mb-3 block">Acesso Antecipado</span>
+                    <h1 class="text-4xl md:text-5xl font-extrabold text-[#0a3b8c] leading-tight mb-6">
+                        Agora você tem a oportunidade de testar a versão 1 do nosso protótipo.
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-10 leading-relaxed">
+                        Conheça a <b>Clarinha</b>, nossa inteligência artificial criada para democratizar o acesso à informação processual. Converse com ela ao lado, envie um número de processo fictício e veja como ela traduz o "juridiquês" em tempo real.
+                    </p>
+
+                    <!-- Card Passo 1 -->
+                    <div class="bg-[#f4f7ff] rounded-2xl p-6 border border-blue-100 flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[#0a3b8c] font-bold text-sm tracking-wider uppercase mb-1 block">Passo 1</span>
+                            <h3 class="text-xl font-bold text-gray-900 mb-1">Teste o MVP ao lado</h3>
+                            <p class="text-gray-600 text-sm">Interaja com a IA e veja na prática.</p>
+                        </div>
+                        <!-- Setas responsivas -->
+                        <div class="text-4xl hidden lg:block animate-bounce" style="animation-direction: alternate; animation-name: bounce-x;">👉</div>
+                        <div class="text-4xl lg:hidden animate-bounce">👇</div>
+                    </div>
+                </div>
+
+                <!-- Direita: O MVP (Celular) -->
+                <div class="reveal flex justify-center w-full">
+                    <div class="phone-container">
+                        <!-- Cabeçalho (WhatsApp Header) -->
+                        <div class="bg-[#4a81d4] text-white px-3 py-2 flex items-center shadow-md z-10">
+                            <i class="fa-solid fa-arrow-left mr-3"></i>
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden mr-3">
+                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clareia Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1 cursor-pointer">
+                                <h1 class="font-semibold text-[16px] leading-tight">Clarinha | Tradutor Jurídico</h1>
+                                <p id="status-text" class="text-[13px] text-[#ffffffb3] leading-tight">Online</p>
+                            </div>
+                            <div class="flex gap-4 items-center text-xl">
+                                <i class="fa-solid fa-video"></i>
+                                <i class="fa-solid fa-phone"></i>
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </div>
+                        </div>
+
+                        <!-- Área do Chat -->
+                        <div class="chat-bg"></div>
+                        <div id="chat-area" class="chat-area">
+                            <div class="system-badge">
+                                <i class="fa-solid fa-lock text-[#008069] mr-1"></i>
+                                As mensagens são protegidas por criptografia e as tuas informações estão seguras sob a LGPD.
+                            </div>
+                        </div>
+
+                        <!-- Área de Input -->
+                        <div class="bg-[#f0f2f5] p-2 flex items-end gap-2 z-10">
+                            <div class="flex-1 bg-white rounded-2xl flex items-center px-3 py-2 min-h-[44px] shadow-sm">
+                                <i class="fa-regular fa-face-smile text-[#8696a0] text-xl mr-3"></i>
+                                <textarea id="message-input" rows="1" placeholder="Mensagem" class="flex-1 outline-none resize-none max-h-24 bg-transparent" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                                <i class="fa-solid fa-paperclip text-[#8696a0] text-xl mx-3"></i>
+                                <i class="fa-solid fa-camera text-[#8696a0] text-xl"></i>
+                            </div>
+                            <button id="send-btn" class="w-[48px] h-[48px] rounded-full bg-[#128c7e] text-white flex items-center justify-center flex-shrink-0 shadow-sm transition-transform active:scale-95">
+                                <i id="send-icon" class="fa-solid fa-microphone text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO DE AVALIAÇÃO -->
+        <section class="max-w-6xl mx-auto px-6 md:px-12 py-16">
+            <div class="reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#0a3b8c] text-center mb-4">Sua avaliação é fundamental</h2>
+                <p class="text-center text-gray-600 max-w-3xl mx-auto mb-16 text-lg">
+                    Esta é a nossa versão inicial. Ela foi desenhada para resolver o problema central, e é por isso que sua opinião sincera é a parte mais valiosa do processo.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-8">
+                    <!-- Card 1 -->
+                    <div class="step-card bg-[#f8faff] border-0">
+                        <div class="step-number text-[#4a81d4]">1</div>
+                        <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Explore livremente</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Acesse o MVP logo acima, clique e use como se fosse no seu dia a dia. Não tenha medo de testar os limites.
+                        </p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="step-card bg-[#f8faff] border-0">
+                        <div class="step-number text-[#4a81d4]">2</div>
+                        <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Anote suas impressões</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            O que foi fácil? O que pareceu confuso? Faltou alguma funcionalidade essencial na tradução do juridiquês?
+                        </p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="step-card bg-[#eef3fb] border-0">
+                        <div class="step-number bg-[#0a3b8c] text-white border-[#0a3b8c]">3</div>
+                        <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Responda a pesquisa</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Após o teste, desça até o final desta página e responda ao nosso questionário rápido para nos guiar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO DE CTA -->
+        <section class="bg-[#0a3b8c] py-16 px-6">
+            <div class="max-w-3xl mx-auto text-center reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Terminou de testar a Clareia?</h2>
+                <p class="text-blue-100 mb-10 text-lg">
+                    Sua experiência moldará os próximos passos da nossa inteligência artificial. Leva menos de 3 minutos para responder.
+                </p>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSdIneFCKXNlC7J7ZrUk2aaQm3kxNoJ1KdfHusDG6_NuqI4J4Q/viewform?usp=sharing&ouid=113657872038468399466" 
+                   target="_blank" 
+                   class="inline-flex items-center gap-2 bg-white text-[#0a3b8c] font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-gray-100 transition-colors">
+                    <i class="fa-regular fa-clipboard"></i> Responder Questionário
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- FAQ (2 Colunas, Coruja pousada) -->
+    <section class="py-24 px-6 bg-[#FBFBFD]">
+        <div class="max-w-7xl mx-auto">
+            <header class="flex items-center gap-6 mb-16 justify-center">
+                <div class="faq-icon-wrapper">
+                    <img src="https://clareia1.vercel.app/clareia_coruja.png" alt="Owl" class="coruja-pousada">
+                    <svg class="brand-icon-faq" viewBox="0 0 512 512" style="width: 50px;">
+                        <path d="M120,180 H320 A40,40 0 0 1 360,220 V340 A40,40 0 0 1 320,380 H260 L200,440 V380 A40,40 0 0 1 180,340 V220 A40,40 0 0 1 120,180" fill="#0ea5e9"/>
+                        <text x="215" y="315" font-family="Arial" font-size="120" font-weight="bold" fill="white">?</text>
+                    </svg>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold text-[#005691]">10+ Dúvidas dos Investidores</h2>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4 max-w-6xl mx-auto">
+                <div class="flex flex-col gap-4">
+                    <details class="faq-item group"><summary>Qual é a dor latente?<div class="status-icon-faq"></div></summary><div class="answer-body">O abismo da linguagem jurídica que gera ansiedade em leigos brasileiros.</div></details>
+                    <details class="faq-item group"><summary>Por que investir agora?<div class="status-icon-faq"></div></summary><div class="answer-body">Maturidade da IA Generativa e a onipresença do WhatsApp no Brasil.</div></details>
+                    <details class="faq-item group"><summary>Diferencial competitivo?<div class="status-icon-faq"></div></summary><div class="answer-body">Focamos na experiência do cliente final (B2C), simplificando dados brutos.</div></details>
+                    <details class="faq-item group"><summary>Tamanho do mercado?<div class="status-icon-faq"></div></summary><div class="answer-body">80 milhões de processos ativos no Brasil com alta demanda por clareza.</div></details>
+                    <details class="faq-item group"><summary>Modelo de Monetização?<div class="status-icon-faq"></div></summary><div class="answer-body">Modelo híbrido: assinaturas B2B e micro-pagamentos B2C por consulta.</div></details>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <details class="faq-item group"><summary>Qual a Unfair Advantage?<div class="status-icon-faq"></div></summary><div class="answer-body">Arquitetura multiagente treinada para tradução pedagógica jurídica leiga.</div></details>
+                    <details class="faq-item group"><summary>Como validaram o PMF?<div class="status-icon-faq"></div></summary><div class="answer-body">Identificamos que 70% do tempo de advogados é gasto explicando o básico.</div></details>
+                    <details class="faq-item group"><summary>Quais os principais KPIs?<div class="status-icon-faq"></div></summary><div class="answer-body">Taxa de ativação de traduções, retenção de usuários e horas economizadas.</div></details>
+                    <details class="faq-item group"><summary>Conformidade com LGPD?<div class="status-icon-faq"></div></summary><div class="answer-body">Criptografia de ponta a ponta e total segurança jurídica dos dados.</div></details>
+                    <details class="faq-item group"><summary>Estratégia de Expansão?<div class="status-icon-faq"></div></summary><div class="answer-body">Parcerias com escritórios e presença direta nos canais de massa.</div></details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nossa Essência -->
+    <section id="cultura" class="py-24 px-6 bg-white border-t border-blue-100">
+        <div class="max-w-[900px] mx-auto">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#005691] mb-4">Nossa Essência</h2>
+                <p class="text-gray-500 text-lg">Valores que iluminam o caminho para a justiça acessível.</p>
+            </div>
+            
+            <div class="culture-grid reveal">
+                <!-- BOTÃO 1 COM A CORUJA -->
+                <details class="culture-card">
+                    <summary>
+                        <img src="https://clareia1.vercel.app/clareia_coruja.png" alt="Mascote Coruja Clareia" class="coruja-cultura" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'coruja-cultura\' style=\'display:flex;align-items:center;justify-content:center;font-size:30px;background:#fff;border-radius:50%;width:50px;height:50px;top:-35px;\'>🦉</div>')">
+                        <div class="icon-wrapper-cultura">
+                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                        </div>
+                        <span>Nosso Propósito</span>
+                    </summary>
+                    <div class="culture-content">
+                        <span class="highlight">Iluminar o caminho</span> entre o cidadão e seus direitos através da clareza absoluta e do fácil entendimento.
+                    </div>
+                </details>
+
+                <details class="culture-card">
+                    <summary>
+                        <div class="icon-wrapper-cultura">
+                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+                        </div>
+                        <span>Nossa Missão</span>
+                    </summary>
+                    <div class="culture-content">
+                        Eliminar as barreiras do <span class="highlight">juridiquês</span>, transformando processos complexos em diálogos simples e acessíveis para todos os brasileiros.
+                    </div>
+                </details>
+
+                <details class="culture-card">
+                    <summary>
+                        <div class="icon-wrapper-cultura">
+                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                        </div>
+                        <span>Nossa Visão</span>
+                    </summary>
+                    <div class="culture-content">
+                        Consolidar-se como a <span class="highlight">interface padrão</span> de comunicação entre o sistema judiciário brasileiro e a sociedade civil até o final de 2027.
+                    </div>
+                </details>
+
+                <details class="culture-card">
+                    <summary>
+                        <div class="icon-wrapper-cultura">
+                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                        </div>
+                        <span>Nossos Valores</span>
+                    </summary>
+                        <div class="culture-content">
+                            <div class="values-list">
+                                <div class="value-item"><b>Clareza Radical</b> Não apenas informamos, nós traduzimos o complexo para o comum.</div>
+                                <div class="value-item"><b>Empatia Digital</b> Design centrado na ansiedade e na necessidade real do cidadão.</div>
+                                <div class="value-item"><b>Justiça Acessível</b> Tecnologia como ponte para inclusão social e jurídica.</div>
+                                <div class="value-item"><b>Segurança Inviolável</b> Tratamento ético e custódia rigorosa de dados sensíveis (LGPD).</div>
+                            </div>
+                        </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Time Section (Strict Refinement) -->
+    <section id="team-clareia">
+        <div class="max-w-7xl mx-auto text-center py-24 px-6">
+            <div class="mb-20">
+                <p class="text-[--brand-blue] text-xl font-bold max-w-2xl mx-auto leading-relaxed">Nosso time de especialistas é dedicado a tornar o entendimento jurídico acessível e simples para todos.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-20 gap-x-10" id="teamGrid">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Entregáveis (Full Highlight and Repo) -->
+    <section id="entregaveis" class="py-24 px-6 bg-[#f0f9ff] border-t border-blue-100">
+        <div class="max-w-[900px] mx-auto">
+            <div class="menu-header mb-8 flex items-center gap-4">
+                <svg class="icon-svg w-11 h-11 flex-shrink-0" viewBox="0 0 512 512">
+                    <defs><linearGradient id="grad-menu" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#22d3ee;stop-opacity:1" /><stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:1" /></linearGradient></defs>
+                    <path d="M120,180 H320 A40,40 0 0 1 360,220 V340 A40,40 0 0 1 320,380 H260 L200,440 V380 A40,40 0 0 1 180,340 V220 A40,40 0 0 1 120,180" fill="url(#grad-menu)"/>
+                    <rect x="230" y="270" width="60" height="10" rx="5" fill="white"/><rect x="230" y="295" width="60" height="10" rx="5" fill="white"/>
+                </svg>
+                <h1 class="text-3xl font-bold text-[#005691] m-0">Lista de Entregas</h1>
+            </div>
+
+            <div class="tech-category">
+                <h2 class="tech-category-title">⭐ Principais</h2>
+                <p class="tech-category-desc">Documentos centrais e entregáveis fundamentais requisitados pelos professores/mentores.</p>
+                <div class="links-grid">
+                    <a href="https://docs.google.com/document/d/1jPh4tPRbGIyhn0uMnEQga1RjDIHX9fukNgtmucodBvs/edit" target="_blank" class="menu-item">Entrega 1 - Desafios, Lacunas, Tendências/Oportunidades</a>
+                    <a href="https://docs.google.com/document/d/1zuiOksBWL82Az_hUZSfOAIxv2AiWJF7X5ZJONYCCorQ/edit" target="_blank" class="menu-item">Entrega 2 - Achados Iniciais</a>
+                    <a href="https://docs.google.com/document/d/1XcOZV5DdjYliKFlmpASwNO-oYV4h1yNVHH5mw7DfMOA/edit" target="_blank" class="menu-item">Entrega 3 - Pessoas, Causas e Consequências</a>
+                    <a href="https://docs.google.com/document/d/1PxhRM3rwETDrPEQzmXVVD1HgWpBLSTpcLhXdDWdDbNY/edit" target="_blank" class="menu-item">Entrega 4 - Pessoas, Causas e Consequências</a>
+                    <a href="https://docs.google.com/document/d/1dapsC-dyeLIp6ImZ8O0BZnovX5KjR-w023hd6g6qw3M/edit" target="_blank" class="menu-item">Entrega 5 - Relevância e Justificativa</a>
+                    <a href="https://docs.google.com/document/d/1JpPsJMZ2kfZaqBMP2dlION23Z2-K9m4-RZddZ58HCZo/edit" target="_blank" class="menu-item">Entrega 6 - Estratégias</a>
+                </div>
+            </div>
+
+            <div class="tech-category">
+                <h2 class="tech-category-title">🛠️ Ferramentas Aplicadas</h2>
+                <p class="tech-category-desc">Atividades práticas, dinâmicas e documentação de frameworks utilizados.</p>
+                <div class="links-grid">
+                    <a href="https://docs.google.com/document/d/1VB_dwNjBdZnA03zHqgo-wdPH28ak0wp2/edit?usp=sharing&ouid=113657872038468399466&rtpof=true&sd=true" target="_blank" class="menu-item highlight">Documentação Clareia (Resumo de Atividades)</a>
+                    <a href="https://docs.google.com/presentation/d/1jH2RfZ9KGZ9-Ur0S5DHvunnWOZYPUMFmZ0MkCGhXiKQ/edit" target="_blank" class="menu-item">Concepção do Problema - Atividade 1 (aula)</a>
+                    <a href="https://docs.google.com/document/d/10nIbRiLLxDES455vkAKkTSe0LAviUUkN0pAavI758_Q/edit" target="_blank" class="menu-item">Problema Escolhido</a>
+                    <a href="https://docs.google.com/document/d/1YXvfN49Oi_YypMhjAG8QpY2QwNc_b_X3CqanKjX-aRU/edit" target="_blank" class="menu-item">Análise PESTEL</a>
+                    <a href="https://docs.google.com/document/d/1LF20WRdugNx955lf6nq3NjOlbMhKJwMUjxSa9lDxFn8/edit" target="_blank" class="menu-item">Matriz RACI</a>
+                    <a href="https://docs.google.com/document/d/1nU65qJiMn8zWUzz4YUxWwsvX65VBXPFoKOChNlykQoc/edit" target="_blank" class="menu-item">JTBD | Opportunity Statement | Elevator Pitch</a>
+                    <a href="https://docs.google.com/document/d/1W4ZOeE5_sNn9oLyey8eNmca7Sr3mM9QGitaJi6Evj9Q/edit" target="_blank" class="menu-item">Benchmark Estratégico</a>
+                    <a href="https://docs.google.com/presentation/d/1itX3tP5d5XeXoIGkb7N2IG4J4zdJIKso1kcAnbYQUK4/edit" target="_blank" class="menu-item">Entendendo o Fluxo Clareia</a>
+                    <a href="https://docs.google.com/document/d/1uk7cWyt04tNjLu4Q0VfH8lDQ9giLn-GK/edit" target="_blank" class="menu-item">Storytelling Clareia</a>
+                    <a href="https://docs.google.com/presentation/d/1k0LN0o-p_0x2fqFDW1_cJTs11qjEOYvjLzDdV2nGjzQ/edit" target="_blank" class="menu-item">Mapa de Empatia</a>
+                    <a href="https://docs.google.com/document/d/1MvwBEitOUAuYwBOO0CL8z2A9TznyFWb9PUItfv3EsIQ/edit" target="_blank" class="menu-item">Modelo de Receita</a>
+                    <a href="https://docs.google.com/presentation/d/1BRsAS3A_MEq-A46Ubk2KyK8GIBhuF-HiRqMsledH0Xc/edit" target="_blank" class="menu-item">Lean Canvas</a>
+                </div>
+            </div>
+
+            <div class="menu-header mt-20 mb-8 flex items-center gap-4">
+                <svg class="icon-svg w-11 h-11 flex-shrink-0" viewBox="0 0 512 512">
+                    <defs><linearGradient id="grad-tools" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#22d3ee;stop-opacity:1" /><stop offset="100%" style="stop-color:#0ea5e9;stop-opacity:1" /></linearGradient></defs>
+                    <path d="M160,120 L40,256 L160,392 L200,352 L120,256 L200,160 Z M352,120 L312,160 L392,256 L312,352 L352,392 L472,256 Z M288,80 L208,432 L248,432 L328,80 Z" fill="url(#grad-tools)"/>
+                </svg>
+                <h1 class="text-3xl font-bold text-[#005691] m-0">Ferramentas Tecnológicas Utilizadas</h1>
+            </div>
+
+            <div class="tech-category">
+                <h2 class="tech-category-title">📂 Gestão e Colaboração</h2>
+                <p class="tech-category-desc">Foco na governança de dados, documentação centralizada e comunicação estratégica.</p>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Google Drive</h3>
+                                <span class="tool-badge">GESTÃO</span>
+                            </div>
+                            <p class="tool-desc">Repositório central em nuvem para armazenamento e controle de versionamento de ativos não estruturados do projeto.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Google_Docs_logo_%282014-2020%29.svg" alt="Google Docs" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Google Docs</h3>
+                                <span class="tool-badge">DOCS</span>
+                            </div>
+                            <p class="tool-desc">Ambiente colaborativo para redação de especificações técnicas, briefings e documentação de processos do Clareia.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Google_Sheets_logo_%282014-2020%29.svg" alt="Google Sheets" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Google Sheets</h3>
+                                <span class="tool-badge">DATA</span>
+                            </div>
+                            <p class="tool-desc">Estruturação de conjuntos de dados, cronogramas financeiros e planilhas de controle operacional.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://play-lh.googleusercontent.com/DG-zbXPr8LItYD8F2nD4aR_SK_jpkipLBK77YWY-F0cdJt67VFgCHZtRtjsakzTw3EM=w240-h480-rw" alt="Google Slides" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Google Slides</h3>
+                                <span class="tool-badge">UI/UX</span>
+                            </div>
+                            <p class="tool-desc">Criação de apresentações executivas e storyboards para comunicação visual de marcos do projeto.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Google_Sites_2020_Logo.svg/250px-Google_Sites_2020_Logo.svg.png" alt="Google Sites" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Google Sites</h3>
+                                <span class="tool-badge">PORTAL</span>
+                            </div>
+                            <p class="tool-desc">Plataforma para construção de wikis internas e portais de visualização rápida para stakeholders.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://img.freepik.com/vetores-premium/icone-do-logotipo-do-whatsapp-circulo-aplicativo-de-midia-social-aplicativo-de-rede-marca-editorial-popular-ilustracao-vetorial_913857-391.jpg?semt=ais_hybrid&w=740&q=80" alt="WhatsApp" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">WhatsApp</h3>
+                                <span class="tool-badge">COMMS</span>
+                            </div>
+                            <p class="tool-desc">Interface de comunicação instantânea e canal de integração para automações de notificações via API.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://tm.ibxk.com.br/2022/12/06/06175044983232.jpg?ims=1000x400/filters:quality(80)" alt="Canva" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Canva</h3>
+                                <span class="tool-badge">DESIGN</span>
+                            </div>
+                            <p class="tool-desc">Engine de design gráfico para suporte à identidade visual e criação de assets de interface do usuário.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-category">
+                <h2 class="tech-category-title">💻 Desenvolvimento e Deploy</h2>
+                <p class="tech-category-desc">Camada de engenharia, controle de código-fonte e hospedagem de aplicações.</p>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://img.freepik.com/psd-gratuitas/icone-de-arquivo-html-renderizado-em-3d_84443-57041.jpg" alt="HTML5" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">HTML5</h3>
+                                <span class="tool-badge">MARKUP</span>
+                            </div>
+                            <p class="tool-desc">Linguagem de marcação estrutural responsável pela semântica e organização do conteúdo web.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://assets.dio.me/VIKVdQugEKFX46hQwLZD1ckFAiTaVf6Dqdp19t58EBY/f:webp/q:80/L2FydGljbGVzL2NvdmVyLzg4MTUzZDdmLTZhOWMtNGI1Ny04ZTkyLTEyM2E2OWJhMWJlYi5wbmc" alt="CSS3" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">CSS3</h3>
+                                <span class="tool-badge">ESTILO</span>
+                            </div>
+                            <p class="tool-desc">Engine de estilização responsável pelo design responsivo, variáveis de layout e interface fluida.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ4qe-TiNdb7kONl0a1C3a1R3H9TPWKSJeGg&s" alt="JavaScript" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">JavaScript</h3>
+                                <span class="tool-badge">FRONTEND</span>
+                            </div>
+                            <p class="tool-desc">Linguagem de script para lógica de interface, manipulação dinâmica do DOM e integrações assíncronas.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Web Stack (Node.js)</h3>
+                                <span class="tool-badge">DEV</span>
+                            </div>
+                            <p class="tool-desc">Engine de execução e tecnologias core (HTML5/CSS3/JS) para desenvolvimento de interfaces e lógica de servidor.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Git-logo.svg" alt="Git" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Git</h3>
+                                <span class="tool-badge">VCS</span>
+                            </div>
+                            <p class="tool-desc">Sistema distribuído para controle de versões, garantindo a integridade do histórico de alterações do código.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">GitHub</h3>
+                                <span class="tool-badge">REPO</span>
+                            </div>
+                            <p class="tool-desc">Plataforma de hospedagem de código e colaboração, centralizando o desenvolvimento remoto do projeto.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://assets.vercel.com/image/upload/v1588132850/repositories/vercel/logo.png" alt="Vercel" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Vercel</h3>
+                                <span class="tool-badge">DEPLOY</span>
+                            </div>
+                            <p class="tool-desc">Plataforma de Cloud para deploy contínuo (CI/CD) e hospedagem de aplicações front-end de alta performance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-category">
+                <h2 class="tech-category-title">🧠 Inteligência e Automação</h2>
+                <p class="tech-category-desc">Núcleo de processamento de linguagem natural e orquestração de fluxos inteligentes utilizadas para o MVP.</p>
+                
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" alt="Google Gemini" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Google Gemini</h3>
+                                <span class="tool-badge">AI</span>
+                            </div>
+                            <p class="tool-desc">Modelo de linguagem de grande escala (LLM) integrado para automação de insights e análise de dados.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png" alt="n8n" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">n8n</h3>
+                                <span class="tool-badge">FLOW</span>
+                            </div>
+                            <p class="tool-desc">Orquestrador de workflows low-code utilizado para conectar o ecossistema Clareia e automatizar rotinas entre apps.</p>
+                        </div>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-icon-wrapper">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" class="tool-icon">
+                        </div>
+                        <div class="tool-info">
+                            <div class="tool-header">
+                                <h3 class="tool-name">Python</h3>
+                                <span class="tool-badge">BACKEND</span>
+                            </div>
+                            <p class="tool-desc">Linguagem de script robusta para processamento de dados pesado e integração de módulos de IA personalizados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="tech-note">Nota Técnica: Todas as marcas e logos são propriedades dos seus respetivos detentores. Esta documentação reflete a arquitetura atual do Projeto Clareia em 2026.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-white text-center border-t border-gray-100">
+        <div class="flex justify-center gap-3 mb-4"><img src="https://clareia1.vercel.app/logo_clareia_icone.png" class="w-6 h-6"><span class="font-bold text-[#0a3b8c]">Clareia</span></div>
+        <p class="text-gray-500 font-medium">© 2026 Clareia. Todos os direitos reservados. </p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Reveal effect
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Time Implementation (Strict Refinement)
+        const teamData = [
+            { name: "Aynoã", role: "Dev / Scrum Team", desc: "Foco em infraestrutura lógica de sistemas", img: "https://clareia1.vercel.app/Ayno%C3%A3.jpg" },
+            { name: "Beatriz", role: "Dev / Scrum Team", desc: "Pesquisa e UX", img: "https://clareia1.vercel.app/Beatriz.png" },
+            { name: "Cauã", role: "Dev / Scrum Team", desc: "Desenvolvimento", img: "https://clareia1.vercel.app/Cau%C3%A3.png" },
+            { name: "Danilo", role: "Product Owner", desc: "Líder de produto e estratégia", img: "https://clareia1.vercel.app/Danilo.jpg" },
+            { name: "Leônidas", role: "Scrum Master / Dev Full Stack", desc: "Desenvolvimento, Negócio e Validação", img: "https://clareia1.vercel.app/Leonidas.jpg" },
+            { name: "Marcela", role: "Dev / Scrum Team", desc: "Conteúdo e Documentação", img: "https://clareia1.vercel.app/Marcela.jpg" }
+        ];
+
+        const teamGrid = document.getElementById('teamGrid');
+        teamData.forEach((member) => {
+            const card = document.createElement('div');
+            card.className = 'team-card flex flex-col items-center reveal';
+            const duration = 4.5 + Math.random() * 2;
+            const delay = Math.random() * -5;
+            card.style.animation = `floatMember ${duration}s ease-in-out ${delay}s infinite`;
+            card.innerHTML = `
+                <div class="avatar-container">
+                    <svg class="blob-bg" viewBox="0 0 200 200"><path d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-46.5C87.4,-33.9,90,-16.9,89.1,-0.5C88.2,15.9,83.8,31.8,75.4,45.4C67,59,54.6,70.2,40.3,77.6C26,85,9.8,88.5,-5.5,85.2C-20.8,81.9,-35.1,71.8,-48,60.8C-60.9,49.8,-72.4,37.8,-79.1,23.5C-85.8,9.2,-87.7,-7.4,-84,-22.9C-80.3,-38.4,-71,-52.8,-58.5,-60.7C-46,-68.6,-30.3,-70,-15.5,-73.4C-0.7,-76.8,13.2,-82.2,28.8,-83.6C44.4,-84.9,61.7,-82.2,44.7,-76.4Z" transform="translate(100 100)" /></svg>
+                    <div class="avatar-circle"><img src="${member.img}" alt="${member.name}"></div>
+                    <div class="mini-logo-wrapper"><img src="https://clareia1.vercel.app/logo_clareia_icone.png" class="mini-logo-img"></div>
+                </div>
+                <div class="info">
+                    <h3 class="text-[1.6rem] font-bold text-[#005691] mb-1">${member.name}</h3>
+                    <p class="text-[0.9rem] font-bold uppercase tracking-[1.5px] text-[#1ca0da] mb-3">${member.role}</p>
+                    <p class="text-[1rem] text-[#64748b] leading-[1.4] max-w-[280px] mx-auto">${member.desc}</p>
+                </div>`;
+            teamGrid.appendChild(card);
+            revealObserver.observe(card);
+        });
+
+        // ================= LÓGICA DO MVP (GEMINI) =================
+        const apiKey = ""; // A chave da API é providenciada automaticamente
+        const dynamicApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // --- VARIÁVEIS DOM ---
+        const chatArea = document.getElementById('chat-area');
+        const messageInput = document.getElementById('message-input');
+        const sendBtn = document.getElementById('send-btn');
+        const sendIcon = document.getElementById('send-icon');
+        const statusText = document.getElementById('status-text');
+        
+        let isTyping = false;
+        let chatHistory = [];
+
+        const systemInstruction = `
+            És a Clarinha, uma corujinha fofa e assistente jurídica da Clareia, projetada para simular um atendimento de WhatsApp para um MVP. 
+            A tua missão é democratizar o acesso à informação processual, traduzindo o "juridiquês" para cidadãos comuns.
+            
+            DIRETRIZES DE COMPORTAMENTO:
+            - Tom: Acolhedor, empático, claro, fofo e nada robótico. Usa emojis ocasionalmente (como 🦉).
+            - Respostas curtas (estilo WhatsApp).
+            
+            FLUXO OBRIGATÓRIO DA CONVERSA:
+            O utilizador já recebeu a tua saudação inicial e o aviso sobre a LGPD.
+            1. O utilizador vai responder com o seu nome agora. Agradece e pergunta a sua idade.
+            2. Após receberes a idade, adapta a tua linguagem (sê mais paciente e explicativa se for idoso) e pede o número do processo.
+            3. Após receberes o número (qualquer número fictício serve), DEVES separar a tua resposta em duas partes usando EXATAMENTE o texto "|||" no meio.
+            Exemplo OBRIGATÓRIO de como deves responder ao passo 3: "Um momento, vou consultar os sistemas do tribunal... ⏳ ||| 🔍 Encontrei! O estado do teu processo é [INSERIR AQUI UMA ATUALIZAÇÃO FICTÍCIA, ex: Concluso para sentença ou Expedida intimação]. Isto quer dizer que [TRADUÇÃO COM DICIONÁRIO DE EMOÇÕES]."
+            
+            NOVO FLUXO: INDICAÇÃO DE ADVOGADOS (PARCERIAS):
+            - Se a atualização fictícia indicar que o utilizador precisa de tomar alguma ação técnica/urgente (ex: fazer recurso, ir a audiência, apresentar defesa) OU se o utilizador demonstrar dúvida sobre "o que fazer a seguir", segue estes passos:
+              a) Passo 1: Na mesma mensagem ou na próxima, pergunta de forma empática: "Já tens um advogado a acompanhar isto?"
+              b) Passo 2: Se o utilizador disser que NÃO tem advogado: Diz que a Clareia possui advogados parceiros de confiança e pergunta de que Cidade e Estado/Distrito fala para procurares um na região.
+              c) Passo 3: Quando ele responder a cidade, cria um advogado FICTÍCIO (ex: "Dr. Carlos Mendes", "Dra. Ana Souza") dizendo que é um excelente especialista que atende em [Cidade do Utilizador] e simula a entrega do contacto dele.
+            
+            A REGRA DE OURO (Dicionário de Emoções):
+            NUNCA dês apenas a tradução do termo jurídico. DEVES dar previsibilidade para acalmar o utilizador.
+            Exemplo mau: "Isto significa que o juiz vai decidir."
+            Exemplo excelente: "O estado do teu processo é 'Concluso para sentença'. Isto quer dizer que o juiz já está com o documento na secretária dele para dar a decisão final. Não te preocupes, não precisas de fazer nada agora! O tempo médio para esta etapa é de uns 3 meses. Fica tranquilo, está tudo a correr bem."
+            
+            Mantém o contexto fictício se o utilizador fizer mais perguntas.
+        `;
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+
+        function addMessageToUI(text, isSentByUser) {
+            const bubbleWrap = document.createElement('div');
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.classList.add(isSentByUser ? 'bubble-sent' : 'bubble-received');
+            let formattedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            bubble.innerHTML = `
+                <span>${formattedText}</span>
+                <div class="meta-text">${getCurrentTime()} ${isSentByUser ? '<i class="fa-solid fa-check-double blue-tick"></i>' : ''}</div>
+            `;
+            bubbleWrap.appendChild(bubble);
+            chatArea.appendChild(bubbleWrap);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        messageInput.addEventListener('input', () => {
+            if (messageInput.value.trim() !== "") {
+                sendIcon.classList.remove('fa-microphone');
+                sendIcon.classList.add('fa-paper-plane');
+            } else {
+                sendIcon.classList.remove('fa-paper-plane');
+                sendIcon.classList.add('fa-microphone');
+                messageInput.style.height = 'auto';
+            }
+        });
+
+        // Configurado com Exponential Backoff (1s, 2s, 4s, 8s, 16s)
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        throw new Error(errorData.error?.message || `HTTP ${response.status} - Falha desconhecida`);
+                    }
+                    return await response.json();
+                } catch (e) {
+                    if (i === retries - 1) throw e;
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        async function callGeminiAPI() {
+            // A passar o 'systemInstruction' nativamente como o modelo Gemini exige
+            const payload = { 
+                contents: chatHistory,
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+            
+            const headers = { 'Content-Type': 'application/json' };
+
+            try {
+                const data = await fetchWithRetry(dynamicApiUrl, { method: 'POST', headers: headers, body: JSON.stringify(payload) });
+                const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, tive um problema técnico.";
+                
+                chatHistory.push({ role: "model", parts: [{ text: modelText.replace('|||', '') }] });
+                
+                if (modelText.includes('|||')) {
+                    const parts = modelText.split('|||');
+                    const waitMessage = parts[0].trim();
+                    const resultMessage = parts[1].trim();
+
+                    setTypingStatus(false);
+                    addMessageToUI(waitMessage, false);
+
+                    setTimeout(() => {
+                        setTypingStatus(true); 
+                        setTimeout(() => {
+                            setTypingStatus(false);
+                            addMessageToUI(resultMessage, false);
+                        }, 4000); 
+                    }, 1500); 
+
+                } else {
+                    setTypingStatus(false);
+                    setTimeout(() => { addMessageToUI(modelText, false); }, Math.min(modelText.length * 20, 2500) / 2);
+                }
+
+            } catch (error) {
+                setTypingStatus(false);
+                console.error("Erro detalhado da API:", error);
+                addMessageToUI(`🚧 **Erro do Google:** ${error.message}`, false);
+            }
+        }
+
+        function setTypingStatus(typing) {
+            isTyping = typing;
+            statusText.innerText = typing ? 'a escrever...' : 'Online';
+            statusText.classList.toggle('typing-active', typing);
+        }
+
+        async function handleSend() {
+            const text = messageInput.value.trim();
+            if (!text || isTyping) return;
+            messageInput.value = ""; messageInput.style.height = 'auto';
+            sendIcon.classList.remove('fa-paper-plane'); sendIcon.classList.add('fa-microphone');
+            
+            addMessageToUI(text, true);
+            
+            chatHistory.push({ role: "user", parts: [{ text: text }] });
+            
+            setTypingStatus(true);
+            setTimeout(() => { callGeminiAPI(); }, 800);
+        }
+
+        sendBtn.addEventListener('click', () => { if (messageInput.value.trim() !== "") handleSend(); });
+        messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } });
+
+        function startOnboarding() {
+            setTypingStatus(true);
+            const initialMessages = [
+                "Olá! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.",
+                "Antes de começarmos, quero garantir-te que a nossa conversa é 100% segura e protegida pela LGPD. Os teus dados estão blindados comigo! 🔒",
+                "Para eu começar a ajudar-te, como preferes que eu te chame?"
+            ];
+            let delay = 1000;
+            initialMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    addMessageToUI(msg, false);
+                    if (index === initialMessages.length - 1) setTypingStatus(false);
+                }, delay);
+                delay += 2000;
+            });
+        }
+
+        // Inicializar
+        window.addEventListener('load', () => { 
+            setTimeout(startOnboarding, 800); 
+        });
+    </script>
+</body>
+</html>
