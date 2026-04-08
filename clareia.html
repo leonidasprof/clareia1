@@ -912,9 +912,11 @@
             revealObserver.observe(card);
         });
 
-        // ================= LÓGICA DO MVP (GEMINI) =================
-        const apiKey = ""; // A chave da API é providenciada automaticamente
-        const dynamicApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        // ================= LÓGICA DO MVP (GROQ FALLBACK GEMINI) =================
+        const groqApiKey = "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";
+        // Variável reservada para o ambiente Gemini no canvas (não alterar)
+        const geminiApiKey = ""; 
+        const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`;
 
         // --- VARIÁVEIS DOM ---
         const chatArea = document.getElementById('chat-area');
@@ -927,32 +929,34 @@
         let chatHistory = [];
 
         const systemInstruction = `
-            És a Clarinha, uma corujinha fofa e assistente jurídica da Clareia, projetada para simular um atendimento de WhatsApp para um MVP. 
-            A tua missão é democratizar o acesso à informação processual, traduzindo o "juridiquês" para cidadãos comuns.
+            Você é a Clarinha, uma corujinha assistente jurídica da Clareia, atuando num MVP de WhatsApp.
+            Sua missão é traduzir o "juridiquês" para pessoas comuns, democratizando o acesso à informação de forma leve e tranquila.
             
-            DIRETRIZES DE COMPORTAMENTO:
-            - Tom: Acolhedor, empático, claro, fofo e nada robótico. Usa emojis ocasionalmente (como 🦉).
-            - Respostas curtas (estilo WhatsApp).
+            DIRETRIZES DE COMPORTAMENTO E TOM:
+            - Natural, informal e humano (pareça uma pessoa normal conversando no WhatsApp do Brasil).
+            - Neutro, mas acolhedor. Evite ser robótica ou usar palavras difíceis.
+            - ADAPTAÇÃO PELA IDADE: Seja bem descontraída e informal por padrão (use "você", "tá", "né"). MAS, se o usuário informar que tem mais de 60 anos, ajuste o tom para ser um pouco mais formal, extremamente paciente e respeitoso (usando o pronome senhor/senhora se couber).
+            - Respostas curtas e diretas (estilo WhatsApp). Use emojis ocasionalmente (como 🦉).
             
             FLUXO OBRIGATÓRIO DA CONVERSA:
-            O utilizador já recebeu a tua saudação inicial e o aviso sobre a LGPD.
-            1. O utilizador vai responder com o seu nome agora. Agradece e pergunta a sua idade.
-            2. Após receberes a idade, adapta a tua linguagem (sê mais paciente e explicativa se for idoso) e pede o número do processo.
-            3. Após receberes o número (qualquer número fictício serve), DEVES separar a tua resposta em duas partes usando EXATAMENTE o texto "|||" no meio.
-            Exemplo OBRIGATÓRIO de como deves responder ao passo 3: "Um momento, vou consultar os sistemas do tribunal... ⏳ ||| 🔍 Encontrei! O estado do teu processo é [INSERIR AQUI UMA ATUALIZAÇÃO FICTÍCIA, ex: Concluso para sentença ou Expedida intimação]. Isto quer dizer que [TRADUÇÃO COM DICIONÁRIO DE EMOÇÕES]."
+            O usuário já recebeu a saudação inicial (onboarding).
+            1. Agora ele vai responder com o nome. Agradeça, seja super amigável e pergunte a idade dele.
+            2. Após receber a idade, ajuste seu tom imediatamente e peça o número do processo (avise que pode ser um número fictício para o teste).
+            3. Quando receber o número, VOCÊ DEVE separar a sua resposta em duas partes usando EXATAMENTE o texto "|||" no meio.
+            Exemplo OBRIGATÓRIO: "Só um minutinho, vou dar uma olhadinha nos sistemas do tribunal... ⏳ ||| 🔍 Achei aqui! O andamento do seu processo está como [INSERIR ATUALIZAÇÃO FICTÍCIA, ex: Concluso para sentença]. Isso significa que [TRADUÇÃO COM EMPATIA]."
             
             NOVO FLUXO: INDICAÇÃO DE ADVOGADOS (PARCERIAS):
-            - Se a atualização fictícia indicar que o utilizador precisa de tomar alguma ação técnica/urgente (ex: fazer recurso, ir a audiência, apresentar defesa) OU se o utilizador demonstrar dúvida sobre "o que fazer a seguir", segue estes passos:
-              a) Passo 1: Na mesma mensagem ou na próxima, pergunta de forma empática: "Já tens um advogado a acompanhar isto?"
-              b) Passo 2: Se o utilizador disser que NÃO tem advogado: Diz que a Clareia possui advogados parceiros de confiança e pergunta de que Cidade e Estado/Distrito fala para procurares um na região.
-              c) Passo 3: Quando ele responder a cidade, cria um advogado FICTÍCIO (ex: "Dr. Carlos Mendes", "Dra. Ana Souza") dizendo que é um excelente especialista que atende em [Cidade do Utilizador] e simula a entrega do contacto dele.
+            - Se a atualização fictícia exigir uma ação do usuário (ex: recorrer, ir a uma audiência) OU se ele perguntar "o que eu faço agora?", siga estes passos:
+              a) Passo 1: Pergunte com empatia: "Você já tem um advogado te acompanhando nisso?"
+              b) Passo 2: Se a pessoa não tiver, diga que a Clareia tem advogados parceiros ótimos e pergunte a Cidade e Estado dela.
+              c) Passo 3: Quando a pessoa disser a cidade, invente um advogado (ex: "Dr. Carlos Mendes") dizendo que é um ótimo especialista na região e simule passar o contato.
             
-            A REGRA DE OURO (Dicionário de Emoções):
-            NUNCA dês apenas a tradução do termo jurídico. DEVES dar previsibilidade para acalmar o utilizador.
-            Exemplo mau: "Isto significa que o juiz vai decidir."
-            Exemplo excelente: "O estado do teu processo é 'Concluso para sentença'. Isto quer dizer que o juiz já está com o documento na secretária dele para dar a decisão final. Não te preocupes, não precisas de fazer nada agora! O tempo médio para esta etapa é de uns 3 meses. Fica tranquilo, está tudo a correr bem."
+            A REGRA DE OURO (Previsibilidade e Calma):
+            NUNCA dê apenas a tradução técnica. Dê contexto para acalmar a pessoa.
+            Exemplo mau: "Isso significa que o juiz vai decidir."
+            Exemplo excelente: "O status é 'Concluso para sentença'. Isso quer dizer que o juiz já tá com o documento na mesa dele para dar a decisão final. Fique tranquilo, você não precisa fazer nada agora, tá? O tempo médio pra essa etapa costuma ser de uns 3 meses. Tá tudo correndo bem."
             
-            Mantém o contexto fictício se o utilizador fizer mais perguntas.
+            Mantenha o contexto fictício se a pessoa fizer mais perguntas.
         `;
 
         function getCurrentTime() {
@@ -990,7 +994,7 @@
             }
         });
 
-        // Configurado com Exponential Backoff (1s, 2s, 4s, 8s, 16s)
+        // Configurado com Exponential Backoff (1s, 2s, 4s, 8s, 16s) para o Gemini
         async function fetchWithRetry(url, options, retries = 5) {
             const delays = [1000, 2000, 4000, 8000, 16000];
             for (let i = 0; i < retries; i++) {
@@ -1008,21 +1012,68 @@
             }
         }
 
-        async function callGeminiAPI() {
-            // A passar o 'systemInstruction' nativamente como o modelo Gemini exige
-            const payload = { 
-                contents: chatHistory,
-                systemInstruction: { parts: [{ text: systemInstruction }] }
-            };
-            
-            const headers = { 'Content-Type': 'application/json' };
+        // Lógica Principal de Orquestração das APIs
+        async function processAIResponse() {
+            let modelText = "";
 
             try {
-                const data = await fetchWithRetry(dynamicApiUrl, { method: 'POST', headers: headers, body: JSON.stringify(payload) });
-                const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, tive um problema técnico.";
-                
+                // TENTATIVA 1: GROQ API
+                try {
+                    // Converter o histórico do padrão Gemini para o padrão Groq (OpenAI)
+                    const groqMessages = [{ role: "system", content: systemInstruction }];
+                    
+                    chatHistory.forEach(item => {
+                        groqMessages.push({
+                            role: item.role === "model" ? "assistant" : "user",
+                            content: item.parts[0].text
+                        });
+                    });
+
+                    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Authorization": `Bearer ${groqApiKey}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            model: "mixtral-8x7b-32768", 
+                            messages: groqMessages
+                        })
+                    });
+
+                    if (!groqResponse.ok) {
+                        const errTxt = await groqResponse.text();
+                        throw new Error(`Groq falhou com status ${groqResponse.status}: ${errTxt}`);
+                    }
+
+                    const groqData = await groqResponse.json();
+                    modelText = groqData.choices[0].message.content;
+                    console.log("✔️ Resposta gerada via Groq");
+
+                } catch (groqErr) {
+                    console.warn("⚠️ Falha na API Groq (alternando para Gemini):", groqErr.message);
+                    
+                    // TENTATIVA 2 (FALLBACK): GEMINI API
+                    const payload = { 
+                        contents: chatHistory,
+                        systemInstruction: { parts: [{ text: systemInstruction }] }
+                    };
+                    
+                    const headers = { 'Content-Type': 'application/json' };
+                    const geminiData = await fetchWithRetry(geminiApiUrl, { 
+                        method: 'POST', 
+                        headers: headers, 
+                        body: JSON.stringify(payload) 
+                    });
+                    
+                    modelText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, tive um problema técnico ao processar a mensagem.";
+                    console.log("✔️ Resposta gerada via Gemini");
+                }
+
+                // Processar a resposta recebida (salvar no histórico interno)
                 chatHistory.push({ role: "model", parts: [{ text: modelText.replace('|||', '') }] });
                 
+                // Tratar a lógica visual do MVP (Atrás do pano "|||")
                 if (modelText.includes('|||')) {
                     const parts = modelText.split('|||');
                     const waitMessage = parts[0].trim();
@@ -1045,9 +1096,10 @@
                 }
 
             } catch (error) {
+                // Falha Catastrófica (As duas APIs falharam)
                 setTypingStatus(false);
-                console.error("Erro detalhado da API:", error);
-                addMessageToUI(`🚧 **Erro do Google:** ${error.message}`, false);
+                console.error("Erro crítico: Nenhuma das APIs conseguiu responder.", error);
+                addMessageToUI(`🚧 **Erro:** Desculpa, os meus sistemas estão a passar por instabilidades agora. Tenta de novo mais tarde!`, false);
             }
         }
 
@@ -1057,18 +1109,20 @@
             statusText.classList.toggle('typing-active', typing);
         }
 
-        async function handleSend() {
+        function handleSend() {
             const text = messageInput.value.trim();
             if (!text || isTyping) return;
+            
             messageInput.value = ""; messageInput.style.height = 'auto';
             sendIcon.classList.remove('fa-paper-plane'); sendIcon.classList.add('fa-microphone');
             
             addMessageToUI(text, true);
             
+            // Adicionar ao Histórico
             chatHistory.push({ role: "user", parts: [{ text: text }] });
             
             setTypingStatus(true);
-            setTimeout(() => { callGeminiAPI(); }, 800);
+            setTimeout(() => { processAIResponse(); }, 800);
         }
 
         sendBtn.addEventListener('click', () => { if (messageInput.value.trim() !== "") handleSend(); });
@@ -1077,9 +1131,9 @@
         function startOnboarding() {
             setTypingStatus(true);
             const initialMessages = [
-                "Olá! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.",
-                "Antes de começarmos, quero garantir-te que a nossa conversa é 100% segura e protegida pela LGPD. Os teus dados estão blindados comigo! 🔒",
-                "Para eu começar a ajudar-te, como preferes que eu te chame?"
+                "Oi! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.",
+                "Antes de começarmos, quero garantir que a nossa conversa é 100% segura e protegida pela LGPD. Seus dados estão blindados comigo! 🔒",
+                "Pra gente começar, como você prefere que eu te chame?"
             ];
             let delay = 1000;
             initialMessages.forEach((msg, index) => {
