@@ -914,9 +914,8 @@
 
         // ================= LÓGICA DO MVP (GROQ FALLBACK GEMINI) =================
         const groqApiKey = "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";
-        // Variável reservada para o ambiente Gemini no canvas (não alterar)
-        const geminiApiKey = ""; 
-        const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`;
+        const geminiApiKey = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc"; 
+        const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${geminiApiKey}`;
 
         // --- VARIÁVEIS DOM ---
         const chatArea = document.getElementById('chat-area');
@@ -994,21 +993,91 @@
             }
         });
 
-        // Configurado com Exponential Backoff (1s, 2s, 4s, 8s, 16s) para o Gemini
-        async function fetchWithRetry(url, options, retries = 5) {
-            const delays = [1000, 2000, 4000, 8000, 16000];
-            for (let i = 0; i < retries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(errorData.error?.message || `HTTP ${response.status} - Falha desconhecida`);
-                    }
-                    return await response.json();
-                } catch (e) {
-                    if (i === retries - 1) throw e;
-                    await new Promise(res => setTimeout(res, delays[i]));
+        // Funções de Chamada de API Modularizadas (Seguras para uso externo)
+        async function fetchGroq(messages, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${groqApiKey}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.1-8b-instant", // Modelo muito rápido, estável e econômico da Groq
+                        messages: messages,
+                        temperature: 0.7
+                    }),
+                    signal: controller.signal // Atrela o timeout à requisição
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    const err = await response.text();
+                    throw new Error(`Groq HTTP ${response.status}: ${err}`);
                 }
+
+                const data = await response.json();
+                
+                // Checagem rigorosa de formato
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error("Formato de resposta inválido da Groq");
+                }
+                
+                return data.choices[0].message.content;
+                
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error("Timeout: Groq demorou muito a responder.");
+                }
+                throw error; // Repassa qualquer outro erro
+            }
+        }
+
+        async function fetchGemini(history, sysInst, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
+            try {
+                const payload = { 
+                    contents: history,
+                    systemInstruction: { parts: [{ text: sysInst }] },
+                    generationConfig: { temperature: 0.7 }
+                };
+                
+                const response = await fetch(geminiApiUrl, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(payload),
+                    signal: controller.signal // Atrela o timeout à requisição
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    const err = await response.text();
+                    throw new Error(`Gemini HTTP ${response.status}: ${err}`);
+                }
+
+                const data = await response.json();
+                
+                // Checagem rigorosa de formato
+                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+                    throw new Error("Formato de resposta inválido do Gemini");
+                }
+                
+                return data.candidates[0].content.parts[0].text;
+                
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error("Timeout: Gemini demorou muito a responder.");
+                }
+                throw error; // Repassa qualquer outro erro
             }
         }
 
@@ -1019,9 +1088,7 @@
             try {
                 // TENTATIVA 1: GROQ API
                 try {
-                    // Converter o histórico do padrão Gemini para o padrão Groq (OpenAI)
                     const groqMessages = [{ role: "system", content: systemInstruction }];
-                    
                     chatHistory.forEach(item => {
                         groqMessages.push({
                             role: item.role === "model" ? "assistant" : "user",
@@ -1029,51 +1096,26 @@
                         });
                     });
 
-                    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                        method: "POST",
-                        headers: {
-                            "Authorization": `Bearer ${groqApiKey}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            model: "mixtral-8x7b-32768", 
-                            messages: groqMessages
-                        })
-                    });
-
-                    if (!groqResponse.ok) {
-                        const errTxt = await groqResponse.text();
-                        throw new Error(`Groq falhou com status ${groqResponse.status}: ${errTxt}`);
-                    }
-
-                    const groqData = await groqResponse.json();
-                    modelText = groqData.choices[0].message.content;
-                    console.log("✔️ Resposta gerada via Groq");
+                    modelText = await fetchGroq(groqMessages);
+                    console.log("✔️ Resposta gerada via Groq (llama-3.1-8b-instant)");
 
                 } catch (groqErr) {
                     console.warn("⚠️ Falha na API Groq (alternando para Gemini):", groqErr.message);
                     
                     // TENTATIVA 2 (FALLBACK): GEMINI API
-                    const payload = { 
-                        contents: chatHistory,
-                        systemInstruction: { parts: [{ text: systemInstruction }] }
-                    };
-                    
-                    const headers = { 'Content-Type': 'application/json' };
-                    const geminiData = await fetchWithRetry(geminiApiUrl, { 
-                        method: 'POST', 
-                        headers: headers, 
-                        body: JSON.stringify(payload) 
-                    });
-                    
-                    modelText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, tive um problema técnico ao processar a mensagem.";
-                    console.log("✔️ Resposta gerada via Gemini");
+                    try {
+                        modelText = await fetchGemini(chatHistory, systemInstruction);
+                        console.log("✔️ Resposta gerada via Gemini (gemini-1.5-flash-8b)");
+                    } catch (geminiErr) {
+                        console.error("❌ Falha na API Gemini:", geminiErr.message);
+                        throw new Error("Ambas as APIs falharam."); // Passa para o catch principal
+                    }
                 }
 
-                // Processar a resposta recebida (salvar no histórico interno)
+                // Processar a resposta recebida
                 chatHistory.push({ role: "model", parts: [{ text: modelText.replace('|||', '') }] });
                 
-                // Tratar a lógica visual do MVP (Atrás do pano "|||")
+                // Tratar a lógica visual do MVP
                 if (modelText.includes('|||')) {
                     const parts = modelText.split('|||');
                     const waitMessage = parts[0].trim();
@@ -1096,10 +1138,9 @@
                 }
 
             } catch (error) {
-                // Falha Catastrófica (As duas APIs falharam)
                 setTypingStatus(false);
-                console.error("Erro crítico: Nenhuma das APIs conseguiu responder.", error);
-                addMessageToUI(`🚧 **Erro:** Desculpa, os meus sistemas estão a passar por instabilidades agora. Tenta de novo mais tarde!`, false);
+                console.error("Erro crítico de comunicação com as IAs:", error);
+                addMessageToUI(`🚧 **Erro de Conexão:** Desculpa, os meus sistemas estão passando por instabilidades agora. Tente de novo mais tarde!`, false);
             }
         }
 
