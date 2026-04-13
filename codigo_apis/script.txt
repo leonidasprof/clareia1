@@ -1,0 +1,47 @@
+<script>
+async function getResponse(message) {
+  try {
+    // Primeiro tenta Groq
+    const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer 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",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "mixtral-8x7b-32768", // escolha o modelo disponível
+        messages: [{ role: "user", content: message }]
+      })
+    });
+
+    if (!groqResponse.ok) throw new Error("Groq falhou");
+
+    const groqData = await groqResponse.json();
+    return groqData.choices[0].message.content;
+
+  } catch (err) {
+    console.warn("Erro no Groq, tentando Gemini:", err);
+
+    // Se Groq falhar, tenta Gemini
+    const geminiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: message }] }]
+      })
+    });
+
+    if (!geminiResponse.ok) throw new Error("Gemini também falhou");
+
+    const geminiData = await geminiResponse.json();
+    return geminiData.candidates[0].content.parts[0].text;
+  }
+}
+
+// Exemplo de uso:
+async function enviarMensagem() {
+  const input = document.getElementById("msg").value;
+  const resposta = await getResponse(input);
+  document.getElementById("chat").innerHTML += "<p><b>IA:</b> " + resposta + "</p>";
+}
+</script>
