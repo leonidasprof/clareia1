@@ -1,0 +1,356 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  CheckCircle, 
+  MessageCircle, 
+  ShieldCheck, 
+  HeartPulse, 
+  Lightbulb, 
+  Target, 
+  AlertTriangle, 
+  FileText, 
+  Search,
+  Zap,
+  Check,
+  ChevronRight,
+  BookOpen
+} from 'lucide-react';
+
+// --- DATA ---
+const reportData = {
+  agente: "D³ — Data-Driven Design",
+  data_analise: "29 Abr 2026",
+  projeto: "Clareia - Assistente Jurídico Inteligente",
+  contexto: {
+    cenario: "O sistema jurídico brasileiro é um labirinto escuro para a maioria dos cidadãos. A Clareia nasceu para ser a luz nesse caminho, utilizando IA via WhatsApp. Testamos nosso MVP com 15 usuários (26 a 50 anos) para descobrir se estamos realmente 'clareando' a situação.",
+    objetivo: "A missão da pesquisa era simples: nossa tradução do 'juridiquês' funciona? As pessoas confiam na IA para algo tão sério? E quais são os próximos recursos que devemos construir?"
+  },
+  metricas: [
+    { title: "Adoção do Canal", value: "100%", desc: "Conforto total com a interface do WhatsApp", icon: <MessageCircle size={28} />, hex: "#5BC0EB" },
+    { title: "Eficácia da Tradução", value: "86.7%", desc: "Acharam a linguagem da IA perfeitamente clara", icon: <CheckCircle size={28} />, hex: "#38B000" },
+    { title: "Saúde Mental", value: "66.7%", desc: "Relataram queda de ansiedade com as previsões", icon: <HeartPulse size={28} />, hex: "#FF007F" },
+    { title: "Necessidade de Prova", value: "53.3%", desc: "Fariam 'Double Check' do advogado no Google", icon: <Search size={28} />, hex: "#9D4EDD" }
+  ],
+  insights: [
+    {
+      insight: "O WhatsApp é o nosso maior ativo de confiança.",
+      detalhe: "Não estamos forçando o usuário a baixar um app novo. A familiaridade com o WhatsApp zera a curva de aprendizado e destrói a barreira inicial que outras Legaltechs enfrentam.",
+      prioridade: "Alta",
+      color: "border-[#5BC0EB]"
+    },
+    {
+      insight: "A Coruja precisa 'crescer'.",
+      detalhe: "O ícone atual é visto como muito 'infantil'. Para lidar com problemas sérios (divórcios, processos, dívidas), a identidade visual precisa evoluir para transmitir mais sobriedade e autoridade.",
+      prioridade: "Média",
+      color: "border-[#FFB703]"
+    },
+    {
+      insight: "O usuário confia, mas verifica.",
+      detalhe: "A indicação de advogados não pode ser cega. Mais da metade dos usuários quer ver currículos, avaliações e provas sociais antes de fechar negócio. A Clareia precisa fornecer esse 'dossiê'.",
+      prioridade: "Alta",
+      color: "border-[#5BC0EB]"
+    }
+  ],
+  acoes: [
+    {
+      acao: "Lançar Leitor de Documentos (OCR)",
+      por_que: "O cidadão tem papéis físicos em casa. Permitir que ele tire uma foto e a IA leia o documento aumenta drasticamente a utilidade diária do bot.",
+      icon: <FileText size={24} className="text-[#5BC0EB]" />
+    },
+    {
+      acao: "Rebranding Estratégico",
+      por_que: "Amadurecer os traços da nossa mascote e a paleta de cores para aumentar o poder de conversão B2B e a confiança de usuários mais velhos.",
+      icon: <Target size={24} className="text-[#FFB703]" />
+    },
+    {
+      acao: "Alerta de Pendências Pró-ativo",
+      por_que: "Sair do modo passivo (responder dúvidas) para o modo ativo (avisar o que o usuário precisa fazer hoje para o processo não parar).",
+      icon: <Zap size={24} className="text-[#38B000]" />
+    }
+  ]
+};
+
+// --- COMPONENTS ---
+
+// 1. Componente da Coruja Voadora Interativa
+const FlyingOwl = () => {
+  const [position, setPosition] = useState({ x: -100, y: -100 });
+  const [isMoving, setIsMoving] = useState(false);
+
+  useEffect(() => {
+    let timeout;
+    const updateMousePosition = (e) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+      setIsMoving(true);
+      
+      clearTimeout(timeout);
+      timeout = setTimeout(() => setIsMoving(false), 200); // Para de bater asas se o mouse parar
+    };
+
+    window.addEventListener('mousemove', updateMousePosition);
+    return () => {
+      window.removeEventListener('mousemove', updateMousePosition);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  return (
+    <img
+      src="https://clareia1.vercel.app/clareia_coruja.png"
+      alt="Coruja Clareia"
+      className="fixed pointer-events-none z-50 transition-all duration-300 ease-out drop-shadow-[0_0_15px_rgba(91,192,235,0.8)]"
+      style={{
+        left: position.x,
+        top: position.y,
+        width: '80px',
+        transform: `translate(20px, 20px) ${isMoving ? 'rotate(-10deg) translateY(-5px)' : 'rotate(0deg)'}`,
+      }}
+    />
+  );
+};
+
+// 2. Card com efeito Neon Dark Mode
+const NeonCard = ({ children, colorHex, className = "" }) => {
+  return (
+    <div 
+      className={`bg-[#0F172A] border border-slate-800 rounded-2xl p-6 transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden ${className}`}
+      style={{
+        '--hover-glow': colorHex
+      }}
+    >
+      {/* Luz de fundo invisível que acende no hover */}
+      <div 
+        className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"
+        style={{ backgroundColor: colorHex }}
+      ></div>
+      {/* Borda neon no hover via CSS injetado no style */}
+      <div 
+        className="relative z-10 h-full flex flex-col"
+        onMouseEnter={(e) => {
+          e.currentTarget.parentElement.style.boxShadow = `0 0 25px ${colorHex}40, inset 0 0 10px ${colorHex}10`;
+          e.currentTarget.parentElement.style.borderColor = colorHex;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.parentElement.style.boxShadow = 'none';
+          e.currentTarget.parentElement.style.borderColor = '#1e293b'; // slate-800
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
+// --- APP PRINCIPAL ---
+export default function App() {
+  return (
+    <div className="min-h-screen bg-[#020617] font-sans text-slate-300 selection:bg-[#5BC0EB] selection:text-white pb-20 overflow-x-hidden">
+      
+      {/* Coruja Interativa */}
+      <FlyingOwl />
+
+      {/* HEADER (Capítulo 0) */}
+      <header className="relative pt-20 pb-16 px-6 border-b border-slate-800/50">
+        {/* Efeitos de Luz de Fundo (Clareia concept) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-[#5BC0EB] rounded-full mix-blend-screen filter blur-[120px] opacity-10 pointer-events-none"></div>
+        
+        <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
+          <img 
+            src="https://clareia1.vercel.app/logo_clareia_icone.png" 
+            alt="Logo Clareia" 
+            className="w-28 h-28 object-contain mb-6 drop-shadow-[0_0_20px_rgba(91,192,235,0.4)]"
+          />
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0F172A] border border-slate-700 text-sm font-medium text-[#5BC0EB] mb-6">
+            <ShieldCheck size={16} /> Documento Confidencial
+          </div>
+          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-4">
+            Relatório de MVP <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5BC0EB] to-[#38B000]">Clareia</span>
+          </h1>
+          <p className="text-lg text-slate-400 max-w-2xl">
+            Uma análise imersiva dos primeiros passos para democratizar o acesso jurídico no Brasil. Elaborado por {reportData.agente}.
+          </p>
+        </div>
+      </header>
+
+      <main className="max-w-5xl mx-auto px-6 mt-16 space-y-24">
+        
+        {/* CAPÍTULO 1: O DESAFIO */}
+        <section className="relative">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="bg-[#0F172A] p-3 rounded-xl text-[#5BC0EB] border border-slate-800">
+              <BookOpen size={24} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Capítulo 1: O Terreno</h2>
+              <p className="text-slate-500">O que fomos descobrir com nossos usuários</p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <NeonCard colorHex="#5BC0EB">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                O Cenário Atual
+              </h3>
+              <p className="leading-relaxed text-slate-400">
+                {reportData.contexto.cenario}
+              </p>
+            </NeonCard>
+            <NeonCard colorHex="#FFB703">
+              <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                Objetivo da Missão
+              </h3>
+              <p className="leading-relaxed text-slate-400">
+                {reportData.contexto.objetivo}
+              </p>
+            </NeonCard>
+          </div>
+        </section>
+
+        {/* CAPÍTULO 2: OS DADOS */}
+        <section>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="bg-[#0F172A] p-3 rounded-xl text-[#38B000] border border-slate-800">
+              <Zap size={24} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Capítulo 2: A Voz dos Dados</h2>
+              <p className="text-slate-500">Métricas que contam a história da adoção</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {reportData.metricas.map((metric, idx) => (
+              <NeonCard key={idx} colorHex={metric.hex} className="text-center justify-center items-center py-10">
+                <div 
+                  className="mb-4 transition-transform duration-300 group-hover:scale-110" 
+                  style={{ color: metric.hex, filter: `drop-shadow(0 0 10px ${metric.hex}60)` }}
+                >
+                  {metric.icon}
+                </div>
+                {/* NUMEROS COM CORES VIVAS E NEON */}
+                <h3 
+                  className="text-5xl font-black mb-2 tracking-tight transition-all duration-300"
+                  style={{ 
+                    color: metric.hex,
+                    textShadow: `0 0 20px ${metric.hex}40`
+                  }}
+                >
+                  {metric.value}
+                </h3>
+                <h4 className="text-sm font-bold text-white mb-2 uppercase tracking-wider">{metric.title}</h4>
+                <p className="text-xs text-slate-400">{metric.desc}</p>
+              </NeonCard>
+            ))}
+          </div>
+        </section>
+
+        {/* CAPÍTULO 3: GRÁFICO DE CONVERSÃO (Storytelling Visual) */}
+        <section>
+          <NeonCard colorHex="#5BC0EB" className="p-8">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
+               <div className="max-w-xl">
+                  <h2 className="text-2xl font-bold text-white mb-2">A Eficiência do "Tradutor"</h2>
+                  <p className="text-slate-400">
+                    O coração da Clareia é a IA do Gemini. Perguntamos aos usuários: 
+                    <span className="text-white font-medium"> "O quão clara ficou a explicação do seu processo?"</span>
+                  </p>
+               </div>
+            </div>
+            
+            <div className="space-y-8 max-w-3xl">
+              {/* Barra 1 */}
+              <div>
+                <div className="flex justify-between text-base font-semibold mb-3">
+                  <span className="text-white flex items-center gap-2">
+                    <CheckCircle size={18} className="text-[#38B000]" />
+                    Entendimento Perfeito (Satisfeitos)
+                  </span>
+                  <span className="text-[#38B000] text-xl drop-shadow-[0_0_8px_#38B000]">86.7%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-5 overflow-hidden shadow-inner">
+                  <div className="bg-gradient-to-r from-[#1b5e20] to-[#38B000] h-full rounded-full relative" style={{ width: '86.7%' }}>
+                     <div className="absolute top-0 right-0 bottom-0 left-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgMjBMMjAgMEgxMGwtMTAgMTB6IiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiLz48L3N2Zz4=')] opacity-50"></div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Barra 2 */}
+              <div>
+                <div className="flex justify-between text-base font-semibold mb-3">
+                  <span className="text-white flex items-center gap-2">
+                    <AlertTriangle size={18} className="text-[#FFB703]" />
+                    Dúvidas Residuais (Oportunidade)
+                  </span>
+                  <span className="text-[#5BC0EB] text-xl drop-shadow-[0_0_8px_#5BC0EB]">13.3%</span>
+                </div>
+                <div className="w-full bg-slate-800 rounded-full h-5 overflow-hidden shadow-inner">
+                  <div className="bg-gradient-to-r from-[#023e8a] to-[#5BC0EB] h-full rounded-full" style={{ width: '13.3%' }}></div>
+                </div>
+                <p className="text-sm text-slate-400 mt-4 border-l-2 border-[#5BC0EB] pl-3">
+                  <strong className="text-white">Insight:</strong> Estes 13% representam nossa próxima fronteira. Refinar o prompt da IA para linguagem ainda mais acessível para pessoas com baixíssima escolaridade.
+                </p>
+              </div>
+            </div>
+          </NeonCard>
+        </section>
+
+        {/* CAPÍTULO 4: DIAGNÓSTICO E TRATAMENTO */}
+        <section>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="bg-[#0F172A] p-3 rounded-xl text-white border border-slate-800">
+              <Lightbulb size={24} className="text-[#FFB703] fill-[#FFB703]/20" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Capítulo 4: Próximos Passos</h2>
+              <p className="text-slate-500">Cruzando Insights com o Plano de Ação Estratégico</p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* INSIGHTS */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-white mb-4 border-b border-slate-800 pb-2">O que aprendemos (Insights)</h3>
+              {reportData.insights.map((item, idx) => (
+                <div key={idx} className={`bg-[#0F172A] p-6 rounded-2xl border-l-4 ${item.color} shadow-lg relative overflow-hidden group`}>
+                  <div className="flex justify-between items-start mb-3">
+                    <h4 className="font-bold text-white text-lg">{item.insight}</h4>
+                  </div>
+                  <p className="text-slate-400 text-sm leading-relaxed">{item.detalhe}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* AÇÕES */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-white mb-4 border-b border-slate-800 pb-2">O que faremos (Ações)</h3>
+              {reportData.acoes.map((item, idx) => (
+                <NeonCard key={idx} colorHex="#5BC0EB" className="p-6">
+                  <div className="flex gap-4">
+                    <div className="bg-slate-800/50 p-3 rounded-xl h-fit border border-slate-700">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-white text-lg mb-2">{item.acao}</h4>
+                      <p className="text-slate-400 text-sm leading-relaxed"><span className="text-[#5BC0EB] font-medium">Motivo:</span> {item.por_que}</p>
+                    </div>
+                  </div>
+                </NeonCard>
+              ))}
+            </div>
+          </div>
+        </section>
+
+      </main>
+      
+      <footer className="max-w-5xl mx-auto px-6 mt-24 pt-8 border-t border-slate-800 text-center flex flex-col items-center">
+        <img 
+          src="https://clareia1.vercel.app/logo_clareia_icone.png" 
+          alt="Clareia" 
+          className="w-10 h-10 object-contain mb-4 opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer"
+        />
+        <p className="text-slate-600 text-sm">
+          Relatório Estratégico Clareia • Gerado interativamente
+        </p>
+      </footer>
+    </div>
+  );
+}
