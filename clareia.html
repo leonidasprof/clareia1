@@ -335,13 +335,22 @@
                         <div class="text-3xl lg:hidden animate-bounce">👇</div>
                     </div>
 
-                    <div class="bg-[#eaf4fa] rounded-2xl p-5 border border-[#179cde]/30 flex items-center justify-between shadow-sm hover:bg-[#e0f0f9] transition-colors cursor-pointer" onclick="document.getElementById('passo-a-passo-telegram').scrollIntoView({behavior: 'smooth'})">
-                        <div>
-                            <span class="text-[#179cde] font-bold text-xs tracking-wider uppercase mb-1 block">Opção 2</span>
-                            <h3 class="text-lg font-bold text-gray-900 mb-1">Use no seu Telegram</h3>
-                            <p class="text-gray-600 text-sm">Role a página para baixo e veja o passo a passo para acessar pelo app.</p>
+                    <div class="bg-[#eaf4fa] rounded-2xl p-5 border border-[#179cde]/30 flex flex-col justify-between shadow-sm hover:bg-[#e0f0f9] transition-colors">
+                        <div class="flex items-center justify-between w-full mb-3">
+                            <div>
+                                <span class="text-[#179cde] font-bold text-xs tracking-wider uppercase mb-1 block">Opção 2</span>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">Use no seu Telegram</h3>
+                                <p class="text-gray-600 text-sm">Role a página para baixo e veja como testar pelo app.</p>
+                            </div>
+                            <div class="text-3xl text-[#179cde]"><i class="fa-brands fa-telegram"></i></div>
                         </div>
-                        <div class="text-3xl text-[#179cde]"><i class="fa-brands fa-telegram"></i></div>
+                        <div class="mt-2 pt-3 border-t border-[#179cde]/20 flex flex-col items-center">
+                            <p class="text-xs text-center text-gray-500 mb-2 font-medium">Ligue o Bot do Telegram clicando abaixo para ele funcionar.</p>
+                            <button id="toggle-tg-btn" onclick="toggleTelegramBot()" class="bg-[#179cde] text-white font-bold py-2 px-6 rounded-full hover:bg-blue-600 transition shadow-md w-full sm:w-auto">
+                                <i class="fa-solid fa-power-off mr-2"></i> Ativar Bot no Telegram
+                            </button>
+                            <p id="tg-status-text" class="text-xs font-bold text-gray-400 mt-2">Status: <span class="text-red-500">Desligado</span></p>
+                        </div>
                     </div>
                 </div>
 
@@ -394,7 +403,7 @@
                 <div class="text-center mb-12">
                     <span class="bg-[#179cde]/10 text-[#179cde] py-1 px-3 rounded-full text-sm font-bold tracking-wide uppercase mb-3 inline-block">App Oficial</span>
                     <h2 class="text-3xl md:text-4xl font-bold text-[#0a3b8c] mb-4"><i class="fa-brands fa-telegram text-[#179cde] mr-2"></i>Como usar a Clarinha no Telegram</h2>
-                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">Para que o bot funcione, <b>mantenha esta página aberta no seu computador</b> e siga os passos abaixo para falar com ela pelo aplicativo.</p>
+                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">Siga os passos abaixo para testar pelo seu celular ou computador.</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -402,20 +411,20 @@
                     
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">1</div>
-                        <h3 class="font-bold text-xl text-gray-900 mb-3">Abra o App</h3>
-                        <p class="text-gray-600">Abra o aplicativo do <b>Telegram</b> no seu celular ou a versão para computador.</p>
+                        <h3 class="font-bold text-xl text-gray-900 mb-3">Ligue o Bot</h3>
+                        <p class="text-gray-600">Não esqueça de clicar no botão <b>"Ativar Bot no Telegram"</b> ali em cima nesta mesma página para que ela ganhe vida!</p>
                     </div>
                     
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform rotate-3">2</div>
                         <h3 class="font-bold text-xl text-gray-900 mb-3">Busque o Bot</h3>
-                        <p class="text-gray-600">Na lupa de pesquisa do app, digite <b class="text-[#179cde]">@Clareira_Juridico_bot</b> ou <a href="https://t.me/Clareira_Juridico_bot" target="_blank" class="text-[#0a3b8c] font-bold underline hover:text-[#179cde]">clique neste link</a>.</p>
+                        <p class="text-gray-600">No app do Telegram, digite <b class="text-[#179cde]">@Clareira_Juridico_bot</b> na lupa ou <a href="https://t.me/Clareira_Juridico_bot" target="_blank" class="text-[#0a3b8c] font-bold underline hover:text-[#179cde]">clique neste link</a>.</p>
                     </div>
                     
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">3</div>
                         <h3 class="font-bold text-xl text-gray-900 mb-3">Mande o /start</h3>
-                        <p class="text-gray-600">Clique em <b>"Começar"</b> (ou digite /start) no chat para a Clarinha iniciar o atendimento!</p>
+                        <p class="text-gray-600">Clique em <b>"Começar"</b> (ou digite /start) no chat para a Clarinha iniciar o atendimento com você!</p>
                     </div>
                 </div>
             </div>
@@ -676,18 +685,25 @@
             revealObserver.observe(card);
         });
 
-        // ================= LOGICA DO MVP V2 =================
+        // ================= LOGICA DE API AUTOMÁTICA =================
         
-        // A API Key deve ficar vazia para que o ambiente de teste a forneça automaticamente
-        const apiKey = ""; 
-        const model = "gemini-2.5-flash-preview-09-2025";
+        let apiKey = ""; // Mantém-se vazia para o Canvas (ambiente de testes) a fornecer
+        let model = "gemini-2.5-flash-preview-09-2025";
+        
+        // Magia: Se o código detetar que NÃO está a rodar no ambiente de testes do Google (Canvas),
+        // ele assume a sua chave oficial e usa o modelo compatível mais estável!
+        if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('google') && !window.location.hostname.includes('usercontent')) {
+            apiKey = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc";
+            model = "gemini-1.5-flash"; // Este modelo oficial nunca dá erro com chaves públicas.
+        }
+
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         
         // --- TELEGRAM BOT CONFIG ---
         const TELEGRAM_TOKEN = '8720113757:AAG4h0Qs3-4AMl24Nv-faI0ZETn4meAU6jY';
         let tgOffset = 0;
         const tgSessions = {}; // Armazena histórico do Telegram
-        let tgPollingActive = true;
+        let tgPollingActive = false; // AGORA COMEÇA DESLIGADO POR DEFEITO!
 
         // --- VARIÁVEIS DOM ---
         const chatArea = document.getElementById('chat-area');
@@ -697,6 +713,8 @@
         const statusText = document.getElementById('status-text');
         const fileUpload = document.getElementById('file-upload');
         const clipBtn = document.getElementById('clip-btn');
+        const tgBtn = document.getElementById('toggle-tg-btn');
+        const tgStatusTxt = document.getElementById('tg-status-text');
         
         let isTyping = false;
         let webChatHistory = []; 
@@ -722,8 +740,6 @@
         `;
 
         function formatHistoryForGemini(history) {
-            // O Gemini bloqueia a API (Erro 400) se o usuário mandar duas mensagens seguidas sem a IA responder. 
-            // Esta função agrupa mensagens consecutivas da mesma pessoa para evitar os "Tilts" no servidor.
             const formatted = [];
             for (const msg of history) {
                 if (formatted.length === 0) {
@@ -793,7 +809,6 @@
             });
         }
 
-        // Requisições com Exponential Backoff
         async function fetchWithRetry(url, options, retries = 5) {
             const delays = [1000, 2000, 4000, 8000, 16000];
             for (let i = 0; i < retries; i++) {
@@ -855,7 +870,6 @@
                 console.error("Erro na API Web:", error);
                 setTypingStatus(false);
                 addMessageToUI(`🚧 **Erro no Servidor:** Tivemos um pequeno tilt de conexão. Pode tentar de novo?`, false);
-                // O formatHistoryForGemini agora nos protege naturalmente contra falhas de duplo-envio.
             }
         }
 
@@ -928,7 +942,6 @@
                 "Para começarmos de forma personalizada, como você prefere que eu te chame?"
             ];
             
-            // Injeta o contexto inicial na IA
             webChatHistory.push({ role: "user", parts: [{ text: "Oi" }] });
             webChatHistory.push({ role: "model", parts: [{ text: initialMessages.join("\n\n") }] });
 
@@ -938,7 +951,6 @@
                     addMessageToUI(msg, false);
                     if (index === initialMessages.length - 1) {
                         setTypingStatus(false);
-                        startTelegramBotEngine(); 
                     }
                 }, delay);
                 delay += 2000;
@@ -949,33 +961,29 @@
             setTimeout(startOnboarding, 800);
         };
 
-        // ================= MOTOR DO TELEGRAM BOT =================
+        // ================= MOTOR DO TELEGRAM BOT (Manual Toggle) =================
         const processedUpdates = new Set();
-        tgOffset = parseInt(localStorage.getItem('tgOffset') || '0');
-
-        async function startTelegramBotEngine() {
-            console.log("🚀 Motor do Telegram Bot Iniciado no Navegador! Escutando mensagens...");
-            pollTelegram();
+        
+        function toggleTelegramBot() {
+            tgPollingActive = !tgPollingActive;
+            if (tgPollingActive) {
+                tgBtn.innerHTML = `<i class="fa-solid fa-tower-broadcast mr-2"></i> Bot LIGADO (Ativo nesta aba)`;
+                tgBtn.classList.remove('bg-[#179cde]', 'hover:bg-blue-600');
+                tgBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                tgStatusTxt.innerHTML = `Status: <span class="text-green-500 font-bold">LIGADO E ESCUTANDO</span>`;
+                console.log("🚀 Motor do Telegram Iniciado!");
+                pollTelegram();
+            } else {
+                tgBtn.innerHTML = `<i class="fa-solid fa-power-off mr-2"></i> Ativar Bot no Telegram`;
+                tgBtn.classList.add('bg-[#179cde]', 'hover:bg-blue-600');
+                tgBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                tgStatusTxt.innerHTML = `Status: <span class="text-red-500 font-bold">DESLIGADO</span>`;
+                console.log("🛑 Motor do Telegram Desligado.");
+            }
         }
 
         async function pollTelegram() {
             if (!tgPollingActive) return;
-            
-            // Previne conflito se houver múltiplas abas abertas gerando "tilts" e requisições duplicadas
-            const lockTime = localStorage.getItem('tg_poll_lock');
-            const lockTabId = localStorage.getItem('tg_poll_tab_id');
-            const myTabId = sessionStorage.getItem('tg_tab_id') || Math.random().toString(36).substring(2, 11);
-            sessionStorage.setItem('tg_tab_id', myTabId);
-
-            // Se houver outra aba ativa pesquisando nos últimos 25s, essa aba dorme.
-            if (lockTime && lockTabId !== myTabId && Date.now() - parseInt(lockTime) < 25000) {
-                setTimeout(pollTelegram, 5000);
-                return;
-            }
-            
-            // Renova a "posse" do motor do bot para esta aba
-            localStorage.setItem('tg_poll_lock', Date.now().toString());
-            localStorage.setItem('tg_poll_tab_id', myTabId);
 
             try {
                 const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/getUpdates?offset=${tgOffset}&timeout=20`);
@@ -984,23 +992,20 @@
                     if (data.ok && data.result.length > 0) {
                         for (const update of data.result) {
                             tgOffset = Math.max(tgOffset, update.update_id + 1);
-                            localStorage.setItem('tgOffset', tgOffset.toString());
                             
                             if (processedUpdates.has(update.update_id)) continue;
                             processedUpdates.add(update.update_id);
 
                             if (update.message) {
-                                // Ignora mensagens com mais de 60 segundos de idade para evitar flood de "Tilts" 
-                                // caso o bot seja reiniciado e tente responder a todas as mensagens de testes passados de uma vez.
+                                // Ignora mensagens com mais de 60 segundos de idade
                                 const now = Math.floor(Date.now() / 1000);
                                 if (update.message.date < now - 60) {
-                                    console.log("⏳ Ignorando mensagem antiga do Telegram");
+                                    console.log("⏳ Mensagem ignorada por ser muito antiga.");
                                     continue;
                                 }
 
-                                console.log("📩 Nova mensagem no Telegram de:", update.message.chat.first_name);
+                                console.log("📩 Nova mensagem de:", update.message.chat.first_name);
                                 if (update.message.text) {
-                                    // AWAIT é fundamental aqui para processar mensagens sequencialmente e evitar race-conditions com os push e pops
                                     await handleTelegramMessage(update.message.chat.id, update.message.text);
                                 }
                                 else if (update.message.document || update.message.photo) {
@@ -1011,15 +1016,15 @@
                     }
                 }
             } catch (e) {
-                // Timeout ou erro de rede normal do long polling
+                // Erro de rede ou timeout normal
             }
-            setTimeout(pollTelegram, 1500);
+            // Chama de novo só se continuar ativo
+            if(tgPollingActive) setTimeout(pollTelegram, 1500);
         }
 
         async function handleTelegramMessage(chatId, text) {
             if (text === '/start') {
                 const greeting = "Olá! 🦉 Eu sou a Clarinha, a assistente jurídica da Clareia.\n\nPara começarmos de forma personalizada, como você prefere que eu te chame?";
-                // Contexto sintético garante que a IA saiba o que perguntou por último.
                 tgSessions[chatId] = [
                     { role: "user", parts: [{ text: "Oi" }] },
                     { role: "model", parts: [{ text: greeting }] }
@@ -1053,7 +1058,7 @@
                 if (replyText.includes('|||')) {
                     const parts = replyText.split('|||');
                     const waitMsg = parts[0].trim();
-                    const resultMsg = parts.slice(1).join('|||').trim(); // Une o restante caso existam outros |||
+                    const resultMsg = parts.slice(1).join('|||').trim(); 
                     
                     if (waitMsg) await sendTelegramMessage(chatId, waitMsg);
                     fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendChatAction?chat_id=${chatId}&action=typing`).catch(()=>{});
@@ -1078,7 +1083,7 @@
                     body: JSON.stringify({ chat_id: chatId, text: text })
                 });
             } catch (e) {
-                // Silently drop - rede caiu
+                // Drop silenciado
             }
         }
 
