@@ -946,22 +946,39 @@
 
         async function pollTelegram() {
             if (!tgPollingActive) return;
+            
+            // Previne conflito se houver múltiplas abas abertas gerando "tilts" e requisições duplicadas
+            const lockTime = localStorage.getItem('tg_poll_lock');
+            const lockTabId = localStorage.getItem('tg_poll_tab_id');
+            const myTabId = sessionStorage.getItem('tg_tab_id') || Math.random().toString(36).substring(2, 11);
+            sessionStorage.setItem('tg_tab_id', myTabId);
+
+            // Se houver outra aba ativa pesquisando nos últimos 25s, essa aba dorme.
+            if (lockTime && lockTabId !== myTabId && Date.now() - parseInt(lockTime) < 25000) {
+                setTimeout(pollTelegram, 5000);
+                return;
+            }
+            
+            // Renova a "posse" do motor do bot para esta aba
+            localStorage.setItem('tg_poll_lock', Date.now().toString());
+            localStorage.setItem('tg_poll_tab_id', myTabId);
+
             try {
-                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/getUpdates?offset=${tgOffset}&timeout=30`);
-                const data = await res.json();
-                
-                if (data.ok && data.result.length > 0) {
-                    for (const update of data.result) {
-                        tgOffset = update.update_id + 1;
-                        
-                        if (update.message) {
-                            console.log("📩 Nova mensagem no Telegram de:", update.message.chat.first_name);
-                            if (update.message.text) {
-                                // AWAIT é fundamental aqui para processar mensagens sequencialmente e evitar race-conditions com os push e pops
-                                await handleTelegramMessage(update.message.chat.id, update.message.text);
-                            }
-                            else if (update.message.document || update.message.photo) {
-                                await sendTelegramMessage(update.message.chat.id, "🦉 Recebi seu arquivo! Como estou rodando em modo protótipo no navegador do desenvolvedor agora mesmo, não consigo baixar o arquivo por aqui. Mas na versão web lá da página funciona super bem!");
+                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/getUpdates?offset=${tgOffset}&timeout=20`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.ok && data.result.length > 0) {
+                        for (const update of data.result) {
+                            tgOffset = update.update_id + 1;
+                            if (update.message) {
+                                console.log("📩 Nova mensagem no Telegram de:", update.message.chat.first_name);
+                                if (update.message.text) {
+                                    // AWAIT é fundamental aqui para processar mensagens sequencialmente e evitar race-conditions com os push e pops
+                                    await handleTelegramMessage(update.message.chat.id, update.message.text);
+                                }
+                                else if (update.message.document || update.message.photo) {
+                                    await sendTelegramMessage(update.message.chat.id, "🦉 Recebi seu arquivo! Como estou rodando em modo protótipo no navegador, ainda não consigo ler PDFs por aqui. Mas na versão web funciona super bem!");
+                                }
                             }
                         }
                     }
@@ -969,7 +986,7 @@
             } catch (e) {
                 // Timeout ou erro de rede normal do long polling
             }
-            setTimeout(pollTelegram, 2000);
+            setTimeout(pollTelegram, 1500);
         }
 
         async function handleTelegramMessage(chatId, text) {
@@ -1008,16 +1025,20 @@
                 
                 if (replyText.includes('|||')) {
                     const parts = replyText.split('|||');
-                    await sendTelegramMessage(chatId, parts[0].trim());
+                    const waitMsg = parts[0].trim();
+                    const resultMsg = parts.slice(1).join('|||').trim(); // Une o restante caso existam outros |||
+                    
+                    if (waitMsg) await sendTelegramMessage(chatId, waitMsg);
                     fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendChatAction?chat_id=${chatId}&action=typing`).catch(()=>{});
                     setTimeout(() => {
-                        sendTelegramMessage(chatId, parts[1].trim());
+                        if (resultMsg) sendTelegramMessage(chatId, resultMsg);
                     }, 3500);
                 } else {
                     await sendTelegramMessage(chatId, replyText);
                 }
                 
             } catch(e) {
+                console.error("❌ Erro no Telegram Handle:", e);
                 await sendTelegramMessage(chatId, "Desculpe, meu cérebro deu um pequeno tilt na conexão. Pode repetir o que disse? 🦉");
                 tgSessions[chatId].pop(); // Remove a msg problemática do cache para o histórico não crescer bugado
             }
