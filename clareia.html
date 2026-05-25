@@ -350,8 +350,8 @@
                     <div class="phone-container">
                         <div class="bg-[#179cde] text-white px-3 py-2.5 flex items-center shadow-md z-10">
                             <i class="fa-solid fa-arrow-left mr-4 text-lg cursor-pointer"></i>
-                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden mr-3">
-                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clareia Profile" class="w-full h-full object-cover">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden mr-3 shadow-sm border border-gray-100">
+                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clareia Profile" class="w-[85%] h-[85%] object-contain">
                             </div>
                             <div class="flex-1 cursor-pointer">
                                 <h1 class="font-semibold text-[16px] leading-tight">Clarinha | Jurídico</h1>
@@ -702,34 +702,44 @@
         let webChatHistory = []; 
 
         const systemInstruction = `
-            Você é a Clarinha, uma corujinha fofa e assistente jurídica da Clareia, projetada para simular um atendimento via Telegram. 
+            Você é a Clarinha, assistente jurídica da Clareia, em um chat do Telegram.
             Sua missão é democratizar o acesso à informação processual, traduzindo o "juridiquês" para cidadãos comuns.
 
-            DIRETRIZES GERAIS:
-            - Seja sempre acolhedora, empática e clara. Use emojis como 🦉.
-            - Respostas curtas e diretas (estilo Telegram/WhatsApp).
+            REGRAS DE OURO (MANDATÓRIAS):
+            1. NUNCA faça mais de uma pergunta na mesma mensagem.
+            2. NUNCA pule etapas. Avance apenas UM passo por vez e aguarde a resposta do usuário.
+            3. Seja sempre acolhedora e use emojis (ex: 🦉, ⚖️).
 
-            FLUXO DE ATENDIMENTO OBRIGATÓRIO:
-            1. O usuário já recebeu a saudação inicial e informou o nome dele.
-            2. Agradeça e pergunte a DATA DE NASCIMENTO (ex: DD/MM/AAAA). NÃO pergunte a idade diretamente.
-            3. Ao receber a data de nascimento, calcule MENTALMENTE a idade atual e ADAPTE SEU TOM DE VOZ permanentemente para o resto da conversa:
-               - De 18 a 30 anos: Linguagem jovial, super descontraída, moderna, gírias leves (ex: "Top!", "Maneiro", "Fica de boa").
-               - De 30 a 55 anos: Linguagem intermediária, amigável, respeitosa, acolhedora, mas dinâmica.
-               - Acima de 55 anos: Linguagem formal e muito respeitosa (trate SEMPRE por Senhor/Senhora), ritmo paciente.
-            4. Independentemente da idade, a explicação do "JURIDIQUÊS" DEVE SER SEMPRE SIMPLES e FÁCIL.
-            5. Após adaptar o tom, peça o número do processo OU peça para enviar uma foto/PDF do andamento processual.
-            6. Se o usuário digitar um texto (número), use EXATAMENTE o separador "|||" no meio da resposta. Ex: "Vou consultar... ⏳ ||| 🔍 Achei! O status é..."
-            7. Se o usuário ENVIAR UM ARQUIVO (Imagem/PDF), não use o "|||". Apenas leia o anexo e explique detalhadamente o que aquele documento significa.
+            FLUXO RIGOROSO (siga a ordem, um passo por vez):
+            ETAPA 1: O usuário já informou o nome no início. Agradeça e pergunte APENAS a data de nascimento (ex: DD/MM/AAAA). NÃO pergunte mais nada, nem tente avançar antes dele responder a data.
+            ETAPA 2: Quando o usuário informar a data, adapte seu tom de voz de acordo com a idade (Jovem=descontraído, Adulto=amigável, Idoso=formal/paciente). Na MESMA mensagem, pergunte o número do processo OU peça para enviar uma foto/PDF. NÃO explique nada ainda.
+            ETAPA 3: 
+            - Se ele enviar um NÚMERO DE PROCESSO, OBRIGATORIAMENTE use o separador "|||" no meio da sua resposta, dessa exata forma: "Vou consultar no sistema... ⏳ ||| 🔍 Achei! O status é [Explicação Simples]".
+            - Se ele enviar um ARQUIVO (imagem ou pdf), APENAS leia o anexo e explique detalhadamente, de forma simples e acolhedora. NÃO use o "|||".
 
-            DICIONÁRIO DE EMOÇÕES (REGRA DE OURO):
-            Sempre dê previsibilidade para acalmar o usuário. Não traduza só o termo. Diga se ele precisa se preocupar, o tempo médio daquela etapa, ou se ele deve ficar tranquilo pois está tudo certo.
-
-            INDICAÇÃO DE ADVOGADOS (PARCERIAS):
-            Se a atualização indicar ação urgente (recurso, audiência, apresentar defesa) ou se o usuário perguntar "o que fazer agora":
-            - Passo 1: Pergunte de forma empática: "Você já tem um advogado te acompanhando?"
-            - Passo 2: Se NÃO, diga que a Clareia tem parceiros e pergunte a Cidade/Estado dele.
-            - Passo 3: Quando ele informar a cidade, crie um advogado fictício daquela região (Ex: "Dr. Carlos Mendes") e simule a entrega do contato.
+            DICIONÁRIO DE EMOÇÕES:
+            Sempre dê previsibilidade para acalmar o usuário. Diga se ele precisa se preocupar, o tempo médio ou se está tudo certo.
         `;
+
+        function formatHistoryForGemini(history) {
+            // O Gemini bloqueia a API (Erro 400) se o usuário mandar duas mensagens seguidas sem a IA responder. 
+            // Esta função agrupa mensagens consecutivas da mesma pessoa para evitar os "Tilts" no servidor.
+            const formatted = [];
+            for (const msg of history) {
+                if (formatted.length === 0) {
+                    formatted.push({ role: msg.role, parts: [...msg.parts] });
+                } else {
+                    const lastMsg = formatted[formatted.length - 1];
+                    if (lastMsg.role === msg.role) {
+                        lastMsg.parts.push({ text: "\n" });
+                        lastMsg.parts.push(...msg.parts);
+                    } else {
+                        formatted.push({ role: msg.role, parts: [...msg.parts] });
+                    }
+                }
+            }
+            return formatted;
+        }
 
         function getCurrentTime() {
             const now = new Date();
@@ -805,7 +815,7 @@
 
         async function callGeminiAPI() {
             const payload = { 
-                contents: webChatHistory,
+                contents: formatHistoryForGemini(webChatHistory),
                 systemInstruction: { parts: [{ text: systemInstruction }] }
             };
 
@@ -842,9 +852,10 @@
                 }
 
             } catch (error) {
+                console.error("Erro na API Web:", error);
                 setTypingStatus(false);
                 addMessageToUI(`🚧 **Erro no Servidor:** Tivemos um pequeno tilt de conexão. Pode tentar de novo?`, false);
-                webChatHistory.pop(); // Remove a última mensagem para permitir o reenvio
+                // O formatHistoryForGemini agora nos protege naturalmente contra falhas de duplo-envio.
             }
         }
 
@@ -939,6 +950,9 @@
         };
 
         // ================= MOTOR DO TELEGRAM BOT =================
+        const processedUpdates = new Set();
+        tgOffset = parseInt(localStorage.getItem('tgOffset') || '0');
+
         async function startTelegramBotEngine() {
             console.log("🚀 Motor do Telegram Bot Iniciado no Navegador! Escutando mensagens...");
             pollTelegram();
@@ -969,7 +983,12 @@
                     const data = await res.json();
                     if (data.ok && data.result.length > 0) {
                         for (const update of data.result) {
-                            tgOffset = update.update_id + 1;
+                            tgOffset = Math.max(tgOffset, update.update_id + 1);
+                            localStorage.setItem('tgOffset', tgOffset.toString());
+                            
+                            if (processedUpdates.has(update.update_id)) continue;
+                            processedUpdates.add(update.update_id);
+
                             if (update.message) {
                                 console.log("📩 Nova mensagem no Telegram de:", update.message.chat.first_name);
                                 if (update.message.text) {
@@ -1008,7 +1027,7 @@
             
             try {
                 const payload = { 
-                    contents: tgSessions[chatId],
+                    contents: formatHistoryForGemini(tgSessions[chatId]),
                     systemInstruction: { parts: [{ text: systemInstruction }] }
                 };
                 
@@ -1039,8 +1058,7 @@
                 
             } catch(e) {
                 console.error("❌ Erro no Telegram Handle:", e);
-                await sendTelegramMessage(chatId, "Desculpe, meu cérebro deu um pequeno tilt na conexão. Pode repetir o que disse? 🦉");
-                tgSessions[chatId].pop(); // Remove a msg problemática do cache para o histórico não crescer bugado
+                await sendTelegramMessage(chatId, "Desculpe, meu cérebro deu um pequeno tilt na conexão. Pode tentar falar de novo? 🦉");
             }
         }
 
