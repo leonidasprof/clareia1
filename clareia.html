@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clareia Jurídico</title>
+    <title>Clareia Jurídico - Versão 2.0</title>
     <link rel="icon" href="https://clareia1.vercel.app/logo_clareia_icone.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,16 +24,17 @@
             --border-blue: #bae6fd;
             --text-main: #1e293b;
             --text-body: #475569;
-            --wa-bg: #efeae2;
-            --wa-bubble-sent: #e2f7cb;
-            --wa-meta: #667781;
             --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             --brand-gradient: linear-gradient(100deg, #1ca0da 0%, #177bc9 100%);
             
-            /* Vars do MVP WhatsApp */
-            --wa-teal: #4a81d4;
-            --wa-bubble-received: #ffffff;
-            --wa-text: #111b21;
+            /* Vars do MVP Telegram */
+            --tg-blue: #179cde;
+            --tg-bg: #e4ede7;
+            --tg-bubble-sent: #effdde;
+            --tg-bubble-received: #ffffff;
+            --tg-text: #000000;
+            --tg-meta: #68737a;
+            --tg-meta-sent: #4fa441;
         }
 
         body { 
@@ -50,7 +51,7 @@
             z-index: 100; 
         }
 
-        /* --- EFEITO ELEGANTE DA IMAGEM HERO (Novo) --- */
+        /* --- EFEITO ELEGANTE DA IMAGEM HERO --- */
         @keyframes elegantFloat {
             0%, 100% { transform: translateY(0px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
             50% { transform: translateY(-20px); box-shadow: 0 30px 40px rgba(10, 59, 140, 0.2); }
@@ -100,7 +101,7 @@
         }
         .term:hover { color: var(--brand-blue); background: rgba(14, 165, 233, 0.1); border-color: var(--brand-cyan); transform: translateY(-2px); }
 
-        /* --- DESTAQUE DA FRASE PROBLEMA (Novo Efeito) --- */
+        /* --- DESTAQUE DA FRASE PROBLEMA --- */
         .phrase-glow {
             background: linear-gradient(90deg, #4bb5db, #ffffff, #4bb5db);
             background-size: 200% auto;
@@ -113,20 +114,87 @@
             to { background-position: 200% center; }
         }
 
+        /* --- MVP TELEGRAM / PROTÓTIPO --- */
+        .phone-container {
+            width: 100%; max-width: 380px; height: 750px; background-color: var(--tg-bg);
+            border: 12px solid #1f2937; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative; overflow: hidden; display: flex; flex-direction: column; margin: 0 auto;
+        }
+        .chat-bg {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.4;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239ba89f' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0; pointer-events: none;
+        }
+        .chat-area {
+            flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; z-index: 1; scroll-behavior: smooth;
+        }
+        .chat-area::-webkit-scrollbar { width: 4px; }
+        .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+        
+        .bubble {
+            max-width: 85%; padding: 8px 12px; border-radius: 12px; position: relative;
+            font-size: 15px; line-height: 1.4; color: var(--tg-text); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            display: inline-block; word-wrap: break-word;
+        }
+        .bubble-received { background-color: var(--tg-bubble-received); align-self: flex-start; border-bottom-left-radius: 2px; }
+        .bubble-sent { background-color: var(--tg-bubble-sent); align-self: flex-end; border-bottom-right-radius: 2px; }
+        
+        .meta-text { font-size: 11px; float: right; margin-top: 6px; margin-left: 10px; display: flex; align-items: center; gap: 4px; }
+        .bubble-received .meta-text { color: var(--tg-meta); }
+        .bubble-sent .meta-text { color: var(--tg-meta-sent); }
+        .blue-tick { color: #3b91d2; }
+        
+        .system-badge {
+            background-color: rgba(0, 0, 0, 0.2); color: #ffffff; font-size: 12px; font-weight: 500; text-align: center;
+            padding: 4px 12px; border-radius: 12px; align-self: center; margin: 4px 0; z-index: 1; backdrop-filter: blur(2px);
+        }
+        .typing-active { display: block; font-style: italic; opacity: 0.8; }
+
+        .attachment-preview {
+            display: flex; align-items: center; background: rgba(0,0,0,0.05); border-radius: 8px; padding: 8px; margin-bottom: 8px; gap: 10px;
+        }
+        .attachment-preview i { font-size: 24px; color: var(--tg-blue); }
+        .attachment-preview img { max-width: 100px; max-height: 100px; border-radius: 4px; }
+        .attachment-name { font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- ESTILOS DOS CARDS DA AVALIAÇÃO E ANIMAÇÕES --- */
+        .step-card {
+            background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px 24px 24px;
+            position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;
+        }
+        .step-card:hover { transform: translateY(-5px); }
+        .step-number {
+            position: absolute; top: -20px; left: 24px; width: 40px; height: 40px; background: white;
+            border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; color: var(--tg-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        @keyframes bounce-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+        @keyframes bounce-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- EFEITOS ESPECIAIS (BOTÃO E ESSÊNCIA) --- */
+        .btn-glow {
+            background: linear-gradient(135deg, var(--brand-cyan), var(--brand-blue)); background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite; position: relative; overflow: hidden; z-index: 1; border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-glow::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-25deg); transition: all 0.7s ease; z-index: -1;
+        }
+        .btn-glow:hover::before { left: 200%; }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
         /* --- FAQ REFINADO --- */
         .faq-icon-wrapper { position: relative; display: inline-flex; }
         .coruja-pousada {
-            position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
-            height: 44px; z-index: 20; pointer-events: none;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-            animation: flutuarFaq 4s ease-in-out infinite;
+            position: absolute; top: -35px; left: 50%; transform: translateX(-50%); height: 44px; z-index: 20; pointer-events: none;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); animation: flutuarFaq 4s ease-in-out infinite;
         }
         @keyframes flutuarFaq { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -4px); } }
-
-        details.faq-item {
-            border: 1px solid var(--brand-blue); border-radius: 14px;
-            background-color: var(--brand-blue); transition: 0.3s; cursor: pointer; overflow: hidden;
-        }
+        details.faq-item { border: 1px solid var(--brand-blue); border-radius: 14px; background-color: var(--brand-blue); transition: 0.3s; cursor: pointer; overflow: hidden; }
         details.faq-item:hover { transform: translateX(4px); filter: brightness(1.05); }
         details.faq-item summary { list-style: none; padding: 20px 24px; font-size: 16px; font-weight: 500; color: #ffffff; display: flex; justify-content: space-between; align-items: center; outline: none; }
         .status-icon-faq { width: 14px; height: 14px; position: relative; transition: 0.3s; flex-shrink: 0; }
@@ -136,7 +204,26 @@
         details[open] .status-icon-faq { transform: rotate(45deg); }
         .answer-body { padding: 22px 26px; font-size: 15px; color: var(--text-body); background-color: #ffffff; border-top: 1px solid var(--border-blue); }
 
-        /* --- TIME SECTION --- */
+        /* --- CULTURA E TIME --- */
+        .culture-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .culture-card { border-radius: 14px; background: var(--brand-gradient); transition: var(--transition); cursor: pointer; list-style: none; border: none; }
+        .culture-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(23, 123, 201, 0.3); filter: brightness(1.05); }
+        .coruja-cultura { position: absolute; top: -46px; right: 30px; height: 60px; z-index: 10; pointer-events: none; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)); animation: pouso 0.6s ease-out, flutuarCultura 4s ease-in-out infinite 0.6s; }
+        @keyframes pouso { 0% { transform: translateY(-15px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        @keyframes flutuarCultura { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+        .culture-card summary { position: relative; list-style: none; padding: 22px 24px; display: flex; align-items: center; outline: none; color: #ffffff; font-weight: 700; font-size: 16px; user-select: none; border-radius: 14px; }
+        .culture-card summary::-webkit-details-marker { display: none; }
+        .icon-wrapper-cultura { width: 32px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin-right: 8px; }
+        .card-icon-white { width: 22px; height: 22px; fill: #ffffff; }
+        .culture-content { padding: 35px 40px; font-size: 16px; color: var(--text-body); background-color: #ffffff; line-height: 1.8; text-align: center; border-top: 2px solid rgba(255, 255, 255, 0.2); animation: fadeInCard 0.4s ease; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: inset 0 4px 6px -4px rgba(0,0,0,0.05); }
+        .culture-card[open] { grid-column: span 2; border: 2px solid var(--brand-blue); }
+        .culture-content .highlight { color: #177bc9; font-weight: 700; }
+        .values-list { display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 550px; margin: 0 auto; }
+        .value-item b { color: #177bc9; display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
+        @keyframes fadeInCard { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .culture-grid { grid-template-columns: 1fr; } .culture-card[open] { grid-column: span 1; } }
+
+        /* TIME SECTION */
         @keyframes floatMember { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
         .avatar-container { position: relative; width: 220px; height: 220px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
         .blob-bg { position: absolute; width: 125%; height: 125%; z-index: -1; fill: var(--blob-color); filter: blur(4px); opacity: 0.12; transition: var(--transition); }
@@ -149,12 +236,7 @@
 
         /* --- ENTREGÁVEIS --- */
         .icon-svg { width: 45px; height: 45px; flex-shrink: 0; }
-        .menu-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px 22px; background-color: #ffffff; border: 1px solid var(--border-blue);
-            border-radius: 12px; text-decoration: none; color: var(--brand-blue);
-            font-size: 16px; font-weight: 500; transition: var(--transition);
-        }
+        .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; background-color: #ffffff; border: 1px solid var(--border-blue); border-radius: 12px; text-decoration: none; color: var(--brand-blue); font-size: 16px; font-weight: 500; transition: var(--transition); }
         .menu-item:hover { background-color: var(--light-blue); border-color: var(--brand-cyan); transform: translateX(5px); box-shadow: 4px 4px 10px rgba(14, 165, 233, 0.1); }
         .menu-item::after { content: '↗'; font-size: 18px; color: var(--brand-cyan); opacity: 0.5; }
         .menu-item.highlight { background-color: #e0f2fe; border-color: var(--brand-cyan); }
@@ -178,185 +260,24 @@
         .tool-badge { background: #e0f2fe; color: var(--brand-blue); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; border: 1px solid var(--border-blue); letter-spacing: 0.5px; }
         .tool-desc { font-size: 13px; color: var(--text-body); margin: 0; line-height: 1.4; }
         .tech-note { font-size: 13px; color: #64748b; text-align: center; margin-top: 20px; font-style: italic; }
-        
         @media (max-width: 768px) { .tools-grid { grid-template-columns: 1fr; } }
         @media (max-width: 650px) { .tech-category { padding: 16px; } .tool-card { padding: 12px; } }
 
-        /* --- MVP WHATSAPP / PROTÓTIPO --- */
-        .phone-container {
-            width: 100%; max-width: 380px; height: 750px; background-color: var(--wa-bg);
-            border: 12px solid #1f2937; border-radius: 35px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            position: relative; overflow: hidden; display: flex; flex-direction: column; margin: 0 auto;
-        }
-        .chat-bg {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.06;
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
-            background-size: 300px; z-index: 0; pointer-events: none;
-        }
-        .chat-area {
-            flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 1; scroll-behavior: smooth;
-        }
-        .chat-area::-webkit-scrollbar { display: none; }
-        .chat-area { -ms-overflow-style: none; scrollbar-width: none; }
-        .bubble {
-            max-width: 85%; padding: 6px 8px 8px 10px; border-radius: 8px; position: relative;
-            font-size: 14.5px; line-height: 19px; color: var(--wa-text); box-shadow: 0 1px 0.5px rgba(11,20,26,.13);
-            display: inline-block; word-wrap: break-word;
-        }
-        .bubble-received { background-color: var(--wa-bubble-received); align-self: flex-start; border-top-left-radius: 0; }
-        .bubble-received::before { content: ""; position: absolute; top: 0; left: -8px; border-top: 10px solid var(--wa-bubble-received); border-left: 10px solid transparent; }
-        .bubble-sent { background-color: var(--wa-bubble-sent); align-self: flex-end; border-top-right-radius: 0; }
-        .bubble-sent::before { content: ""; position: absolute; top: 0; right: -8px; border-top: 10px solid var(--wa-bubble-sent); border-right: 10px solid transparent; }
-        .meta-text { font-size: 11px; color: var(--wa-meta); float: right; margin-top: 4px; margin-left: 10px; display: flex; align-items: center; gap: 4px; }
-        .blue-tick { color: #53bdeb; }
-        .system-badge {
-            background-color: rgba(225, 245, 254, 0.9); color: #455a64; font-size: 12px; text-align: center;
-            padding: 6px 12px; border-radius: 8px; align-self: center; margin: 10px 0; max-width: 90%; z-index: 1;
-        }
-        .typing-active { display: block; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
-        /* --- ESTILOS DOS CARDS DA AVALIAÇÃO --- */
-        .step-card {
-            background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px 24px 24px;
-            position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;
-        }
-        .step-card:hover { transform: translateY(-5px); }
-        .step-number {
-            position: absolute; top: -20px; left: 24px; width: 40px; height: 40px; background: white;
-            border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; color: var(--clareia-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        @keyframes bounce-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
-        @keyframes bounce-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
-
-        .reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        /* --- EFEITOS ESPECIAIS (BOTÃO E ESSÊNCIA) --- */
-        .btn-glow {
-            background: linear-gradient(135deg, var(--brand-cyan), var(--brand-blue));
-            background-size: 200% 200%;
-            animation: gradientShift 3s ease infinite;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .btn-glow::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-25deg);
-            transition: all 0.7s ease;
-            z-index: -1;
-        }
-        .btn-glow:hover::before {
-            left: 200%;
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* --- CULTURA / ESSÊNCIA --- */
-        .culture-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        .culture-card { border-radius: 14px; background: var(--brand-gradient); transition: var(--transition); cursor: pointer; list-style: none; border: none; }
-        .culture-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(23, 123, 201, 0.3); filter: brightness(1.05); }
-        .coruja-cultura { position: absolute; top: -46px; right: 30px; height: 60px; z-index: 10; pointer-events: none; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)); animation: pouso 0.6s ease-out, flutuarCultura 4s ease-in-out infinite 0.6s; }
-        @keyframes pouso { 0% { transform: translateY(-15px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
-        @keyframes flutuarCultura { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
-        .culture-card summary { position: relative; list-style: none; padding: 22px 24px; display: flex; align-items: center; outline: none; color: #ffffff; font-weight: 700; font-size: 16px; user-select: none; border-radius: 14px; }
-        .culture-card summary::-webkit-details-marker { display: none; }
-        .icon-wrapper-cultura { width: 32px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; margin-right: 8px; }
-        .card-icon-white { width: 22px; height: 22px; fill: #ffffff; }
-        .culture-content { padding: 35px 40px; font-size: 16px; color: var(--text-body); background-color: #ffffff; line-height: 1.8; text-align: center; border-top: 2px solid rgba(255, 255, 255, 0.2); animation: fadeInCard 0.4s ease; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; box-shadow: inset 0 4px 6px -4px rgba(0,0,0,0.05); }
-        .culture-card[open] { grid-column: span 2; border: 2px solid var(--brand-blue); }
-        .culture-content .highlight { color: #177bc9; font-weight: 700; }
-        .values-list { display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 550px; margin: 0 auto; }
-        .value-item b { color: #177bc9; display: block; font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 2px; }
-        @keyframes fadeInCard { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .culture-grid { grid-template-columns: 1fr; } .culture-card[open] { grid-column: span 1; } }
-
-        /* --- BOTÃO WHATSAPP FLUTUANTE (Novo) --- */
-        .wa-fixed-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .wa-balloon {
-            background: white;
-            color: var(--text-main);
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            position: relative;
-            opacity: 0;
-            transform: translateX(20px);
-            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Efeito bounce natural */
-            pointer-events: none;
-            border: 1px solid #e5e7eb;
-        }
-        .wa-balloon::after {
-            content: '';
-            position: absolute;
-            right: -7px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 7px 0 7px 7px;
-            border-style: solid;
-            border-color: transparent transparent transparent white;
-        }
-        .wa-fixed-container:hover .wa-balloon {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        .wa-btn {
-            width: 65px;
-            height: 65px;
-            background: #25D366;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 34px;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4);
-            position: relative;
-            animation: waPulse 2s infinite;
-            transition: transform 0.3s;
-        }
-        .wa-btn:hover {
-            transform: scale(1.1);
-        }
-        @keyframes waPulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.8); }
-            70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
-        
-        @media (max-width: 768px) {
-            .wa-balloon { display: none; /* Esconde balão em mobile para não quebrar a tela */ }
-            .wa-btn { width: 55px; height: 55px; font-size: 28px; }
-            .wa-fixed-container { bottom: 20px; right: 20px; }
-        }
+        /* --- BOTÃO WHATSAPP FLUTUANTE --- */
+        .wa-fixed-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; align-items: center; gap: 15px; }
+        .wa-balloon { background: white; color: var(--text-main); padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.15); position: relative; opacity: 0; transform: translateX(20px); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: none; border: 1px solid #e5e7eb; }
+        .wa-balloon::after { content: ''; position: absolute; right: -7px; top: 50%; transform: translateY(-50%); border-width: 7px 0 7px 7px; border-style: solid; border-color: transparent transparent transparent white; }
+        .wa-fixed-container:hover .wa-balloon { opacity: 1; transform: translateX(0); }
+        .wa-btn { width: 65px; height: 65px; background: #25D366; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 34px; text-decoration: none; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4); position: relative; animation: waPulse 2s infinite; transition: transform 0.3s; }
+        .wa-btn:hover { transform: scale(1.1); }
+        @keyframes waPulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.8); } 70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+        @media (max-width: 768px) { .wa-balloon { display: none; } .wa-btn { width: 55px; height: 55px; font-size: 28px; } .wa-fixed-container { bottom: 20px; right: 20px; } }
     </style>
 </head>
 <body id="topo">
 
     <nav class="glass-nav fixed top-0 w-full py-4">
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <!-- Logo agora clica para o topo -->
             <a href="#topo" class="flex items-center gap-3 cursor-pointer group">
                 <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Logo" class="w-8 h-8 group-hover:scale-110 transition-transform duration-300">
                 <span class="text-xl font-bold tracking-tight text-[#0a3b8c] group-hover:text-blue-600 transition-colors duration-300">Clareia</span>
@@ -364,7 +285,7 @@
             <div class="hidden lg:flex gap-8 text-sm font-bold text-gray-500">
                 <a href="#o-que-resolve" class="hover:text-blue-600 transition-colors">Problema</a>
                 <a href="#solucoes" class="hover:text-blue-600 transition-colors">Solução</a>
-                <a href="#mvp-v1" class="hover:text-blue-600 transition-colors">Protótipo</a>
+                <a href="#mvp-v2" class="hover:text-blue-600 transition-colors">Protótipo v2</a>
                 <a href="#team-clareia" class="hover:text-blue-600 transition-colors">Time</a>
             </div>
             <a href="#entregaveis" class="bg-blue-600 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-blue-700 transition-all shadow-md">Acesse os Entregáveis</a>
@@ -380,7 +301,7 @@
                     O acesso às informações sobre processos judiciais ainda é burocrático, técnico e pouco transparente para o cidadão comum. Muitos usuários não compreendem o juridiquês, dependem integralmente do advogado para entender atualizações e encontram dificuldades para acompanhar seus processos com autonomia.
                 </p>
                 <div class="flex flex-col sm:flex-row items-center gap-8">
-                    <a href="#mvp-v1" class="btn-glow group inline-flex items-center gap-3 text-white px-10 py-5 rounded-2xl text-lg font-bold shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:shadow-[0_0_30px_rgba(14,165,233,0.7)] hover:-translate-y-1 transition-all duration-300">
+                    <a href="#mvp-v2" class="btn-glow group inline-flex items-center gap-3 text-white px-10 py-5 rounded-2xl text-lg font-bold shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:shadow-[0_0_30px_rgba(14,165,233,0.7)] hover:-translate-y-1 transition-all duration-300">
                         Valide nosso protótipo
                         <img src="https://clareia1.vercel.app/clareia_coruja.png" alt="Corujinha da Clareia" class="h-8 drop-shadow-md group-hover:-translate-y-1 group-hover:rotate-12 transition-transform duration-300">
                     </a>
@@ -388,7 +309,6 @@
                 </div>
             </div>
             <div class="reveal flex justify-center">
-                <!-- Efeito elegante aplicado na imagem abaixo -->
                 <img src="https://clareia1.vercel.app/imagem.png" alt="Desafio" class="hero-img-elegant max-w-full lg:max-w-lg">
             </div>
         </div>
@@ -405,7 +325,6 @@
                 <span class="term term-light" title="Pronto para o juiz decidir">"Concluso para Despacho"</span> 
                 geram insegurança e dependência total de terceiros.
             </p>
-            <!-- Efeito css (phrase-glow) aplicado para dar ênfase na frase -->
             <div class="text-2xl font-bold border-t border-white/20 pt-8 mt-8 phrase-glow">
                 A Clareia nasceu para quebrar essa barreira.
             </div>
@@ -421,8 +340,8 @@
                     <p class="text-lg text-gray-500 mb-10">Nossa plataforma utiliza Inteligência Artificial para monitorar tribunais e enviar mensagens automáticas para o seu celular:</p>
                     <div class="space-y-6">
                         <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="eye"></i></div><div><h4 class="font-bold text-lg text-blue-900">Monitoramento</h4><p class="text-sm text-gray-500">Identificamos qualquer movimentação no seu processo nos sistemas PJe, ESAJ e PROJUDI.</p></div></div>
-                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="languages"></i></div><div><h4 class="font-bold text-lg text-blue-900">Tradução</h4><p class="text-sm text-gray-500">Nossa IA interpreta o evento técnico e remove a complexidade do "juridiquês".</p></div></div>
-                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="message-circle"></i></div><div><h4 class="font-bold text-lg text-blue-900">Notificação</h4><p class="text-sm text-gray-500">Você recebe um resumo no WhatsApp explicando o que aconteceu e qual o próximo passo.</p></div></div>
+                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="languages"></i></div><div><h4 class="font-bold text-lg text-blue-900">Tradução Inteligente</h4><p class="text-sm text-gray-500">Nossa IA lê documentos, identifica sua idade para adaptar o tom e remove a complexidade do "juridiquês".</p></div></div>
+                        <div class="flex gap-4 p-5 bg-white rounded-2xl border border-gray-100 shadow-sm"><div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0"><i data-lucide="message-circle"></i></div><div><h4 class="font-bold text-lg text-blue-900">Notificação</h4><p class="text-sm text-gray-500">Você recebe um resumo direto no seu Telegram (ou WhatsApp) explicando o que aconteceu e qual o próximo passo.</p></div></div>
                     </div>
                 </div>
                 <div class="reveal flex justify-center"><img src="https://clareia1.vercel.app/mockup_clareia21.png" alt="Mockup Solução" class="max-w-full drop-shadow-2xl mix-blend-multiply"></div>
@@ -430,62 +349,59 @@
         </div>
     </section>
 
-    <!-- Nosso Protótipo / MVP -->
-    <div id="mvp-v1" class="bg-white border-t border-gray-100 relative">
+    <!-- Nosso Protótipo v2 / MVP -->
+    <div id="mvp-v2" class="bg-white border-t border-gray-100 relative">
         <section class="max-w-7xl mx-auto px-6 md:px-12 py-24">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
                 <!-- Esquerda: Copywriting e Passos -->
                 <div class="reveal">
-                    <span class="text-[#4a81d4] font-bold tracking-wider uppercase text-sm mb-3 block">Acesso Antecipado</span>
+                    <span class="text-[#179cde] font-bold tracking-wider uppercase text-sm mb-3 block">Acesso Antecipado - Versão 2</span>
                     <h1 class="text-4xl md:text-5xl font-extrabold text-[#0a3b8c] leading-tight mb-6">
-                        Agora você tem a oportunidade de testar a versão 1 do nosso protótipo.
+                        A sua assistente jurídica inteligente, onde você preferir.
                     </h1>
-                    <p class="text-lg text-gray-600 mb-10 leading-relaxed">
-                        Conheça a <b>Clarinha</b>, nossa inteligência artificial criada para democratizar o acesso à informação processual. Converse com ela ao lado, envie um número de processo fictício e veja como ela traduz o "juridiquês" em tempo real.
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                        Conheça a <b>Clarinha v2</b>. Ela adapta a linguagem de acordo com sua idade para conversar no seu ritmo, e agora consegue ler <b>PDFs e Imagens</b> de andamentos processuais! 
+                        Você pode usar o protótipo <b>diretamente nesta tela</b> ou levar a Clarinha com você no seu <b>Telegram</b>.
                     </p>
 
-                    <!-- Agrupamento dos Passos 1 e 2 -->
-                    <div class="flex flex-col gap-4">
-                        <!-- Card Passo 1 -->
-                        <div class="bg-[#f4f7ff] rounded-2xl p-6 border border-blue-100 flex items-center justify-between shadow-sm">
-                            <div>
-                                <span class="text-[#0a3b8c] font-bold text-sm tracking-wider uppercase mb-1 block">Passo 1</span>
-                                <h3 class="text-xl font-bold text-[#0a3b8c] mb-1">Teste o MVP ao lado</h3>
-                                <p class="text-gray-600 text-sm">Interaja com a IA e veja na prática.</p>
-                            </div>
-                            <div class="text-4xl hidden lg:block animate-bounce" style="animation-direction: alternate; animation-name: bounce-x;">👉</div>
-                            <div class="text-4xl lg:hidden animate-bounce" style="animation-name: bounce-y;">👇</div>
+                    <!-- Opção 1: Na tela -->
+                    <div class="bg-[#f4f7ff] rounded-2xl p-5 border border-blue-100 flex items-center justify-between shadow-sm mb-4">
+                        <div>
+                            <span class="text-[#0a3b8c] font-bold text-xs tracking-wider uppercase mb-1 block">Opção 1</span>
+                            <h3 class="text-lg font-bold text-gray-900 mb-1">Teste aqui na página</h3>
+                            <p class="text-gray-600 text-sm">Use o celular interativo ao lado. Mande um oi e anexe um PDF!</p>
                         </div>
+                        <div class="text-3xl hidden lg:block animate-bounce" style="animation-direction: alternate; animation-name: bounce-x;">👉</div>
+                        <div class="text-3xl lg:hidden animate-bounce">👇</div>
+                    </div>
 
-                        <!-- Card Passo 2 -->
-                        <a href="#secao-avaliacao" class="bg-[#f4f7ff] rounded-2xl p-6 border border-blue-100 flex items-center justify-between shadow-sm hover:bg-blue-50 transition-colors cursor-pointer group">
-                            <div>
-                                <span class="text-[#0a3b8c] font-bold text-sm tracking-wider uppercase mb-1 block">Passo 2</span>
-                                <h3 class="text-xl font-bold text-[#0a3b8c] mb-1 group-hover:text-blue-600 transition-colors">Valide nossa 1ª versão</h3>
-                                <p class="text-gray-600 text-sm font-medium">Responda o questionário abaixo.</p>
-                                <p class="text-blue-600 text-sm font-bold mt-1">Sua avaliação é muito importante para nós!</p>
-                            </div>
-                            <div class="text-4xl animate-bounce" style="animation-name: bounce-y;">👇</div>
-                        </a>
+                    <!-- Opção 2: Telegram -->
+                    <div class="bg-[#eaf4fa] rounded-2xl p-5 border border-[#179cde]/30 flex items-center justify-between shadow-sm hover:bg-[#e0f0f9] transition-colors cursor-pointer" onclick="document.getElementById('passo-a-passo-telegram').scrollIntoView({behavior: 'smooth'})">
+                        <div>
+                            <span class="text-[#179cde] font-bold text-xs tracking-wider uppercase mb-1 block">Opção 2</span>
+                            <h3 class="text-lg font-bold text-gray-900 mb-1">Use no seu Telegram</h3>
+                            <p class="text-gray-600 text-sm">Role a página para baixo e veja o passo a passo para acessar pelo app.</p>
+                        </div>
+                        <div class="text-3xl text-[#179cde]"><i class="fa-brands fa-telegram"></i></div>
                     </div>
                 </div>
 
-                <!-- Direita: O MVP (Celular) -->
+                <!-- Direita: O MVP (Celular Telegram) -->
                 <div class="reveal flex justify-center w-full">
                     <div class="phone-container">
-                        <!-- Cabeçalho (WhatsApp Header) -->
-                        <div class="bg-[#4a81d4] text-white px-3 py-2 flex items-center shadow-md z-10">
-                            <i class="fa-solid fa-arrow-left mr-3"></i>
+                        <!-- Cabeçalho (Telegram Header) -->
+                        <div class="bg-[#179cde] text-white px-3 py-2.5 flex items-center shadow-md z-10">
+                            <i class="fa-solid fa-arrow-left mr-4 text-lg cursor-pointer"></i>
                             <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden mr-3">
                                 <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clareia Profile" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-1 cursor-pointer">
-                                <h1 class="font-semibold text-[16px] leading-tight">Clarinha | Tradutor Jurídico</h1>
-                                <p id="status-text" class="text-[13px] text-[#ffffffb3] leading-tight">Online</p>
+                                <h1 class="font-semibold text-[16px] leading-tight">Clarinha | Jurídico</h1>
+                                <p id="status-text" class="text-[13px] text-[#ffffffb3] leading-tight">online</p>
                             </div>
-                            <div class="flex gap-4 items-center text-xl">
-                                <i class="fa-solid fa-video"></i>
-                                <i class="fa-solid fa-phone"></i>
+                            <div class="flex gap-4 items-center text-lg">
+                                <i class="fa-solid fa-magnifying-glass"></i>
                                 <i class="fa-solid fa-ellipsis-vertical"></i>
                             </div>
                         </div>
@@ -493,24 +409,66 @@
                         <!-- Área do Chat -->
                         <div class="chat-bg"></div>
                         <div id="chat-area" class="chat-area">
-                            <div class="system-badge">
-                                <i class="fa-solid fa-lock text-[#008069] mr-1"></i>
-                                As mensagens são protegidas por criptografia e as tuas informações estão seguras sob a LGPD.
-                            </div>
+                            <div class="system-badge">Hoje</div>
                         </div>
 
                         <!-- Área de Input -->
-                        <div class="bg-[#f0f2f5] p-2 flex items-end gap-2 z-10">
-                            <div class="flex-1 bg-white rounded-2xl flex items-center px-3 py-2 min-h-[44px] shadow-sm">
-                                <i class="fa-regular fa-face-smile text-[#8696a0] text-xl mr-3"></i>
-                                <textarea id="message-input" rows="1" placeholder="Mensagem" class="flex-1 outline-none resize-none max-h-24 bg-transparent" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
-                                <i class="fa-solid fa-paperclip text-[#8696a0] text-xl mx-3"></i>
-                                <i class="fa-solid fa-camera text-[#8696a0] text-xl"></i>
+                        <div class="bg-[#ffffff] p-2 flex items-end gap-2 z-10 border-t border-gray-200">
+                            <div class="flex-1 bg-transparent flex items-end px-1 py-1 min-h-[44px]">
+                                <!-- Input de Anexo Oculto -->
+                                <input type="file" id="file-upload" accept="image/*,application/pdf" class="hidden">
+                                
+                                <button id="clip-btn" class="p-2 text-[#8696a0] hover:text-[#179cde] transition-colors text-xl">
+                                    <i class="fa-solid fa-paperclip"></i>
+                                </button>
+                                
+                                <textarea id="message-input" rows="1" placeholder="Mensagem" class="flex-1 outline-none resize-none max-h-24 bg-transparent text-[15px] py-2 px-2" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
+                                
+                                <button class="p-2 text-[#8696a0] hover:text-[#179cde] transition-colors text-xl" onclick="document.getElementById('file-upload').click()">
+                                    <i class="fa-regular fa-face-smile"></i>
+                                </button>
                             </div>
-                            <button id="send-btn" class="w-[48px] h-[48px] rounded-full bg-[#128c7e] text-white flex items-center justify-center flex-shrink-0 shadow-sm transition-transform active:scale-95">
-                                <i id="send-icon" class="fa-solid fa-microphone text-xl"></i>
+                            <button id="send-btn" class="w-[44px] h-[44px] rounded-full text-[#179cde] flex items-center justify-center flex-shrink-0 transition-transform active:scale-95 bg-transparent hover:bg-gray-100">
+                                <i id="send-icon" class="fa-solid fa-microphone text-2xl"></i>
                             </button>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: PASSO A PASSO TELEGRAM -->
+        <section id="passo-a-passo-telegram" class="bg-[#f4f9fc] border-y border-[#179cde]/10 py-16">
+            <div class="max-w-6xl mx-auto px-6 md:px-12 reveal">
+                <div class="text-center mb-12">
+                    <span class="bg-[#179cde]/10 text-[#179cde] py-1 px-3 rounded-full text-sm font-bold tracking-wide uppercase mb-3 inline-block">App Oficial</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#0a3b8c] mb-4"><i class="fa-brands fa-telegram text-[#179cde] mr-2"></i>Como usar a Clarinha no Telegram</h2>
+                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">É super fácil levar a sua assistente jurídica no bolso. Siga os passos abaixo para falar com ela direto pelo aplicativo.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                    <!-- Linha conectando os passos (apenas desktop) -->
+                    <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#179cde]/30 to-transparent -z-10 -translate-y-8"></div>
+                    
+                    <!-- Passo 1 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
+                        <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">1</div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-3">Abra o App</h3>
+                        <p class="text-gray-600">Abra o aplicativo do <b>Telegram</b> no seu celular ou a versão para computador.</p>
+                    </div>
+                    
+                    <!-- Passo 2 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
+                        <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform rotate-3">2</div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-3">Busque o Bot</h3>
+                        <p class="text-gray-600">Na lupa de pesquisa do app, digite <b class="text-[#179cde]">@Clareira_Juridico_bot</b> ou <a href="https://t.me/Clareira_Juridico_bot" target="_blank" class="text-[#0a3b8c] font-bold underline hover:text-[#179cde]">clique neste link</a>.</p>
+                    </div>
+                    
+                    <!-- Passo 3 -->
+                    <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
+                        <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">3</div>
+                        <h3 class="font-bold text-xl text-gray-900 mb-3">Mande um "Oi"</h3>
+                        <p class="text-gray-600">Clique no botão <b>"Começar"</b> (ou Start) no chat e envie qualquer mensagem para ela iniciar!</p>
                     </div>
                 </div>
             </div>
@@ -521,34 +479,29 @@
             <div class="reveal">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#0a3b8c] text-center mb-4">Sua avaliação é fundamental</h2>
                 <p class="text-center text-gray-600 max-w-3xl mx-auto mb-16 text-lg">
-                    Esta é a nossa versão inicial. Ela foi desenhada para resolver o problema central, e é por isso que sua opinião sincera é a parte mais valiosa do processo.
+                    Nesta nova versão, a Clarinha entende anexos e adapta a linguagem à sua idade. Sua opinião sincera é a parte mais valiosa do processo de construção.
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-8">
-                    <!-- Card 1 -->
                     <div class="step-card bg-[#f8faff] border-0">
-                        <div class="step-number text-[#4a81d4]">1</div>
+                        <div class="step-number text-[#179cde]">1</div>
                         <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Explore livremente</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            Acesse o MVP logo acima, clique e use como se fosse no seu dia a dia. Não tenha medo de testar os limites.
+                            Envie sua data de nascimento. Se você tiver 20 anos, ela falará como uma jovem. Se tiver 60, usará um tom formal e paciente.
                         </p>
                     </div>
-
-                    <!-- Card 2 -->
                     <div class="step-card bg-[#f8faff] border-0">
-                        <div class="step-number text-[#4a81d4]">2</div>
-                        <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Anote suas impressões</h3>
+                        <div class="step-number text-[#179cde]">2</div>
+                        <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Envie Documentos</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            O que foi fácil? O que pareceu confuso? Faltou alguma funcionalidade essencial na tradução do juridiquês?
+                            Clique no clipe no chat, envie um PDF de um processo e peça para ela explicar o que está acontecendo.
                         </p>
                     </div>
-
-                    <!-- Card 3 -->
                     <div class="step-card bg-[#eef3fb] border-0">
                         <div class="step-number bg-[#0a3b8c] text-white border-[#0a3b8c]">3</div>
                         <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Responda a pesquisa</h3>
                         <p class="text-gray-600 leading-relaxed">
-                            Após o teste, desça até o final desta página e responda ao nosso questionário rápido para nos guiar.
+                            Após testar, clique no botão abaixo e responda ao nosso questionário rápido para nos guiar.
                         </p>
                     </div>
                 </div>
@@ -587,7 +540,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-4 max-w-6xl mx-auto">
                 <div class="flex flex-col gap-4">
                     <details class="faq-item group"><summary>Qual é a dor latente?<div class="status-icon-faq"></div></summary><div class="answer-body">O abismo da linguagem jurídica que gera ansiedade em leigos brasileiros.</div></details>
-                    <details class="faq-item group"><summary>Por que investir agora?<div class="status-icon-faq"></div></summary><div class="answer-body">Maturidade da IA Generativa e a onipresença do WhatsApp no Brasil.</div></details>
+                    <details class="faq-item group"><summary>Por que investir agora?<div class="status-icon-faq"></div></summary><div class="answer-body">Maturidade da IA Generativa e a onipresença do WhatsApp/Telegram no Brasil.</div></details>
                     <details class="faq-item group"><summary>Diferencial competitivo?<div class="status-icon-faq"></div></summary><div class="answer-body">Focamos na experiência do cliente final (B2C), simplificando dados brutos.</div></details>
                     <details class="faq-item group"><summary>Tamanho do mercado?<div class="status-icon-faq"></div></summary><div class="answer-body">80 milhões de processos ativos no Brasil com alta demanda por clareza.</div></details>
                     <details class="faq-item group"><summary>Modelo de Monetização?<div class="status-icon-faq"></div></summary><div class="answer-body">Modelo híbrido: assinaturas B2B e micro-pagamentos B2C por consulta.</div></details>
@@ -735,202 +688,6 @@
             </div>
 
             <div class="tech-category">
-                <h2 class="tech-category-title">📂 Gestão e Colaboração</h2>
-                <p class="tech-category-desc">Foco na governança de dados, documentação centralizada e comunicação estratégica.</p>
-                
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Google Drive</h3>
-                                <span class="tool-badge">GESTÃO</span>
-                            </div>
-                            <p class="tool-desc">Repositório central em nuvem para armazenamento e controle de versionamento de ativos não estruturados do projeto.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/0/01/Google_Docs_logo_%282014-2020%29.svg" alt="Google Docs" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Google Docs</h3>
-                                <span class="tool-badge">DOCS</span>
-                            </div>
-                            <p class="tool-desc">Ambiente colaborativo para redação de especificações técnicas, briefings e documentação de processos do Clareia.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/Google_Sheets_logo_%282014-2020%29.svg" alt="Google Sheets" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Google Sheets</h3>
-                                <span class="tool-badge">DATA</span>
-                            </div>
-                            <p class="tool-desc">Estruturação de conjuntos de dados, cronogramas financeiros e planilhas de controle operacional.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://play-lh.googleusercontent.com/DG-zbXPr8LItYD8F2nD4aR_SK_jpkipLBK77YWY-F0cdJt67VFgCHZtRtjsakzTw3EM=w240-h480-rw" alt="Google Slides" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Google Slides</h3>
-                                <span class="tool-badge">UI/UX</span>
-                            </div>
-                            <p class="tool-desc">Criação de apresentações executivas e storyboards para comunicação visual de marcos do projeto.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Google_Sites_2020_Logo.svg/250px-Google_Sites_2020_Logo.svg.png" alt="Google Sites" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Google Sites</h3>
-                                <span class="tool-badge">PORTAL</span>
-                            </div>
-                            <p class="tool-desc">Plataforma para construção de wikis internas e portais de visualização rápida para stakeholders.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://img.freepik.com/vetores-premium/icone-do-logotipo-do-whatsapp-circulo-aplicativo-de-midia-social-aplicativo-de-rede-marca-editorial-popular-ilustracao-vetorial_913857-391.jpg?semt=ais_hybrid&w=740&q=80" alt="WhatsApp" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">WhatsApp</h3>
-                                <span class="tool-badge">COMMS</span>
-                            </div>
-                            <p class="tool-desc">Interface de comunicação instantânea e canal de integração para automações de notificações via API.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://tm.ibxk.com.br/2022/12/06/06175044983232.jpg?ims=1000x400/filters:quality(80)" alt="Canva" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Canva</h3>
-                                <span class="tool-badge">DESIGN</span>
-                            </div>
-                            <p class="tool-desc">Engine de design gráfico para suporte à identidade visual e criação de assets de interface do usuário.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tech-category">
-                <h2 class="tech-category-title">💻 Desenvolvimento e Deploy</h2>
-                <p class="tech-category-desc">Camada de engenharia, controle de código-fonte e hospedagem de aplicações.</p>
-                
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://img.freepik.com/psd-gratuitas/icone-de-arquivo-html-renderizado-em-3d_84443-57041.jpg" alt="HTML5" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">HTML5</h3>
-                                <span class="tool-badge">MARKUP</span>
-                            </div>
-                            <p class="tool-desc">Linguagem de marcação estrutural responsável pela semântica e organização do conteúdo web.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://assets.dio.me/VIKVdQugEKFX46hQwLZD1ckFAiTaVf6Dqdp19t58EBY/f:webp/q:80/L2FydGljbGVzL2NvdmVyLzg4MTUzZDdmLTZhOWMtNGI1Ny04ZTkyLTEyM2E2OWJhMWJlYi5wbmc" alt="CSS3" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">CSS3</h3>
-                                <span class="tool-badge">ESTILO</span>
-                            </div>
-                            <p class="tool-desc">Engine de estilização responsável pelo design responsivo, variáveis de layout e interface fluida.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ4qe-TiNdb7kONl0a1C3a1R3H9TPWKSJeGg&s" alt="JavaScript" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">JavaScript</h3>
-                                <span class="tool-badge">FRONTEND</span>
-                            </div>
-                            <p class="tool-desc">Linguagem de script para lógica de interface, manipulação dinâmica do DOM e integrações assíncronas.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Web Stack (Node.js)</h3>
-                                <span class="tool-badge">DEV</span>
-                            </div>
-                            <p class="tool-desc">Engine de execução e tecnologias core (HTML5/CSS3/JS) para desenvolvimento de interfaces e lógica de servidor.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Git-logo.svg" alt="Git" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Git</h3>
-                                <span class="tool-badge">VCS</span>
-                            </div>
-                            <p class="tool-desc">Sistema distribuído para controle de versões, garantindo a integridade do histórico de alterações do código.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">GitHub</h3>
-                                <span class="tool-badge">REPO</span>
-                            </div>
-                            <p class="tool-desc">Plataforma de hospedagem de código e colaboração, centralizando o desenvolvimento remoto do projeto.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://assets.vercel.com/image/upload/v1588132850/repositories/vercel/logo.png" alt="Vercel" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Vercel</h3>
-                                <span class="tool-badge">DEPLOY</span>
-                            </div>
-                            <p class="tool-desc">Plataforma de Cloud para deploy contínuo (CI/CD) e hospedagem de aplicações front-end de alta performance.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tech-category">
                 <h2 class="tech-category-title">🧠 Inteligência e Automação</h2>
                 <p class="tech-category-desc">Núcleo de processamento de linguagem natural e orquestração de fluxos inteligentes utilizadas para o MVP.</p>
                 
@@ -944,47 +701,19 @@
                                 <h3 class="tool-name">Google Gemini</h3>
                                 <span class="tool-badge">AI</span>
                             </div>
-                            <p class="tool-desc">Modelo de linguagem de grande escala (LLM) integrado para automação de insights e análise de dados.</p>
+                            <p class="tool-desc">Modelo multimodal de grande escala utilizado para análise de PDFs processuais, orquestração de insights e adaptação de linguagem baseada em idade (Clareia v2).</p>
                         </div>
                     </div>
-
                     <div class="tool-card">
                         <div class="tool-icon-wrapper">
-                            <img src="https://raw.githubusercontent.com/n8n-io/n8n/master/assets/n8n-logo.png" alt="n8n" class="tool-icon">
+                            <i class="fa-brands fa-telegram text-[#179cde] text-2xl"></i>
                         </div>
                         <div class="tool-info">
                             <div class="tool-header">
-                                <h3 class="tool-name">n8n</h3>
-                                <span class="tool-badge">FLOW</span>
+                                <h3 class="tool-name">Telegram API</h3>
+                                <span class="tool-badge">BOT</span>
                             </div>
-                            <p class="tool-desc">Orquestrador de workflows low-code utilizado para conectar o ecossistema Clareia e automatizar rotinas entre apps.</p>
-                        </div>
-                    </div>
-
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Python</h3>
-                                <span class="tool-badge">BACKEND</span>
-                            </div>
-                            <p class="tool-desc">Linguagem de script robusta para processamento de dados pesado e integração de módulos de IA personalizados.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- NOVO CARD ADICIONADO: GROK -->
-                    <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://www.malwarebytes.com/wp-content/uploads/sites/2/2025/08/Grok_logo.png" alt="Grok" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Grok</h3>
-                                <span class="tool-badge">LLM</span>
-                            </div>
-                            <p class="tool-desc">A LLM Grok como ferramenta também utilizada para o desenvolvimento e inteligência do MVP.</p>
+                            <p class="tool-desc">Integração via Long-Polling para o bot oficial interagir com os usuários diretamente pelo aplicativo em tempo real.</p>
                         </div>
                     </div>
                 </div>
@@ -1049,10 +778,16 @@
             revealObserver.observe(card);
         });
 
-        // ================= LÓGICA DO MVP (GROQ FALLBACK GEMINI) =================
-        const groqApiKey = "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";
-        const geminiApiKey = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc"; 
-        const geminiApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${geminiApiKey}`;
+        // ================= LOGICA DO MVP V2 (TELEGRAM + GEMINI 2.5 FLASH MULTIMODAL) =================
+        const apiKey = ""; // Injetada automaticamente
+        const model = "gemini-2.5-flash-preview-09-2025";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        
+        // --- TELEGRAM BOT CONFIG ---
+        const TELEGRAM_TOKEN = '8720113757:AAG4h0Qs3-4AMl24Nv-faI0ZETn4meAU6jY';
+        let tgOffset = 0;
+        const tgSessions = {}; // Armazena histórico do Telegram
+        let tgPollingActive = true;
 
         // --- VARIÁVEIS DOM ---
         const chatArea = document.getElementById('chat-area');
@@ -1060,39 +795,40 @@
         const sendBtn = document.getElementById('send-btn');
         const sendIcon = document.getElementById('send-icon');
         const statusText = document.getElementById('status-text');
+        const fileUpload = document.getElementById('file-upload');
+        const clipBtn = document.getElementById('clip-btn');
         
         let isTyping = false;
-        let chatHistory = [];
+        let webChatHistory = []; 
 
         const systemInstruction = `
-            Você é a Clarinha, uma corujinha assistente jurídica da Clareia, atuando num MVP de WhatsApp.
-            Sua missão é traduzir o "juridiquês" para pessoas comuns, democratizando o acesso à informação de forma leve e tranquila.
-            
-            DIRETRIZES DE COMPORTAMENTO E TOM:
-            - Natural, informal e humano (pareça uma pessoa normal conversando no WhatsApp do Brasil).
-            - Neutro, mas acolhedor. Evite ser robótica ou usar palavras difíceis.
-            - ADAPTAÇÃO PELA IDADE: Seja bem descontraída e informal por padrão (use "você", "tá", "né"). MAS, se o usuário informar que tem mais de 60 anos, ajuste o tom para ser um pouco mais formal, extremamente paciente e respeitoso (usando o pronome senhor/senhora se couber).
-            - Respostas curtas e diretas (estilo WhatsApp). Use emojis ocasionalmente (como 🦉).
-            
-            FLUXO OBRIGATÓRIO DA CONVERSA:
-            O usuário já recebeu a saudação inicial (onboarding).
-            1. Agora ele vai responder com o nome. Agradeça, seja super amigável e pergunte a idade dele.
-            2. Após receber a idade, ajuste seu tom imediatamente e peça o número do processo (avise que pode ser um número fictício para o teste).
-            3. Quando receber o número, VOCÊ DEVE separar a sua resposta em duas partes usando EXATAMENTE o texto "|||" no meio.
-            Exemplo OBRIGATÓRIO: "Só um minutinho, vou dar uma olhadinha nos sistemas do tribunal... ⏳ ||| 🔍 Achei aqui! O andamento do seu processo está como [INSERIR ATUALIZAÇÃO FICTÍCIA, ex: Concluso para sentença]. Isso significa que [TRADUÇÃO COM EMPATIA]."
-            
-            NOVO FLUXO: INDICAÇÃO DE ADVOGADOS (PARCERIAS):
-            - Se a atualização fictícia exigir uma ação do usuário (ex: recorrer, ir a uma audiência) OU se ele perguntar "o que eu faço agora?", siga estes passos:
-              a) Passo 1: Pergunte com empatia: "Você já tem um advogado te acompanhando nisso?"
-              b) Passo 2: Se a pessoa não tiver, diga que a Clareia tem advogados parceiros ótimos e pergunte a Cidade e Estado dela.
-              c) Passo 3: Quando a pessoa disser a cidade, invente um advogado (ex: "Dr. Carlos Mendes") dizendo que é um ótimo especialista na região e simule passar o contato.
-            
-            A REGRA DE OURO (Previsibilidade e Calma):
-            NUNCA dê apenas a tradução técnica. Dê contexto para acalmar a pessoa.
-            Exemplo mau: "Isso significa que o juiz vai decidir."
-            Exemplo excelente: "O status é 'Concluso para sentença'. Isso quer dizer que o juiz já tá com o documento na mesa dele para dar a decisão final. Fique tranquilo, você não precisa fazer nada agora, tá? O tempo médio pra essa etapa costuma ser de uns 3 meses. Tá tudo correndo bem."
-            
-            Mantenha o contexto fictício se a pessoa fizer mais perguntas.
+            Você é a Clarinha, uma corujinha fofa e assistente jurídica da Clareia, projetada para simular um atendimento via Telegram. 
+            Sua missão é democratizar o acesso à informação processual, traduzindo o "juridiquês" para cidadãos comuns.
+
+            DIRETRIZES GERAIS:
+            - Seja sempre acolhedora, empática e clara. Use emojis como 🦉.
+            - Respostas curtas e diretas (estilo Telegram/WhatsApp).
+
+            FLUXO DE ATENDIMENTO OBRIGATÓRIO:
+            1. O usuário já recebeu a saudação inicial. A primeira resposta dele será provavelmente o nome.
+            2. Agradeça e pergunte a DATA DE NASCIMENTO (ex: DD/MM/AAAA). NÃO pergunte a idade diretamente.
+            3. Ao receber a data de nascimento, calcule MENTALMENTE a idade atual e ADAPTE SEU TOM DE VOZ permanentemente para o resto da conversa:
+               - De 18 a 30 anos: Linguagem jovial, super descontraída, moderna, gírias leves (ex: "Top!", "Maneiro", "Fica de boa").
+               - De 30 a 55 anos: Linguagem intermediária, amigável, respeitosa, acolhedora, mas dinâmica.
+               - Acima de 55 anos: Linguagem formal e muito respeitosa (trate SEMPRE por Senhor/Senhora), ritmo paciente.
+            4. Independentemente da idade, a explicação do "JURIDIQUÊS" DEVE SER SEMPRE SIMPLES e FÁCIL.
+            5. Após adaptar o tom, peça o número do processo OU peça para enviar uma foto/PDF do andamento processual.
+            6. Se o usuário digitar um texto (número), use EXATAMENTE o separador "|||" no meio da resposta. Ex: "Vou consultar... ⏳ ||| 🔍 Achei! O status é..."
+            7. Se o usuário ENVIAR UM ARQUIVO (Imagem/PDF), não use o "|||". Apenas leia o anexo e explique detalhadamente o que aquele documento significa.
+
+            DICIONÁRIO DE EMOÇÕES (REGRA DE OURO):
+            Sempre dê previsibilidade para acalmar o usuário. Não traduza só o termo. Diga se ele precisa se preocupar, o tempo médio daquela etapa, ou se ele deve ficar tranquilo pois está tudo certo.
+
+            INDICAÇÃO DE ADVOGADOS (PARCERIAS):
+            Se a atualização indicar ação urgente (recurso, audiência, apresentar defesa) ou se o usuário perguntar "o que fazer agora":
+            - Passo 1: Pergunte de forma empática: "Você já tem um advogado te acompanhando?"
+            - Passo 2: Se NÃO, diga que a Clareia tem parceiros e pergunte a Cidade/Estado dele.
+            - Passo 3: Quando ele informar a cidade, crie um advogado fictício daquela região (Ex: "Dr. Carlos Mendes") e simule a entrega do contato.
         `;
 
         function getCurrentTime() {
@@ -1100,15 +836,20 @@
             return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
         }
 
-        function addMessageToUI(text, isSentByUser) {
+        function addMessageToUI(text, isSentByUser, attachmentHtml = null) {
             const bubbleWrap = document.createElement('div');
             const bubble = document.createElement('div');
             bubble.classList.add('bubble');
             bubble.classList.add(isSentByUser ? 'bubble-sent' : 'bubble-received');
+            
             let formattedText = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            let contentHtml = attachmentHtml ? `${attachmentHtml}<div class="mt-1"></div>` : '';
+            contentHtml += `<span>${formattedText}</span>`;
+            
             bubble.innerHTML = `
-                <span>${formattedText}</span>
-                <div class="meta-text">${getCurrentTime()} ${isSentByUser ? '<i class="fa-solid fa-check-double blue-tick"></i>' : ''}</div>
+                ${contentHtml}
+                <div class="meta-text">${getCurrentTime()} ${isSentByUser ? '<i class="fa-solid fa-check blue-tick"></i>' : ''}</div>
             `;
             bubbleWrap.appendChild(bubble);
             chatArea.appendChild(bubbleWrap);
@@ -1130,121 +871,56 @@
             }
         });
 
-        // Funções de Chamada de API Modularizadas
-        async function fetchGroq(messages, timeoutMs = 15000) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-            try {
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${groqApiKey}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        model: "llama-3.1-8b-instant",
-                        messages: messages,
-                        temperature: 0.7
-                    }),
-                    signal: controller.signal
+        // Helper: File to Base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve({
+                    mimeType: file.type,
+                    data: reader.result.split(',')[1]
                 });
-
-                clearTimeout(timeoutId);
-
-                if (!response.ok) {
-                    const err = await response.text();
-                    throw new Error(`Groq HTTP ${response.status}: ${err}`);
-                }
-
-                const data = await response.json();
-                
-                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                    throw new Error("Formato de resposta inválido da Groq");
-                }
-                
-                return data.choices[0].message.content;
-                
-            } catch (error) {
-                clearTimeout(timeoutId);
-                if (error.name === 'AbortError') {
-                    throw new Error("Timeout: Groq demorou muito a responder.");
-                }
-                throw error;
-            }
+                reader.onerror = error => reject(error);
+            });
         }
 
-        async function fetchGemini(history, sysInst, timeoutMs = 15000) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-
-            try {
-                const payload = { 
-                    contents: history,
-                    systemInstruction: { parts: [{ text: sysInst }] },
-                    generationConfig: { temperature: 0.7 }
-                };
-                
-                const response = await fetch(geminiApiUrl, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify(payload),
-                    signal: controller.signal
-                });
-
-                clearTimeout(timeoutId);
-
-                if (!response.ok) {
-                    const err = await response.text();
-                    throw new Error(`Gemini HTTP ${response.status}: ${err}`);
-                }
-
-                const data = await response.json();
-                
-                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-                    throw new Error("Formato de resposta inválido do Gemini");
-                }
-                
-                return data.candidates[0].content.parts[0].text;
-                
-            } catch (error) {
-                clearTimeout(timeoutId);
-                if (error.name === 'AbortError') {
-                    throw new Error("Timeout: Gemini demorou muito a responder.");
-                }
-                throw error;
-            }
-        }
-
-        async function processAIResponse() {
-            let modelText = "";
-
-            try {
+        // Fetch with Retry
+        async function fetchWithRetry(url, options, retries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
                 try {
-                    const groqMessages = [{ role: "system", content: systemInstruction }];
-                    chatHistory.forEach(item => {
-                        groqMessages.push({
-                            role: item.role === "model" ? "assistant" : "user",
-                            content: item.parts[0].text
-                        });
-                    });
-
-                    modelText = await fetchGroq(groqMessages);
-                    console.log("✔️ Resposta gerada via Groq (llama-3.1-8b-instant)");
-
-                } catch (groqErr) {
-                    console.warn("⚠️ Falha na API Groq (alternando para Gemini):", groqErr.message);
-                    
-                    try {
-                        modelText = await fetchGemini(chatHistory, systemInstruction);
-                        console.log("✔️ Resposta gerada via Gemini (gemini-1.5-flash-8b)");
-                    } catch (geminiErr) {
-                        console.error("❌ Falha na API Gemini:", geminiErr.message);
-                        throw new Error("Ambas as APIs falharam.");
+                    const response = await fetch(url, options);
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        const error = new Error(errorData.error?.message || `HTTP ${response.status}`);
+                        error.status = response.status;
+                        throw error;
                     }
+                    return await response.json();
+                } catch (e) {
+                    if (i === retries - 1) throw e;
+                    console.warn(`Retry ${i+1}/${retries} after error:`, e.message);
+                    await new Promise(res => setTimeout(res, delays[i]));
                 }
+            }
+        }
 
-                chatHistory.push({ role: "model", parts: [{ text: modelText.replace('|||', '') }] });
+        async function callGeminiAPI() {
+            const payload = { 
+                contents: webChatHistory,
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+
+            try {
+                const data = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, tive um problema técnico ao processar sua mensagem.";
+                
+                webChatHistory.push({ role: "model", parts: [{ text: modelText.replace('|||', '') }] });
                 
                 if (modelText.includes('|||')) {
                     const parts = modelText.split('|||');
@@ -1264,23 +940,62 @@
 
                 } else {
                     setTypingStatus(false);
-                    setTimeout(() => { addMessageToUI(modelText, false); }, Math.min(modelText.length * 20, 2500) / 2);
+                    setTimeout(() => { addMessageToUI(modelText, false); }, Math.min(modelText.length * 15, 2000));
                 }
 
             } catch (error) {
                 setTypingStatus(false);
-                console.error("Erro crítico de comunicação com as IAs:", error);
-                addMessageToUI(`🚧 **Erro de Conexão:** Desculpa, os meus sistemas estão passando por instabilidades agora. Tente de novo mais tarde!`, false);
+                console.error("Erro da API:", error);
+                addMessageToUI(`🚧 **Erro no Servidor:** ${error.message}. Tentamos várias vezes sem sucesso.`, false);
+                webChatHistory.pop();
             }
         }
 
         function setTypingStatus(typing) {
             isTyping = typing;
-            statusText.innerText = typing ? 'a escrever...' : 'Online';
+            statusText.innerText = typing ? 'digitando...' : 'online';
             statusText.classList.toggle('typing-active', typing);
         }
 
-        function handleSend() {
+        clipBtn.addEventListener('click', () => fileUpload.click());
+
+        fileUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || isTyping) return;
+            
+            try {
+                const fileData = await fileToBase64(file);
+                let attachmentHtml = '';
+                
+                if (file.type.startsWith('image/')) {
+                    attachmentHtml = `<div class="attachment-preview"><img src="data:${file.type};base64,${fileData.data}" alt="anexo"></div>`;
+                } else if (file.type === 'application/pdf') {
+                    attachmentHtml = `<div class="attachment-preview"><i class="fa-solid fa-file-pdf"></i><div class="attachment-name">${file.name}</div></div>`;
+                } else {
+                    alert("Apenas Imagens e PDFs são suportados.");
+                    return;
+                }
+
+                addMessageToUI("Enviando documento...", true, attachmentHtml);
+                
+                const parts = [
+                    { inlineData: { mimeType: fileData.mimeType, data: fileData.data } },
+                    { text: "Analise este documento processual e me explique em linguagem simples o que ele significa e qual o andamento do processo." }
+                ];
+                
+                webChatHistory.push({ role: "user", parts: parts });
+                
+                setTypingStatus(true);
+                fileUpload.value = ""; 
+                setTimeout(() => { callGeminiAPI(); }, 800);
+                
+            } catch (error) {
+                console.error("Erro ao processar arquivo:", error);
+                addMessageToUI("❌ Erro ao ler o arquivo.", false);
+            }
+        });
+
+        async function handleSendText() {
             const text = messageInput.value.trim();
             if (!text || isTyping) return;
             
@@ -1288,36 +1003,125 @@
             sendIcon.classList.remove('fa-paper-plane'); sendIcon.classList.add('fa-microphone');
             
             addMessageToUI(text, true);
-            
-            chatHistory.push({ role: "user", parts: [{ text: text }] });
+            webChatHistory.push({ role: "user", parts: [{ text: text }] });
             
             setTypingStatus(true);
-            setTimeout(() => { processAIResponse(); }, 800);
+            setTimeout(() => { callGeminiAPI(); }, 800);
         }
 
-        sendBtn.addEventListener('click', () => { if (messageInput.value.trim() !== "") handleSend(); });
-        messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } });
+        sendBtn.addEventListener('click', () => { if (messageInput.value.trim() !== "") handleSendText(); });
+        messageInput.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendText(); } });
 
         function startOnboarding() {
             setTypingStatus(true);
             const initialMessages = [
-                "Oi! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.",
-                "Antes de começarmos, quero garantir que a nossa conversa é 100% segura e protegida pela LGPD. Seus dados estão blindados comigo! 🔒",
-                "Pra gente começar, como você prefere que eu te chame?"
+                "Olá! 🦉 Eu sou a Clarinha, a assistente jurídica da Clareia.",
+                "Nossa conversa é 100% protegida pela LGPD. Seus dados estão blindados! 🔒",
+                "Para começarmos de forma personalizada, como você prefere que eu te chame?"
             ];
             let delay = 1000;
             initialMessages.forEach((msg, index) => {
                 setTimeout(() => {
                     addMessageToUI(msg, false);
-                    if (index === initialMessages.length - 1) setTypingStatus(false);
+                    if (index === initialMessages.length - 1) {
+                        setTypingStatus(false);
+                        startTelegramBotEngine(); 
+                    }
                 }, delay);
                 delay += 2000;
             });
         }
 
-        window.addEventListener('load', () => { 
-            setTimeout(startOnboarding, 800); 
-        });
+        window.onload = () => {
+            setTimeout(startOnboarding, 800);
+        };
+
+        // ================= MOTOR DO TELEGRAM BOT =================
+        async function startTelegramBotEngine() {
+            console.log("🚀 Motor do Telegram Bot Iniciado no Navegador! Escutando mensagens...");
+            pollTelegram();
+        }
+
+        async function pollTelegram() {
+            if (!tgPollingActive) return;
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/getUpdates?offset=${tgOffset}&timeout=30`);
+                const data = await res.json();
+                
+                if (data.ok && data.result.length > 0) {
+                    for (const update of data.result) {
+                        tgOffset = update.update_id + 1;
+                        
+                        if (update.message) {
+                            console.log("📩 Nova mensagem no Telegram de:", update.message.chat.first_name);
+                            if (update.message.text) {
+                                handleTelegramMessage(update.message.chat.id, update.message.text);
+                            }
+                            else if (update.message.document || update.message.photo) {
+                                sendTelegramMessage(update.message.chat.id, "🦉 Recebi seu arquivo! Como estou rodando em modo protótipo no navegador do desenvolvedor agora mesmo, não consigo baixar o arquivo por aqui. Mas na versão web aqui da página funciona super bem!");
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                console.log("⏳ Aguardando novas mensagens do Telegram...");
+            }
+            setTimeout(pollTelegram, 2000);
+        }
+
+        async function handleTelegramMessage(chatId, text) {
+            if (!tgSessions[chatId]) tgSessions[chatId] = []; 
+            
+            tgSessions[chatId].push({ role: "user", parts: [{ text: text }] });
+            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendChatAction?chat_id=${chatId}&action=typing`).catch(()=>{});
+            
+            try {
+                const payload = { 
+                    contents: tgSessions[chatId],
+                    systemInstruction: { parts: [{ text: systemInstruction }] }
+                };
+                
+                const data = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (data.error) throw new Error(data.error.message);
+
+                const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Erro interno.";
+                tgSessions[chatId].push({ role: "model", parts: [{ text: replyText.replace('|||', '') }] });
+                
+                if (replyText.includes('|||')) {
+                    const parts = replyText.split('|||');
+                    await sendTelegramMessage(chatId, parts[0].trim());
+                    fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendChatAction?chat_id=${chatId}&action=typing`).catch(()=>{});
+                    setTimeout(() => {
+                        sendTelegramMessage(chatId, parts[1].trim());
+                    }, 3500);
+                } else {
+                    await sendTelegramMessage(chatId, replyText);
+                }
+                
+            } catch(e) {
+                console.error('❌ Erro ao responder no Telegram:', e);
+                await sendTelegramMessage(chatId, "Desculpe, meu cérebro deu um pequeno tilt na conexão. Pode repetir o que disse? 🦉");
+                tgSessions[chatId].pop(); 
+            }
+        }
+
+        async function sendTelegramMessage(chatId, text) {
+            try {
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ chat_id: chatId, text: text })
+                });
+            } catch (e) {
+                console.error("Falha ao enviar msg via Telegram API", e);
+            }
+        }
+
     </script>
 </body>
 </html>
