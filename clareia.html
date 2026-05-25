@@ -51,7 +51,6 @@
             z-index: 100; 
         }
 
-        /* --- EFEITO ELEGANTE DA IMAGEM HERO --- */
         @keyframes elegantFloat {
             0%, 100% { transform: translateY(0px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
             50% { transform: translateY(-20px); box-shadow: 0 30px 40px rgba(10, 59, 140, 0.2); }
@@ -63,7 +62,6 @@
             border-radius: 40px;
         }
 
-        /* --- DESAFIO / O QUE RESOLVE --- */
         .icon-box {
             margin-bottom: 40px; display: inline-flex; justify-content: center; align-items: center;
             width: 80px; height: 80px; background: rgba(0, 86, 179, 0.1); border-radius: 50%;
@@ -74,26 +72,16 @@
             70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(0, 86, 179, 0); } 
             100% { transform: scale(1); } 
         }
-        
         @keyframes pulseIconLight { 
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.25); } 
             70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); } 
             100% { transform: scale(1); } 
         }
-        .icon-box-light {
-            background: rgba(255, 255, 255, 0.15) !important;
-            animation: pulseIconLight 3s infinite !important;
-        }
+        .icon-box-light { background: rgba(255, 255, 255, 0.15) !important; animation: pulseIconLight 3s infinite !important; }
         .icon-box-light svg { fill: #ffffff; width: 40px; height: 40px; }
         
-        .term-light {
-            background: rgba(255, 255, 255, 0.15) !important;
-            color: #ffffff !important;
-        }
-        .term-light:hover {
-            background: #ffffff !important;
-            color: var(--clareia-blue) !important;
-        }
+        .term-light { background: rgba(255, 255, 255, 0.15) !important; color: #ffffff !important; }
+        .term-light:hover { background: #ffffff !important; color: var(--clareia-blue) !important; }
 
         .term {
             display: inline-block; color: var(--text-main); font-weight: 700; padding: 2px 8px;
@@ -101,18 +89,12 @@
         }
         .term:hover { color: var(--brand-blue); background: rgba(14, 165, 233, 0.1); border-color: var(--brand-cyan); transform: translateY(-2px); }
 
-        /* --- DESTAQUE DA FRASE PROBLEMA --- */
         .phrase-glow {
             background: linear-gradient(90deg, #4bb5db, #ffffff, #4bb5db);
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: shineText 4s linear infinite;
+            background-size: 200% auto; color: transparent; -webkit-background-clip: text;
+            background-clip: text; animation: shineText 4s linear infinite;
         }
-        @keyframes shineText {
-            to { background-position: 200% center; }
-        }
+        @keyframes shineText { to { background-position: 200% center; } }
 
         /* --- MVP TELEGRAM / PROTÓTIPO --- */
         .phone-container {
@@ -125,9 +107,7 @@
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239ba89f' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             z-index: 0; pointer-events: none;
         }
-        .chat-area {
-            flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; z-index: 1; scroll-behavior: smooth;
-        }
+        .chat-area { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; z-index: 1; scroll-behavior: smooth; }
         .chat-area::-webkit-scrollbar { width: 4px; }
         .chat-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
         
@@ -149,32 +129,20 @@
             padding: 4px 12px; border-radius: 12px; align-self: center; margin: 4px 0; z-index: 1; backdrop-filter: blur(2px);
         }
         .typing-active { display: block; font-style: italic; opacity: 0.8; }
-
-        .attachment-preview {
-            display: flex; align-items: center; background: rgba(0,0,0,0.05); border-radius: 8px; padding: 8px; margin-bottom: 8px; gap: 10px;
-        }
+        .attachment-preview { display: flex; align-items: center; background: rgba(0,0,0,0.05); border-radius: 8px; padding: 8px; margin-bottom: 8px; gap: 10px; }
         .attachment-preview i { font-size: 24px; color: var(--tg-blue); }
         .attachment-preview img { max-width: 100px; max-height: 100px; border-radius: 4px; }
         .attachment-name { font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- ESTILOS DOS CARDS DA AVALIAÇÃO E ANIMAÇÕES --- */
-        .step-card {
-            background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px 24px 24px;
-            position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;
-        }
+        .step-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 32px 24px 24px; position: relative; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s; }
         .step-card:hover { transform: translateY(-5px); }
-        .step-number {
-            position: absolute; top: -20px; left: 24px; width: 40px; height: 40px; background: white;
-            border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; color: var(--tg-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+        .step-number { position: absolute; top: -20px; left: 24px; width: 40px; height: 40px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--tg-blue); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         @keyframes bounce-x { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
         @keyframes bounce-y { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 
         .reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* --- EFEITOS ESPECIAIS (BOTÃO E ESSÊNCIA) --- */
         .btn-glow {
             background: linear-gradient(135deg, var(--brand-cyan), var(--brand-blue)); background-size: 200% 200%;
             animation: gradientShift 3s ease infinite; position: relative; overflow: hidden; z-index: 1; border: 1px solid rgba(255,255,255,0.2);
@@ -187,12 +155,9 @@
         .btn-glow:hover::before { left: 200%; }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* --- FAQ REFINADO --- */
+        /* FAQ, CULTURA, TIME, ETC... */
         .faq-icon-wrapper { position: relative; display: inline-flex; }
-        .coruja-pousada {
-            position: absolute; top: -35px; left: 50%; transform: translateX(-50%); height: 44px; z-index: 20; pointer-events: none;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); animation: flutuarFaq 4s ease-in-out infinite;
-        }
+        .coruja-pousada { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); height: 44px; z-index: 20; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); animation: flutuarFaq 4s ease-in-out infinite; }
         @keyframes flutuarFaq { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -4px); } }
         details.faq-item { border: 1px solid var(--brand-blue); border-radius: 14px; background-color: var(--brand-blue); transition: 0.3s; cursor: pointer; overflow: hidden; }
         details.faq-item:hover { transform: translateX(4px); filter: brightness(1.05); }
@@ -204,7 +169,6 @@
         details[open] .status-icon-faq { transform: rotate(45deg); }
         .answer-body { padding: 22px 26px; font-size: 15px; color: var(--text-body); background-color: #ffffff; border-top: 1px solid var(--border-blue); }
 
-        /* --- CULTURA E TIME --- */
         .culture-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         .culture-card { border-radius: 14px; background: var(--brand-gradient); transition: var(--transition); cursor: pointer; list-style: none; border: none; }
         .culture-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(23, 123, 201, 0.3); filter: brightness(1.05); }
@@ -223,7 +187,6 @@
         @keyframes fadeInCard { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 768px) { .culture-grid { grid-template-columns: 1fr; } .culture-card[open] { grid-column: span 1; } }
 
-        /* TIME SECTION */
         @keyframes floatMember { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
         .avatar-container { position: relative; width: 220px; height: 220px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; }
         .blob-bg { position: absolute; width: 125%; height: 125%; z-index: -1; fill: var(--blob-color); filter: blur(4px); opacity: 0.12; transition: var(--transition); }
@@ -234,7 +197,6 @@
         .team-card:hover .blob-bg { transform: scale(1.1) rotate(15deg); opacity: 0.35; }
         .team-card:hover .avatar-circle img { transform: scale(1.08); }
 
-        /* --- ENTREGÁVEIS --- */
         .icon-svg { width: 45px; height: 45px; flex-shrink: 0; }
         .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 22px; background-color: #ffffff; border: 1px solid var(--border-blue); border-radius: 12px; text-decoration: none; color: var(--brand-blue); font-size: 16px; font-weight: 500; transition: var(--transition); }
         .menu-item:hover { background-color: var(--light-blue); border-color: var(--brand-cyan); transform: translateX(5px); box-shadow: 4px 4px 10px rgba(14, 165, 233, 0.1); }
@@ -242,7 +204,6 @@
         .menu-item.highlight { background-color: #e0f2fe; border-color: var(--brand-cyan); }
         .menu-item.highlight:hover { background-color: #bae6fd; }
 
-        /* --- FERRAMENTAS --- */
         .links-grid { display: flex; flex-direction: column; gap: 12px; }
         .tech-category { margin-bottom: 40px; background: #ffffff; border-radius: 16px; padding: 24px; border: 1px solid var(--border-blue); box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.05); transition: var(--transition); }
         .tech-category:hover { box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15); border-color: var(--brand-cyan); }
@@ -263,7 +224,6 @@
         @media (max-width: 768px) { .tools-grid { grid-template-columns: 1fr; } }
         @media (max-width: 650px) { .tech-category { padding: 16px; } .tool-card { padding: 12px; } }
 
-        /* --- BOTÃO WHATSAPP FLUTUANTE --- */
         .wa-fixed-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; display: flex; align-items: center; gap: 15px; }
         .wa-balloon { background: white; color: var(--text-main); padding: 12px 18px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.15); position: relative; opacity: 0; transform: translateX(20px); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); pointer-events: none; border: 1px solid #e5e7eb; }
         .wa-balloon::after { content: ''; position: absolute; right: -7px; top: 50%; transform: translateY(-50%); border-width: 7px 0 7px 7px; border-style: solid; border-color: transparent transparent transparent white; }
@@ -314,7 +274,7 @@
         </div>
     </section>
 
-    <!-- Problema (O que resolve?) -->
+    <!-- Problema -->
     <section id="o-que-resolve" class="py-24 px-6 bg-[#0a3b8c] overflow-hidden">
         <div class="max-w-4xl mx-auto text-center reveal">
             <div class="icon-box icon-box-light"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
@@ -354,18 +314,17 @@
         <section class="max-w-7xl mx-auto px-6 md:px-12 py-24">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 
-                <!-- Esquerda: Copywriting e Passos -->
+                <!-- Esquerda -->
                 <div class="reveal">
                     <span class="text-[#179cde] font-bold tracking-wider uppercase text-sm mb-3 block">Acesso Antecipado - Versão 2</span>
                     <h1 class="text-4xl md:text-5xl font-extrabold text-[#0a3b8c] leading-tight mb-6">
                         A sua assistente jurídica inteligente, onde você preferir.
                     </h1>
                     <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                        Conheça a <b>Clarinha v2</b>. Ela adapta a linguagem de acordo com sua idade para conversar no seu ritmo, e agora consegue ler <b>PDFs e Imagens</b> de andamentos processuais! 
+                        Conheça a <b>Clarinha v2</b>. Ela adapta a linguagem de acordo com sua idade e consegue ler <b>PDFs e Imagens</b> de andamentos processuais! 
                         Você pode usar o protótipo <b>diretamente nesta tela</b> ou levar a Clarinha com você no seu <b>Telegram</b>.
                     </p>
 
-                    <!-- Opção 1: Na tela -->
                     <div class="bg-[#f4f7ff] rounded-2xl p-5 border border-blue-100 flex items-center justify-between shadow-sm mb-4">
                         <div>
                             <span class="text-[#0a3b8c] font-bold text-xs tracking-wider uppercase mb-1 block">Opção 1</span>
@@ -376,7 +335,6 @@
                         <div class="text-3xl lg:hidden animate-bounce">👇</div>
                     </div>
 
-                    <!-- Opção 2: Telegram -->
                     <div class="bg-[#eaf4fa] rounded-2xl p-5 border border-[#179cde]/30 flex items-center justify-between shadow-sm hover:bg-[#e0f0f9] transition-colors cursor-pointer" onclick="document.getElementById('passo-a-passo-telegram').scrollIntoView({behavior: 'smooth'})">
                         <div>
                             <span class="text-[#179cde] font-bold text-xs tracking-wider uppercase mb-1 block">Opção 2</span>
@@ -387,10 +345,9 @@
                     </div>
                 </div>
 
-                <!-- Direita: O MVP (Celular Telegram) -->
+                <!-- Direita -->
                 <div class="reveal flex justify-center w-full">
                     <div class="phone-container">
-                        <!-- Cabeçalho (Telegram Header) -->
                         <div class="bg-[#179cde] text-white px-3 py-2.5 flex items-center shadow-md z-10">
                             <i class="fa-solid fa-arrow-left mr-4 text-lg cursor-pointer"></i>
                             <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden mr-3">
@@ -406,24 +363,18 @@
                             </div>
                         </div>
 
-                        <!-- Área do Chat -->
                         <div class="chat-bg"></div>
                         <div id="chat-area" class="chat-area">
                             <div class="system-badge">Hoje</div>
                         </div>
 
-                        <!-- Área de Input -->
                         <div class="bg-[#ffffff] p-2 flex items-end gap-2 z-10 border-t border-gray-200">
                             <div class="flex-1 bg-transparent flex items-end px-1 py-1 min-h-[44px]">
-                                <!-- Input de Anexo Oculto -->
                                 <input type="file" id="file-upload" accept="image/*,application/pdf" class="hidden">
-                                
                                 <button id="clip-btn" class="p-2 text-[#8696a0] hover:text-[#179cde] transition-colors text-xl">
                                     <i class="fa-solid fa-paperclip"></i>
                                 </button>
-                                
                                 <textarea id="message-input" rows="1" placeholder="Mensagem" class="flex-1 outline-none resize-none max-h-24 bg-transparent text-[15px] py-2 px-2" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
-                                
                                 <button class="p-2 text-[#8696a0] hover:text-[#179cde] transition-colors text-xl" onclick="document.getElementById('file-upload').click()">
                                     <i class="fa-regular fa-face-smile"></i>
                                 </button>
@@ -443,32 +394,28 @@
                 <div class="text-center mb-12">
                     <span class="bg-[#179cde]/10 text-[#179cde] py-1 px-3 rounded-full text-sm font-bold tracking-wide uppercase mb-3 inline-block">App Oficial</span>
                     <h2 class="text-3xl md:text-4xl font-bold text-[#0a3b8c] mb-4"><i class="fa-brands fa-telegram text-[#179cde] mr-2"></i>Como usar a Clarinha no Telegram</h2>
-                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">É super fácil levar a sua assistente jurídica no bolso. Siga os passos abaixo para falar com ela direto pelo aplicativo.</p>
+                    <p class="text-gray-600 text-lg max-w-2xl mx-auto">Para que o bot funcione, <b>mantenha esta página aberta no seu computador</b> e siga os passos abaixo para falar com ela pelo aplicativo.</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-                    <!-- Linha conectando os passos (apenas desktop) -->
                     <div class="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-[#179cde]/30 to-transparent -z-10 -translate-y-8"></div>
                     
-                    <!-- Passo 1 -->
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">1</div>
                         <h3 class="font-bold text-xl text-gray-900 mb-3">Abra o App</h3>
                         <p class="text-gray-600">Abra o aplicativo do <b>Telegram</b> no seu celular ou a versão para computador.</p>
                     </div>
                     
-                    <!-- Passo 2 -->
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform rotate-3">2</div>
                         <h3 class="font-bold text-xl text-gray-900 mb-3">Busque o Bot</h3>
                         <p class="text-gray-600">Na lupa de pesquisa do app, digite <b class="text-[#179cde]">@Clareira_Juridico_bot</b> ou <a href="https://t.me/Clareira_Juridico_bot" target="_blank" class="text-[#0a3b8c] font-bold underline hover:text-[#179cde]">clique neste link</a>.</p>
                     </div>
                     
-                    <!-- Passo 3 -->
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">3</div>
-                        <h3 class="font-bold text-xl text-gray-900 mb-3">Mande um "Oi"</h3>
-                        <p class="text-gray-600">Clique no botão <b>"Começar"</b> (ou Start) no chat e envie qualquer mensagem para ela iniciar!</p>
+                        <h3 class="font-bold text-xl text-gray-900 mb-3">Mande o /start</h3>
+                        <p class="text-gray-600">Clique em <b>"Começar"</b> (ou digite /start) no chat para a Clarinha iniciar o atendimento!</p>
                     </div>
                 </div>
             </div>
@@ -486,35 +433,27 @@
                     <div class="step-card bg-[#f8faff] border-0">
                         <div class="step-number text-[#179cde]">1</div>
                         <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Explore livremente</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Envie sua data de nascimento. Se você tiver 20 anos, ela falará como uma jovem. Se tiver 60, usará um tom formal e paciente.
-                        </p>
+                        <p class="text-gray-600 leading-relaxed">Envie sua data de nascimento. Se você tiver 20 anos, ela falará como uma jovem. Se tiver 60, usará um tom formal e paciente.</p>
                     </div>
                     <div class="step-card bg-[#f8faff] border-0">
                         <div class="step-number text-[#179cde]">2</div>
                         <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Envie Documentos</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Clique no clipe no chat, envie um PDF de um processo e peça para ela explicar o que está acontecendo.
-                        </p>
+                        <p class="text-gray-600 leading-relaxed">Clique no clipe no chat, envie um PDF de um processo e peça para ela explicar o que está acontecendo.</p>
                     </div>
                     <div class="step-card bg-[#eef3fb] border-0">
                         <div class="step-number bg-[#0a3b8c] text-white border-[#0a3b8c]">3</div>
                         <h3 class="text-xl font-bold text-[#0a3b8c] mb-3">Responda a pesquisa</h3>
-                        <p class="text-gray-600 leading-relaxed">
-                            Após testar, clique no botão abaixo e responda ao nosso questionário rápido para nos guiar.
-                        </p>
+                        <p class="text-gray-600 leading-relaxed">Após testar, clique no botão abaixo e responda ao nosso questionário rápido para nos guiar.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- SEÇÃO DE CTA -->
+        <!-- CTA -->
         <section class="bg-[#0a3b8c] py-16 px-6">
             <div class="max-w-3xl mx-auto text-center reveal">
                 <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Terminou de testar a Clareia?</h2>
-                <p class="text-blue-100 mb-10 text-lg">
-                    Sua experiência moldará os próximos passos da nossa inteligência artificial. Leva menos de 3 minutos para responder.
-                </p>
+                <p class="text-blue-100 mb-10 text-lg">Sua experiência moldará os próximos passos da nossa inteligência artificial. Leva menos de 3 minutos para responder.</p>
                 <a href="https://docs.google.com/forms/d/e/1FAIpQLSdIneFCKXNlC7J7ZrUk2aaQm3kxNoJ1KdfHusDG6_NuqI4J4Q/viewform?usp=sharing&ouid=113657872038468399466" 
                    target="_blank" 
                    class="inline-flex items-center gap-2 bg-white text-[#0a3b8c] font-bold py-4 px-8 rounded-xl shadow-lg hover:bg-gray-100 transition-colors">
@@ -524,7 +463,7 @@
         </section>
     </div>
 
-    <!-- FAQ (2 Colunas, Coruja pousada) -->
+    <!-- FAQ -->
     <section class="py-24 px-6 bg-[#FBFBFD]">
         <div class="max-w-7xl mx-auto">
             <header class="flex items-center gap-6 mb-16 justify-center">
@@ -556,67 +495,49 @@
         </div>
     </section>
 
-    <!-- Nossa Essência -->
+    <!-- Cultura -->
     <section id="cultura" class="py-24 px-6 bg-white border-t border-blue-100">
         <div class="max-w-[900px] mx-auto">
             <div class="text-center mb-16 reveal">
                 <h2 class="text-3xl md:text-4xl font-bold text-[#005691] mb-4">Nossa Essência</h2>
                 <p class="text-gray-500 text-lg">Valores que iluminam o caminho para a justiça acessível.</p>
             </div>
-            
             <div class="culture-grid reveal">
                 <details class="culture-card">
                     <summary>
                         <img src="https://clareia1.vercel.app/clareia_coruja.png" alt="Mascote Coruja Clareia" class="coruja-cultura" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'coruja-cultura\' style=\'display:flex;align-items:center;justify-content:center;font-size:30px;background:#fff;border-radius:50%;width:50px;height:50px;top:-35px;\'>🦉</div>')">
-                        <div class="icon-wrapper-cultura">
-                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-                        </div>
+                        <div class="icon-wrapper-cultura"><svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg></div>
                         <span>Nosso Propósito</span>
                     </summary>
-                    <div class="culture-content">
-                        <span class="highlight">Iluminar o caminho</span> entre o cidadão e seus direitos através da clareza absoluta e do fácil entendimento.
-                    </div>
+                    <div class="culture-content"><span class="highlight">Iluminar o caminho</span> entre o cidadão e seus direitos através da clareza absoluta e do fácil entendimento.</div>
                 </details>
-
                 <details class="culture-card">
                     <summary>
-                        <div class="icon-wrapper-cultura">
-                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
-                        </div>
+                        <div class="icon-wrapper-cultura"><svg class="card-icon-white" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg></div>
                         <span>Nossa Missão</span>
                     </summary>
-                    <div class="culture-content">
-                        <span class="highlight">Eliminar as barreiras do juridiquês</span>, transformando processos complexos em diálogos simples e acessíveis para todos os brasileiros.
-                    </div>
+                    <div class="culture-content"><span class="highlight">Eliminar as barreiras do juridiquês</span>, transformando processos complexos em diálogos simples e acessíveis para todos os brasileiros.</div>
                 </details>
-
                 <details class="culture-card">
                     <summary>
-                        <div class="icon-wrapper-cultura">
-                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-                        </div>
+                        <div class="icon-wrapper-cultura"><svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></div>
                         <span>Nossa Visão</span>
                     </summary>
-                    <div class="culture-content">
-                        <span class="highlight">Consolidar-se como a interface padrão</span> de comunicação entre o sistema judiciário brasileiro e a sociedade civil até o final de 2027.
-                    </div>
+                    <div class="culture-content"><span class="highlight">Consolidar-se como a interface padrão</span> de comunicação entre o sistema judiciário brasileiro e a sociedade civil até o final de 2027.</div>
                 </details>
-
                 <details class="culture-card">
                     <summary>
-                        <div class="icon-wrapper-cultura">
-                            <svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                        </div>
+                        <div class="icon-wrapper-cultura"><svg class="card-icon-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
                         <span>Nossos Valores</span>
                     </summary>
-                        <div class="culture-content">
-                            <div class="values-list">
-                                <div class="value-item"><b>Clareza Radical</b> Não apenas informamos, nós traduzimos o complexo para o comum.</div>
-                                <div class="value-item"><b>Empatia Digital</b> Design centrado na ansiedade e na necessidade real do cidadão.</div>
-                                <div class="value-item"><b>Justiça Acessível</b> Tecnologia como ponte para inclusão social e jurídica.</div>
-                                <div class="value-item"><b>Segurança Inviolável</b> Tratamento ético e custódia rigorosa de dados sensíveis (LGPD).</div>
-                            </div>
+                    <div class="culture-content">
+                        <div class="values-list">
+                            <div class="value-item"><b>Clareza Radical</b> Não apenas informamos, nós traduzimos o complexo para o comum.</div>
+                            <div class="value-item"><b>Empatia Digital</b> Design centrado na ansiedade e na necessidade real do cidadão.</div>
+                            <div class="value-item"><b>Justiça Acessível</b> Tecnologia como ponte para inclusão social e jurídica.</div>
+                            <div class="value-item"><b>Segurança Inviolável</b> Tratamento ético e custódia rigorosa de dados sensíveis (LGPD).</div>
                         </div>
+                    </div>
                 </details>
             </div>
         </div>
@@ -648,7 +569,6 @@
 
             <div class="tech-category">
                 <h2 class="tech-category-title">⭐ Principais</h2>
-                <p class="tech-category-desc">Documentos centrais e entregáveis fundamentais requisitados pelos professores/mentores.</p>
                 <div class="links-grid">
                     <a href="https://docs.google.com/document/d/1jPh4tPRbGIyhn0uMnEQga1RjDIHX9fukNgtmucodBvs/edit" target="_blank" class="menu-item">Entrega 1 - Desafios, Lacunas, Tendências/Oportunidades</a>
                     <a href="https://docs.google.com/document/d/1zuiOksBWL82Az_hUZSfOAIxv2AiWJF7X5ZJONYCCorQ/edit" target="_blank" class="menu-item">Entrega 2 - Achados Iniciais</a>
@@ -662,7 +582,6 @@
 
             <div class="tech-category">
                 <h2 class="tech-category-title">🛠️ Ferramentas Aplicadas</h2>
-                <p class="tech-category-desc">Atividades práticas, dinâmicas e documentação de frameworks utilizados.</p>
                 <div class="links-grid">
                     <a href="https://docs.google.com/document/d/1VB_dwNjBdZnA03zHqgo-wdPH28ak0wp2/edit?usp=sharing&ouid=113657872038468399466&rtpof=true&sd=true" target="_blank" class="menu-item highlight">Documentação Clareia (Resumo de Atividades)</a>
                     <a href="https://docs.google.com/presentation/d/1jH2RfZ9KGZ9-Ur0S5DHvunnWOZYPUMFmZ0MkCGhXiKQ/edit" target="_blank" class="menu-item">Concepção do Problema - Atividade 1 (aula)</a>
@@ -689,36 +608,17 @@
 
             <div class="tech-category">
                 <h2 class="tech-category-title">🧠 Inteligência e Automação</h2>
-                <p class="tech-category-desc">Núcleo de processamento de linguagem natural e orquestração de fluxos inteligentes utilizadas para o MVP.</p>
-                
                 <div class="tools-grid">
                     <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" alt="Google Gemini" class="tool-icon">
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Google Gemini</h3>
-                                <span class="tool-badge">AI</span>
-                            </div>
-                            <p class="tool-desc">Modelo multimodal de grande escala utilizado para análise de PDFs processuais, orquestração de insights e adaptação de linguagem baseada em idade (Clareia v2).</p>
-                        </div>
+                        <div class="tool-icon-wrapper"><img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" alt="Google Gemini" class="tool-icon"></div>
+                        <div class="tool-info"><div class="tool-header"><h3 class="tool-name">Google Gemini</h3><span class="tool-badge">AI</span></div><p class="tool-desc">Modelo multimodal utilizado para análise de PDFs e adaptação de linguagem (Clareia v2).</p></div>
                     </div>
                     <div class="tool-card">
-                        <div class="tool-icon-wrapper">
-                            <i class="fa-brands fa-telegram text-[#179cde] text-2xl"></i>
-                        </div>
-                        <div class="tool-info">
-                            <div class="tool-header">
-                                <h3 class="tool-name">Telegram API</h3>
-                                <span class="tool-badge">BOT</span>
-                            </div>
-                            <p class="tool-desc">Integração via Long-Polling para o bot oficial interagir com os usuários diretamente pelo aplicativo em tempo real.</p>
-                        </div>
+                        <div class="tool-icon-wrapper"><i class="fa-brands fa-telegram text-[#179cde] text-2xl"></i></div>
+                        <div class="tool-info"><div class="tool-header"><h3 class="tool-name">Telegram API</h3><span class="tool-badge">BOT</span></div><p class="tool-desc">Integração via Long-Polling para o bot oficial interagir em tempo real.</p></div>
                     </div>
                 </div>
             </div>
-
             <p class="tech-note">Nota Técnica: Todas as marcas e logos são propriedades dos seus respetivos detentores. Esta documentação reflete a arquitetura atual do Projeto Clareia em 2026.</p>
         </div>
     </section>
@@ -729,12 +629,10 @@
         <p class="text-gray-500 font-medium">© 2026 Clareia. Todos os direitos reservados. </p>
     </footer>
 
-    <!-- BOTÃO WHATSAPP FLUTUANTE (Atualizado) -->
+    <!-- BOTÃO WHATSAPP FLUTUANTE -->
     <div class="wa-fixed-container">
         <div class="wa-balloon">Ficou com dúvida? Fale com a gente.</div>
-        <a href="https://wa.me/5581996243714" target="_blank" class="wa-btn">
-            <i class="fa-brands fa-whatsapp"></i>
-        </a>
+        <a href="https://wa.me/5581996243714" target="_blank" class="wa-btn"><i class="fa-brands fa-whatsapp"></i></a>
     </div>
 
     <script>
@@ -778,8 +676,11 @@
             revealObserver.observe(card);
         });
 
-        // ================= LOGICA DO MVP V2 (TELEGRAM + GEMINI 2.5 FLASH MULTIMODAL) =================
-        const apiKey = ""; // Injetada automaticamente
+        // ================= LOGICA DO MVP V2 =================
+        
+        const GEMINI_API_KEY = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc"; 
+        
+        const apiKey = GEMINI_API_KEY; 
         const model = "gemini-2.5-flash-preview-09-2025";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         
@@ -871,7 +772,6 @@
             }
         });
 
-        // Helper: File to Base64
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -884,9 +784,8 @@
             });
         }
 
-        // Fetch with Retry
-        async function fetchWithRetry(url, options, retries = 5) {
-            const delays = [1000, 2000, 4000, 8000, 16000];
+        async function fetchWithRetry(url, options, retries = 3) {
+            const delays = [1000, 2000, 4000];
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url, options);
@@ -899,13 +798,19 @@
                     return await response.json();
                 } catch (e) {
                     if (i === retries - 1) throw e;
-                    console.warn(`Retry ${i+1}/${retries} after error:`, e.message);
+                    console.warn(`Tentativa ${i+1}/${retries} falhou. Retentando...`, e.message);
                     await new Promise(res => setTimeout(res, delays[i]));
                 }
             }
         }
 
         async function callGeminiAPI() {
+            if (!apiKey) {
+                addMessageToUI("❌ Erro: Chave da API do Gemini não configurada no código.", false);
+                setTypingStatus(false);
+                return;
+            }
+
             const payload = { 
                 contents: webChatHistory,
                 systemInstruction: { parts: [{ text: systemInstruction }] }
@@ -1038,6 +943,10 @@
 
         // ================= MOTOR DO TELEGRAM BOT =================
         async function startTelegramBotEngine() {
+            if (!apiKey) {
+                console.log("❌ Motor Telegram suspenso: Faltando chave GEMINI_API_KEY no código.");
+                return;
+            }
             console.log("🚀 Motor do Telegram Bot Iniciado no Navegador! Escutando mensagens...");
             pollTelegram();
         }
@@ -1058,18 +967,25 @@
                                 handleTelegramMessage(update.message.chat.id, update.message.text);
                             }
                             else if (update.message.document || update.message.photo) {
-                                sendTelegramMessage(update.message.chat.id, "🦉 Recebi seu arquivo! Como estou rodando em modo protótipo no navegador do desenvolvedor agora mesmo, não consigo baixar o arquivo por aqui. Mas na versão web aqui da página funciona super bem!");
+                                sendTelegramMessage(update.message.chat.id, "🦉 Recebi seu arquivo! Como estou rodando em modo protótipo no navegador do desenvolvedor agora mesmo, não consigo baixar o arquivo por aqui. Mas na versão web lá da página funciona super bem!");
                             }
                         }
                     }
                 }
             } catch (e) {
-                console.log("⏳ Aguardando novas mensagens do Telegram...");
+                // Timeout ou erro de rede normal do long polling
             }
             setTimeout(pollTelegram, 2000);
         }
 
         async function handleTelegramMessage(chatId, text) {
+            // Se for o comando de iniciar, tratamos separadamente
+            if (text === '/start') {
+                tgSessions[chatId] = []; // Limpa histórico
+                await sendTelegramMessage(chatId, "Olá! 🦉 Eu sou a Clarinha, a assistente jurídica da Clareia.\n\nPara começarmos bem, como você prefere que eu te chame e qual é a sua data de nascimento?");
+                return;
+            }
+
             if (!tgSessions[chatId]) tgSessions[chatId] = []; 
             
             tgSessions[chatId].push({ role: "user", parts: [{ text: text }] });
