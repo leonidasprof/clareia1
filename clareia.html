@@ -351,7 +351,7 @@
                         <div class="bg-[#179cde] text-white px-3 py-2.5 flex items-center shadow-md z-10">
                             <i class="fa-solid fa-arrow-left mr-4 text-lg cursor-pointer"></i>
                             <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden mr-3 shadow-sm border border-gray-100">
-                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clareia Profile" class="w-[85%] h-[85%] object-contain">
+                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clareia Profile" class="w-full h-full object-contain p-1">
                             </div>
                             <div class="flex-1 cursor-pointer">
                                 <h1 class="font-semibold text-[16px] leading-tight">Clarinha | Jurídico</h1>
@@ -678,8 +678,8 @@
 
         // ================= LOGICA DO MVP V2 =================
         
-        // A API Key será provida no tempo de execução pelo ambiente Canvas
-        const apiKey = ""; 
+        // A API Key foi configurada com a chave fornecida
+        const apiKey = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc"; 
         const model = "gemini-2.5-flash-preview-09-2025";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         
@@ -990,6 +990,14 @@
                             processedUpdates.add(update.update_id);
 
                             if (update.message) {
+                                // Ignora mensagens com mais de 60 segundos de idade para evitar flood de "Tilts" 
+                                // caso o bot seja reiniciado e tente responder a todas as mensagens de testes passados de uma vez.
+                                const now = Math.floor(Date.now() / 1000);
+                                if (update.message.date < now - 60) {
+                                    console.log("⏳ Ignorando mensagem antiga do Telegram");
+                                    continue;
+                                }
+
                                 console.log("📩 Nova mensagem no Telegram de:", update.message.chat.first_name);
                                 if (update.message.text) {
                                     // AWAIT é fundamental aqui para processar mensagens sequencialmente e evitar race-conditions com os push e pops
