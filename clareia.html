@@ -678,8 +678,8 @@
 
         // ================= LOGICA DO MVP V2 =================
         
-        // A API Key foi configurada com a chave fornecida
-        const apiKey = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc"; 
+        // A API Key deve ficar vazia para que o ambiente de teste a forneça automaticamente
+        const apiKey = ""; 
         const model = "gemini-2.5-flash-preview-09-2025";
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
         
