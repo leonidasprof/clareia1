@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Profissional Autodirigido</title>
+    
+    <!-- Tipografia Moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           SISTEMA DE VARIÁVEIS E BASE
+           ========================================================================== */
+        :root {
+            --rsb-blue: #003366;
+            --rsb-red: #cc0000;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --transition-epic: 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-dark);
+            overflow: hidden; 
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           BACKGROUND CURVO (SVG VETORIAL INSPIRADO NA IMAGEM)
+           ========================================================================== */
+        .bg-svg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           LOGO EM CÍRCULO & QUICANDO (BOLA)
+           ========================================================================== */
+        .logo-wrapper {
+            position: fixed;
+            top: 2rem; left: 3rem;
+            z-index: 9999; /* Elevação máxima para não sumir sob os slides */
+            perspective: 1000px;
+            pointer-events: auto;
+        }
+
+        .logo-circle {
+            width: 100px;
+            height: 100px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounceLogo 0.6s infinite alternate cubic-bezier(0.5, 0.05, 1, 0.5);
+            transform-style: preserve-3d;
+            border: 2px solid rgba(0, 51, 102, 0.05);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+        }
+
+        .logo {
+            width: 65%;
+            height: 65%;
+            object-fit: contain;
+            transition: transform 0.1s ease-out;
+            transform: translateZ(20px); /* Reduzido levemente para evitar clipping no Safari */
+        }
+
+        /* Caso a imagem quebre, estilizamos o texto alternativo */
+        .logo:before {
+            content: "Logo";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            color: var(--rsb-blue);
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 50%;
+        }
+
+        @keyframes bounceLogo {
+            0% { transform: translateY(0); box-shadow: 0 10px 15px rgba(0,0,0,0.15); }
+            100% { transform: translateY(-35px); box-shadow: 0 35px 25px rgba(0,0,0,0.08); }
+        }
+
+        /* ==========================================================================
+           TRANSIÇÕES DE SLIDES ÉPICAS (3D SWIPE / COVERFLOW)
+           ========================================================================== */
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            perspective: 1500px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none; /* Crucial para não bloquear os botões */
+            
+            transform: translateX(60vw) scale(0.7) rotateY(-25deg);
+            filter: blur(15px);
+            transition: transform var(--transition-epic), 
+                        opacity var(--transition-epic), 
+                        filter var(--transition-epic),
+                        visibility 0s linear 0.9s;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            z-index: 20;
+            transform: translateX(0) scale(1) rotateY(0);
+            filter: blur(0);
+            transition: transform var(--transition-epic), 
+                        opacity var(--transition-epic), 
+                        filter var(--transition-epic),
+                        visibility 0s linear 0s;
+        }
+
+        .slide.previous {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateX(-60vw) scale(0.7) rotateY(25deg);
+            filter: blur(15px);
+            transition: transform var(--transition-epic), 
+                        opacity var(--transition-epic), 
+                        filter var(--transition-epic),
+                        visibility 0s linear 0.9s;
+        }
+
+        .slide-content {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 24px;
+            padding: 4rem 5rem;
+            max-width: 900px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12), inset 0 0 0 1px rgba(255,255,255,0.6);
+        }
+
+        /* ==========================================================================
+           TIPOGRAFIA INTERNA DOS SLIDES
+           ========================================================================== */
+        h1 { color: var(--rsb-blue); font-size: 3.2rem; font-weight: 800; margin-bottom: 1rem; line-height: 1.2; letter-spacing: -1px; }
+        h2 { color: var(--rsb-red); font-size: 2.2rem; font-weight: 600; margin-bottom: 1.5rem; }
+        h3 { color: var(--rsb-blue); font-size: 1.5rem; margin-bottom: 1rem; }
+        p { font-size: 1.15rem; line-height: 1.7; color: var(--text-light); margin-bottom: 1.5rem; }
+        ul { list-style-type: none; margin-left: 0; margin-bottom: 1.5rem; }
+        li { font-size: 1.15rem; line-height: 1.7; color: var(--text-dark); margin-bottom: 0.8rem; position: relative; padding-left: 28px; }
+        li::before { content: '•'; color: var(--rsb-red); font-size: 1.8rem; position: absolute; left: 0; top: -4px; }
+        .highlight { color: var(--rsb-red); font-weight: 600; }
+
+        /* ==========================================================================
+           BARRA DE PROGRESSO & CONTROLES PÍLULA
+           ========================================================================== */
+        .progress-container { position: fixed; top: 0; left: 0; width: 100%; height: 6px; background: rgba(0,0,0,0.05); z-index: 9999; }
+        .progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--rsb-blue), var(--rsb-red)); transition: width 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+        .controls {
+            position: fixed;
+            bottom: 3rem; left: 50%;
+            transform: translateX(-50%);
+            display: flex; gap: 1rem; 
+            z-index: 99999; /* Força os botões ficarem acima de qualquer slide em 3D */
+            pointer-events: auto;
+        }
+
+        .btn-pill {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .btn-pill:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.25); }
+        .btn-pill:active { transform: translateY(1px); }
+        .btn-pill:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-prev { background-color: var(--rsb-blue); }
+        .btn-next { background-color: var(--rsb-red); }
+
+        /* ==========================================================================
+           BADGE DO AUTOR (AUTORIDADE)
+           ========================================================================== */
+        .author-badge {
+            position: fixed;
+            bottom: 1.2rem; /* Movido mais para baixo */
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Reduzido o espaço interno */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 5px 16px 5px 5px; /* Reduzido o padding */
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .author-badge:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .author-badge img {
+            width: 38px; /* Foto diminuída */
+            height: 38px; /* Foto diminuída */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--rsb-blue);
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .author-name {
+            font-size: 0.85rem; /* Fonte do nome menor */
+            font-weight: 800;
+            color: var(--rsb-blue);
+            line-height: 1.2;
+        }
+        
+        .author-title {
+            font-size: 0.7rem; /* Fonte do cargo menor */
+            font-weight: 400;
+            color: var(--text-light);
+            line-height: 1;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; } h2 { font-size: 1.6rem; }
+            .slide-content { padding: 2.5rem; width: 95%; }
+            .logo-wrapper { top: 1rem; left: 1.5rem; }
+            .logo-circle { width: 70px; height: 70px; }
+            .logo { width: 65%; height: 65%; }
+            
+            /* Ajuste do Badge para Mobile */
+            .author-badge { bottom: 1rem; right: 1rem; padding: 4px 12px 4px 4px; }
+            .author-badge img { width: 32px; height: 32px; }
+            .author-name { font-size: 0.75rem; }
+            .author-title { font-size: 0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- VETOR DE BACKGROUND: Curvas afiadas, sobrepostas em azul e vermelho -->
+    <svg class="bg-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 L1200,0 C800,150 400,450 0,650 Z" fill="#d31a22" opacity="0.9"/>
+        <path d="M0,0 L900,0 C500,100 200,300 0,450 Z" fill="#002c5f"/>
+        <path d="M0,0 L600,0 C300,50 100,200 0,350 Z" fill="#0065a4"/>
+        <path d="M1920,0 L1300,0 C1550,150 1750,250 1920,400 Z" fill="#d31a22"/>
+        <path d="M1920,1080 L700,1080 C1100,900 1500,700 1920,450 Z" fill="#002c5f"/>
+        <path d="M1920,1080 L1100,1080 C1400,950 1700,800 1920,600 Z" fill="#0065a4"/>
+        <path d="M0,1080 L800,1080 C500,950 200,950 0,850 Z" fill="#d31a22"/>
+        <path d="M0,1080 L400,1080 C250,1000 100,1020 0,950 Z" fill="#9a0000"/>
+    </svg>
+
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+
+    <!-- LOGO INTERATIVA (BOLA QUICANDO) -->
+    <!-- Adicionado evento 'onerror' para garantir que a logo não suma se o link expirar -->
+    <div class="logo-wrapper">
+        <div class="logo-circle">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn9KFigF2mG7LFVwuL3dcYVxmkf_jov9on2A&s" 
+                 onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3281/3281323.png';" 
+                 alt="Logo da Instituição" class="logo" id="interactive-logo">
+        </div>
+    </div>
+
+    <!-- MOTOR DE SLIDES (COVERFLOW) -->
+    <main class="presentation-container" id="slider">
+        <section class="slide active">
+            <div class="slide-content">
+                <h1>O Profissional Autodirigido</h1>
+                <h2>Protagonismo e Inovação</h2>
+                <p>Exploraremos o conceito de autodireção e como essa competência transforma nossa atuação, refletindo diretamente nos valores e propósitos da nossa instituição.</p>
+            </div>
+        </section>
+
+        <!-- NOVO SLIDE: ESTRUTURA DA AULA -->
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Visão Geral da Aula</h2>
+                <p>Nossa trilha de aprendizado está estruturada da seguinte forma:</p>
+                <ul>
+                    <li><strong>Conteúdo:</strong> O Profissional Autodirigido, Protagonismo e Construção de Soft Skills.</li>
+                    <li><strong>Objetivo da aula:</strong> Capacitar os participantes a desenvolverem a autodireção e a liderança de si mesmos para atuarem com autonomia e inovação.</li>
+                    <li><strong>Metodologias:</strong> Exposição interativa, reflexão guiada e aplicação prática de conceitos comportamentais.</li>
+                    <li><strong>Instrutor:</strong> Prof. Leônidas Leandro</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>O que é Autodireção?</h2>
+                <p>O profissional autodirigido não espera pelas circunstâncias perfeitas; ele as cria. É a capacidade de assumir a liderança da própria trajetória de forma intencional e estratégica.</p>
+                <ul>
+                    <li><strong>Autonomia Intencional:</strong> Capacidade de tomar decisões guiadas por propósitos claros.</li>
+                    <li><strong>Responsabilidade Ativa:</strong> Assumir a autoria dos resultados e do desenvolvimento contínuo.</li>
+                    <li><strong>Iniciativa:</strong> Mover-se antes de ser solicitado, identificando oportunidades de melhoria.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Construção de Soft Skills e Autonomia</h2>
+                <p>A autodireção transcende a competência técnica; ela exige a orquestração de diversas <span class="highlight">soft skills</span>. Nossos princípios formam a base comportamental perfeita para esse desenvolvimento:</p>
+                <ul>
+                    <li><strong>Pensamento Crítico:</strong> Planejamento lógico e análise de cenários complexos para tomadas de decisão assertivas.</li>
+                    <li><strong>Ética e Propósito:</strong> Alinhamento profundo aos valores institucionais, garantindo que a autonomia atenda ao bem coletivo.</li>
+                    <li><strong>Inteligência Relacional:</strong> A capacidade de inovar e liderar a si mesmo criando ambientes colaborativos e empáticos.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Mentalidade de Crescimento (Growth Mindset)</h2>
+                <p>O motor da autodireção é a crença de que nossas habilidades podem ser desenvolvidas por meio de dedicação e trabalho duro.</p>
+                <p>O profissional de elite enxerga desafios não como bloqueios, mas como plataformas de lançamento para o aprendizado.</p>
+                <ul>
+                    <li>Abrace o desconforto como ferramenta de evolução.</li>
+                    <li>Substitua o "não sei" pelo <span class="highlight">"ainda não sei, mas vou aprender"</span>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Gestão do Tempo e Foco</h2>
+                <p>A autonomia exige maestria sobre o próprio tempo. Estar ocupado é diferente de ser produtivo.</p>
+                <ul>
+                    <li><strong>Matriz de Priorização:</strong> Diferenciar urgência de importância (Evitar apagar incêndios constantes).</li>
+                    <li><strong>Blocos de Foco:</strong> Proteger o tempo para trabalho profundo (Deep Work).</li>
+                    <li><strong>Disciplina:</strong> A capacidade de manter compromissos consigo mesmo.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Inteligência Emocional</h2>
+                <p>Nenhuma estratégia resiste a um ambiente emocionalmente instável. O autoconhecimento é o pilar da autogestão.</p>
+                <ul>
+                    <li>Identificação e regulação de emoções sob pressão.</li>
+                    <li>Resiliência para lidar com frustrações e mudanças de cenário.</li>
+                    <li>Empatia para entender as necessidades dos alunos, colegas e de toda a comunidade.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Comunicação Assertiva</h2>
+                <p>O profissional autodirigido sabe que comunicação não é o que ele diz, é o que o outro entende.</p>
+                <p>Uma comunicação eficaz constrói pontes e elimina retrabalho, promovendo um ambiente colaborativo e transparente.</p>
+                <ul>
+                    <li>Clareza objetiva na passagem de diretrizes.</li>
+                    <li>Capacidade de fornecer e receber feedback construtivo.</li>
+                    <li>Escuta ativa (ouvir para compreender, não para responder).</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Resolução de Problemas Complexos</h2>
+                <p>Na era da informação, ter as respostas é menos importante do que saber fazer as perguntas certas.</p>
+                <ul>
+                    <li><strong>Pensamento Crítico:</strong> Analisar a raiz do problema, não apenas os sintomas.</li>
+                    <li><strong>Inovação Prática:</strong> Buscar soluções viáveis com os recursos disponíveis.</li>
+                    <li><strong>Agilidade de Aprendizado:</strong> Adaptar-se rapidamente a novos contextos e tecnologias educacionais.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>O Poder da Colaboração</h2>
+                <p>Autodireção <span class="highlight">não significa isolamento</span>. Os maiores resultados são alcançados quando profissionais autônomos unem forças em prol de um objetivo comum.</p>
+                <ul>
+                    <li>Sinergia de competências (1 + 1 = 3).</li>
+                    <li>Compartilhamento ativo de conhecimento (Lifelong Learning em rede).</li>
+                    <li>Alinhamento total com as missões da instituição.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Liderança de Si Mesmo (Self-Leadership)</h2>
+                <p>Antes de liderar projetos, equipes ou alunos, é fundamental liderar a si próprio.</p>
+                <p>Isso envolve a criação de um sistema pessoal de metas, checagem de progresso e correção de rotas, mantendo sempre o senso de propósito alinhado aos nossos princípios educacionais.</p>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h2>Adaptabilidade Frente ao Futuro</h2>
+                <p>A educação e o mercado estão em transformação exponencial. A rigidez é o maior inimigo do profissional moderno.</p>
+                <ul>
+                    <li>Cultive a curiosidade intelectual.</li>
+                    <li>Esteja aberto a desaprender processos obsoletos.</li>
+                    <li>Veja a tecnologia como aliada na potencialização humana, não como substituta.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="slide">
+            <div class="slide-content">
+                <h1>O Futuro em Nossas Mãos</h1>
+                <h2>Chamado à Ação</h2>
+                <p>O profissional autodirigido é o protagonista da sua história e o arquiteto do <span class="highlight">nosso futuro</span>.</p>
+                <p>Qual será o seu próximo passo rumo ao seu desenvolvimento autônomo e contínuo?</p>
+                <br>
+                <h3>Obrigado!</h3>
+            </div>
+        </section>
+    </main>
+
+    <!-- Controles -->
+    <div class="controls">
+        <button class="btn-pill btn-prev" id="btnPrev" disabled aria-label="Anterior">
+            &larr;
+        </button>
+        <button class="btn-pill btn-next" id="btnNext" aria-label="Próximo">
+            &rarr;
+        </button>
+    </div>
+
+    <!-- BADGE DO AUTOR -->
+    <div class="author-badge">
+        <img src="https://clareia1.vercel.app/Leonidas.jpg" alt="Prof. Leônidas Leandro">
+        <div class="author-info">
+            <span class="author-name">Prof. Leônidas Leandro</span>
+            <span class="author-title">Facilitador</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const btnPrev = document.getElementById('btnPrev');
+            const btnNext = document.getElementById('btnNext');
+            const progressBar = document.getElementById('progressBar');
+            const logo = document.getElementById('interactive-logo');
+            
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            /* ==========================
+               EFEITO LOGO 3D PARALLAX
+               ========================== */
+            document.addEventListener('mousemove', (e) => {
+                if(!logo) return;
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                logo.style.transform = `translateZ(20px) rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            });
+
+            /* ==========================
+               MOTOR DO SLIDER
+               ========================== */
+            function updateSlider() {
+                progressBar.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+                
+                btnPrev.disabled = currentSlide === 0;
+                btnNext.disabled = currentSlide === totalSlides - 1;
+
+                slides.forEach((slide, index) => {
+                    slide.classList.remove('active', 'previous');
+                    
+                    if (index === currentSlide) {
+                        slide.classList.add('active'); 
+                    } else if (index < currentSlide) {
+                        slide.classList.add('previous'); 
+                    } 
+                });
+            }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateSlider();
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateSlider();
+                }
+            }
+
+            btnNext.addEventListener('click', nextSlide);
+            btnPrev.addEventListener('click', prevSlide);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') nextSlide();
+                if (e.key === 'ArrowLeft') prevSlide();
+            });
+
+            updateSlider(); // Init
+        });
+    </script>
+</body>
+</html>
+```
