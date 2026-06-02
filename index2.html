@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Imagens - Clareia</title>
+    <!-- Utilizando Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+        .foto-perfil {
+            object-fit: cover;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12 text-slate-800">
+
+<div class="max-w-7xl mx-auto">
+    <!-- Cabeçalho -->
+    <header class="mb-10 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-[#0056b3] mb-2">Ativos Visuais - Clareia</h1>
+            <p class="text-slate-500">Visualize os 26 ativos principais e copie o código HTML para o seu projeto.</p>
+        </div>
+        <div>
+            <input type="file" id="uploadInput" accept="image/*" class="hidden">
+            <button onclick="document.getElementById('uploadInput').click()" class="bg-[#10b981] hover:bg-[#059669] text-white py-2 px-6 rounded-lg font-semibold transition-colors shadow-sm flex items-center gap-2 w-full md:w-auto justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                Fazer Upload
+            </button>
+        </div>
+    </header>
+
+    <!-- Grid de Imagens -->
+    <div id="imageGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+        <!-- 1. Imagem Principal -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="imagem.png" alt="Senhora com advogado" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=imagem.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">imagem.png</p>
+                <button onclick="copyToClipboard('<img src=\'imagem.png\' alt=\'Cliente em atendimento\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 2. Mockup 1 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="mockup_clareia21.png" alt="Mockup Clareia" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=mockup_clareia21.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">mockup_clareia21.png</p>
+                <button onclick="copyToClipboard('<img src=\'mockup_clareia21.png\' alt=\'Mockup aplicativo\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 3. Mockup 2 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="Clareia_mock2.png" alt="Mockup Whatsapp" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Clareia_mock2.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Clareia_mock2.png</p>
+                <button onclick="copyToClipboard('<img src=\'Clareia_mock2.png\' alt=\'Mockup Whatsapp\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 4. Mockup 03 (Clarinha Chat) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md border-blue-100">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="mockup_03.png" alt="Mockup Clarinha" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=mockup_03.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">mockup_03.png</p>
+                <button onclick="copyToClipboard('<img src=\'mockup_03.png\' alt=\'Chat da Clarinha\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 5. Logo Ícone -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="logo_clareia_icone.png" alt="Logo Ícone" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=logo_clareia_icone.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">logo_clareia_icone.png</p>
+                <button onclick="copyToClipboard('<img src=\'logo_clareia_icone.png\' alt=\'Logo Clareia\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 6. Mascote Coruja -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-[#0a0a0a] flex items-center justify-center p-4 relative">
+                <img src="clareia_coruja.png" alt="Mascote Coruja" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=clareia_coruja.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">clareia_coruja.png</p>
+                <button onclick="copyToClipboard('<img src=\'clareia_coruja.png\' alt=\'Mascote Coruja\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 7. Aynoã -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                <img src="Aynoã.jpg" alt="Aynoã" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Aynoã.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Aynoã.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Aynoã.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 8. Leonidas -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                <img src="Leonidas.jpg" alt="Leonidas" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Leonidas.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Leonidas.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Leonidas.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 9. Cauã -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                <img src="Cauã.png" alt="Cauã" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Cauã.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Cauã.png</p>
+                <button onclick="copyToClipboard('<img src=\'Cauã.png\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 10. Danilo -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                <img src="Danilo.jpg" alt="Danilo" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Danilo.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Danilo.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Danilo.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 11. Marcela -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                <img src="Marcela.jpg" alt="Marcela" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Marcela.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Marcela.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Marcela.jpg\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 12. Beatriz -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                <img src="Beatriz.png" alt="Beatriz" class="w-full h-full foto-perfil" onerror="this.src='https://placehold.co/400x300?text=Beatriz.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Beatriz.png</p>
+                <button onclick="copyToClipboard('<img src=\'Beatriz.png\' class=\'foto-perfil\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 13. Logo Clareia 003 -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="Clareia_003.png" alt="Logo Clareia 003" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Clareia_003.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Clareia_003.png</p>
+                <button onclick="copyToClipboard('<img src=\'Clareia_003.png\' alt=\'Logo Clareia 003\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 14. Logo Clareia 2 (Preta) -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-[#0a0a0a] flex items-center justify-center p-4 relative">
+                <img src="logo_clareia2.png" alt="Logo Clareia Dark" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=logo_clareia2.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">logo_clareia2.png</p>
+                <button onclick="copyToClipboard('<img src=\'logo_clareia2.png\' alt=\'Logo Clareia Dark\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 15. Icon Grupo SC -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="icongruposc.png" alt="Icon Grupo SC" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=icongruposc.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">icongruposc.png</p>
+                <button onclick="copyToClipboard('<img src=\'icongruposc.png\' alt=\'Icon Grupo SC\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 16. 2LS Tecnologia -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="2LS_tecnologia.png" alt="2LS Tecnologia" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=2LS_tecnologia.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">2LS_tecnologia.png</p>
+                <button onclick="copyToClipboard('<img src=\'2LS_tecnologia.png\' alt=\'2LS Tecnologia\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 17. logo1.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="logo1.png" alt="Logo 1" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=logo1.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">logo1.png</p>
+                <button onclick="copyToClipboard('<img src=\'logo1.png\' alt=\'Logo 1\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 18. logo2.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="logo2.png" alt="Logo 2" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=logo2.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">logo2.png</p>
+                <button onclick="copyToClipboard('<img src=\'logo2.png\' alt=\'Logo 2\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 19. n8n.jpg -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="n8n.jpg" alt="n8n" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=n8n.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">n8n.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'n8n.jpg\' alt=\'n8n\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 20. Next.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="Next.png" alt="Next" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Next.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Next.png</p>
+                <button onclick="copyToClipboard('<img src=\'Next.png\' alt=\'Next\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 21. projetos.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="projetos.png" alt="projetos" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=projetos.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">projetos.png</p>
+                <button onclick="copyToClipboard('<img src=\'projetos.png\' alt=\'projetos\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 22. sql.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="sql.png" alt="sql" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=sql.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">sql.png</p>
+                <button onclick="copyToClipboard('<img src=\'sql.png\' alt=\'sql\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 23. Workspace.jpg -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="Workspace.jpg" alt="Workspace" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=Workspace.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">Workspace.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'Workspace.jpg\' alt=\'Workspace\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 24. leo345.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="leo345.png" alt="leo345" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=leo345.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">leo345.png</p>
+                <button onclick="copyToClipboard('<img src=\'leo345.png\' alt=\'leo345\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 25. léo346.png -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="léo346.png" alt="léo346" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=léo346.png'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">léo346.png</p>
+                <button onclick="copyToClipboard('<img src=\'léo346.png\' alt=\'léo346\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+        <!-- 26. lógica_python.jpg -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md">
+            <div class="h-48 bg-slate-100 flex items-center justify-center p-4 relative">
+                <img src="lógica_python.jpg" alt="Lógica Python" class="max-h-full max-w-full object-contain" onerror="this.src='https://placehold.co/400x300?text=lógica_python.jpg'">
+            </div>
+            <div class="p-5 flex-1 flex flex-col justify-between">
+                <p class="text-sm font-medium text-slate-700 mb-3 truncate">lógica_python.jpg</p>
+                <button onclick="copyToClipboard('<img src=\'lógica_python.jpg\' alt=\'Lógica Python\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white px-6 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+    <span class="font-medium">Tag HTML copiada!</span>
+</div>
+
+<script>
+    function copyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.top = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showToast();
+        } catch (err) {
+            console.error('Erro:', err);
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.remove('translate-y-20', 'opacity-0');
+        setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 2500);
+    }
+
+    document.getElementById('uploadInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const html = `
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col transition-transform hover:-translate-y-1 hover:shadow-md animate-fade-in">
+                <div class="h-48 bg-slate-100 flex items-center justify-center p-0 relative">
+                    <img src="${event.target.result}" class="w-full h-full object-cover">
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between">
+                    <p class="text-sm font-medium text-slate-700 mb-3 truncate">${file.name}</p>
+                    <button onclick="copyToClipboard('<img src=\\'${file.name}\\' alt=\\'${file.name}\\'>')" class="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white py-2 px-4 rounded-lg text-sm font-semibold transition-colors">Copiar Tag HTML</button>
+                </div>
+            </div>`;
+            document.getElementById('imageGrid').insertAdjacentHTML('afterbegin', html);
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
+
+</body>
+</html>
