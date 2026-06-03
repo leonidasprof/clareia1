@@ -1,0 +1,105 @@
+Relatório da Enquete MVP.1
+Uma análise imersiva dos primeiros passos para democratizar o acesso jurídico no Brasil. Elaborado por D³ — Design Orientado a Dados .
+
+Capítulo 1: O Terreno
+O que descobrimos com nossos usuários
+
+O Cenário Atual
+O sistema jurídico brasileiro é um labirinto escuro para a maioria dos cidadãos. A Clareia nasceu para ser a luz nesse caminho, utilizando IA via WhatsApp. Testamos nosso MVP com 15 usuários (26 a 50 anos) para descobrir se estamos realmente 'clareando' a situação.
+
+Objetivo da sombria
+A missão da pesquisa era simples: nossa tradução do 'juridiquês' funciona? As pessoas investem na IA para algo tão sério? E quais são os próximos recursos que devemos construir?
+
+Capítulo 2: A Voz dos Dados
+Métricas que contam a história da adoção
+
+100%
+Adoção do Canal
+Conforto total com a interface do WhatsApp
+
+86,7%
+Eficácia da Tradução
+Achei a linguagem da IA ​​perfeitamente clara
+
+66,7%
+Saúde Mental
+Relataram queda de ansiedade com as variações
+
+53,3%
+Necessidade de Prova
+Fariam 'Double Check' do advogado no Google
+
+A Eficiência da Clarinha
+O coração da Clareia são os LLMs Gemini e Grok. Perguntamos aos usuários:
+"O quão clara ficou a explicação do seu processo?"
+
+Entendimento Perfeito (Satisfeitos)
+86,7%
+Dúvidas Residuais (Oportunidade)
+13,3%
+Insight: Estes 13% representam nossa próxima fronteira. Refinar o prompt da IA ​​para linguagem ainda mais acessível para pessoas com baixíssima escolaridade.
+
+Capítulo 4: Próximos Passos
+Cruzando Insights com o Plano de Ação Estratégico
+
+O que aprendemos (Insights)
+O WhatsApp é o nosso maior ativo de confiança.
+Não estamos forçando o usuário a baixar um aplicativo novo. A familiaridade com o WhatsApp zera a curva de aprendizado e derrota a barreira inicial que outras Legaltechs enfrentam.
+
+A Coruja precisa 'crescer'.
+O ícone atual é visto como muito 'infantil'. Para lidar com problemas sérios (divórcios, processos, dívidas), a identidade visual precisa evoluir para transmitir mais sobriedade e autoridade.
+
+O usuário confia, mas verifica.
+A indicação de advogados não pode ser cega. Mais da metade dos usuários quer ver currículos, avaliações e provas sociais antes de fechar negócio. A Clareia precisa fornecer esse 'dossiê'.
+
+O que faremos (Ações)
+Lançar Leitor de Documentos (OCR)
+Motivo: O cidadão tem papéis físicos em casa. Permitir que ele tire uma foto e a IA leia o documento aumenta significativamente a utilidade diária do bot.
+
+Rebranding Estratégico
+Motivo: Amadurecer as características de nosso mascote e a paleta de cores para aumentar o poder de conversão B2B e a confiança de usuários mais velhos.
+
+Alerta de Pendências Pró-ativas
+Motivo: Sair do modo passivo (responder dúvidas) para o modo ativo (avisar o que o usuário precisa fazer hoje para o processo não parar).
+
+Capítulo 5: Ideias - Oceano Azul
+Transformando oportunidades em valor financeiro escalável
+
+A Clareia evolui de uma ferramenta de tradução para um ecossistema inteligente, monetizando dados e o timing perfeito da jornada jurídica sem inflar o custo operacional.
+
+Leilão de Leads
+Matchmaking Inteligente
+Identificação de usuários sem advogado
+Casos com alta probabilidade de sucesso
+Distribuição via leilão ou partida direta
+Modelo de Receita
+
+💰
+Venda de leads ou taxas de sucesso (compliance ético).
+
+Antecipação de Créditos
+Liquidez Imediata (Legal-Fintech)
+Detecção automática de sentenças ganhas
+Conexão com fundos e parceiros financeiros
+Fim da espera interminável do cliente
+Modelo de Receita
+
+💰
+Comissão (5% a 10%) - Bilhete Maior Médio.
+
+Mercado Pós-Causa
+Serviços Complementares
+Contadores para cálculos de liquidação
+Peritos especializados em diversas áreas
+Despachantes e serviços notariais
+Modelo de Receita
+
+💰
+Comissão por serviço transacionado.
+
+O Diferencial Estratégico
+A Clareia não compete no mercado jurídico tradicional saturado. Nós criamos um novo espaço onde quantos mais usuários validam suas dúvidas, maior o volume de oportunidades mapeadas. Um ecossistema onde dados, timing e conexão geram valor financeiro contínuo.
+
+Quem sabe não nasceu uma Legal-Fintech?
+Clareia
+Relatório Estratégico Clareia

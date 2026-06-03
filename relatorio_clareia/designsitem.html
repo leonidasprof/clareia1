@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clareia - Análise da Validação</title>
+    
+    <!-- Favicon Oficial -->
+    <link rel="icon" type="image/png" href="https://clareia1.vercel.app/logo_clareia_icone.png">
+    
+    <!-- 1. FONTES OFICIAIS (Typography) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- 2. ÍCONES (Phosphor Icons) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- 3. CONFIGURAÇÃO DE CORES TAILWIND -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A3AFF', /* Roxo Clareia */
+                        accent: '#00E5FF',  /* Azul Neon Clareia */
+                        light: '#F8F7FF',   /* Fundo Claro */
+                        dark: '#1A1A2E',    /* Texto Escuro/Fundos Escuros */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'], /* Textos Longos */
+                        heading: ['Poppins', 'sans-serif'], /* Títulos */
+                    },
+                    boxShadow: {
+                        soft: '0px 8px 24px rgba(74, 58, 255, 0.08)',
+                        neon: '0px 0px 20px rgba(0, 229, 255, 0.4)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 4. CLASSES CUSTOMIZADAS (Design System) -->
+    <style>
+        /* Variáveis de apoio */
+        :root {
+            --primary-purple: #4A3AFF;
+            --accent-neon: #00E5FF;
+            --bg-light: #F8F7FF;
+            --text-dark: #1A1A2E;
+            --text-light: #FFFFFF;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Cantos Assimétricos (A Identidade Visual dos Cards) */
+        .asymmetric-left { border-radius: 32px 0px 32px 0px; }
+        .asymmetric-right { border-radius: 0px 32px 0px 32px; }
+        .basic-card { border-radius: 24px; }
+        
+        /* Botões Base */
+        .btn-neon {
+            background-color: var(--accent-neon);
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-neon:hover {
+            box-shadow: 0px 0px 15px rgba(0, 229, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-purple {
+            background-color: var(--primary-purple);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-purple:hover {
+            background-color: #3b2ecc;
+            transform: translateY(-2px);
+        }
+
+        /* Ajustes de Impressão para PDF */
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: white; }
+            nav, footer, .print-hide { display: none !important; }
+            .print-break { page-break-before: always; }
+        }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- CABEÇALHO PADRÃO -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 shadow-sm border-b border-primary/10 print-hide">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <img src="https://clareia1.vercel.app/logo_clareia2.png" alt="Logo Clareia" class="h-14 sm:h-16 md:h-20 w-auto object-contain">
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" class="text-gray-500 hover:text-primary font-medium text-sm transition">Voltar ao Modelo</a>
+                    <button onclick="window.print()" title="Baixar PDF do Relatório" class="btn-neon w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-neon hover:scale-105 transition-transform">
+                        <i class="ph-bold ph-download-simple"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ÁREA DE CONTEÚDO DO RELATÓRIO -->
+    <main class="pt-32 pb-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Cabeçalho do Relatório -->
+        <div class="mb-12 text-center md:text-left border-b border-gray-200 pb-8">
+            <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Documento Anexo</span>
+            <h1 class="text-4xl md:text-5xl font-heading font-extrabold text-dark leading-tight mb-4">
+                Análise da <span class="text-accent relative inline-block text-shadow">Validação<svg class="absolute w-full h-3 -bottom-1 left-0 text-primary opacity-50" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="4" fill="transparent"/></svg></span>
+            </h1>
+            <p class="text-lg text-gray-600">Resultados, entrevistas e métricas que comprovam a dor do mercado e a viabilidade da Clareia.</p>
+        </div>
+
+        <!-- EXEMPLO DE BLOCO DE CONTEÚDO 1 (Texto Simples) -->
+        <section class="mb-12 bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-gray-100">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-6">
+                <i class="ph-fill ph-target"></i> 1. Hipóteses Iniciais
+            </div>
+            <h2 class="font-heading font-bold text-2xl text-dark mb-4">O que queríamos provar?</h2>
+            <p class="text-gray-600 mb-4 leading-relaxed">
+                Nesta seção você pode inserir os parágrafos do seu relatório. A fonte 'Inter' garante uma leitura confortável, enquanto os títulos em 'Poppins' mantêm a hierarquia do Design System.
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-gray-600">
+                <li>O leigo não entende os termos do processo.</li>
+                <li>Escritórios perdem tempo demais respondendo WhatsApp.</li>
+            </ul>
+        </section>
+
+        <!-- EXEMPLO DE BLOCO DE CONTEÚDO 2 (Card Assimétrico de Destaque) -->
+        <section class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Card Roxo -->
+                <div class="bg-primary p-8 asymmetric-left text-white shadow-soft">
+                    <i class="ph-fill ph-users-three text-4xl text-accent mb-4"></i>
+                    <h3 class="font-heading font-bold text-xl mb-2">Entrevistas (B2C)</h3>
+                    <div class="text-3xl font-black text-accent mb-2">45 Pessoas</div>
+                    <p class="text-sm text-blue-100">Entrevistadas nas filas de fóruns e redes sociais.</p>
+                </div>
+                <!-- Card Claro -->
+                <div class="bg-light border border-gray-200 p-8 asymmetric-right text-dark shadow-sm">
+                    <i class="ph-fill ph-briefcase text-4xl text-primary mb-4"></i>
+                    <h3 class="font-heading font-bold text-xl mb-2">Advogados (B2B)</h3>
+                    <div class="text-3xl font-black text-primary mb-2">12 Escritórios</div>
+                    <p class="text-sm text-gray-500">Validação do tempo perdido em suporte básico.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXEMPLO DE BLOCO DE CONTEÚDO 3 (Citação/Conclusão em Dark Mode) -->
+        <section class="mb-12 bg-dark p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden print-break">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-accent rounded-full blur-[80px] opacity-20"></div>
+            <h2 class="font-heading font-bold text-2xl text-white mb-4 relative z-10">Conclusão da Validação</h2>
+            <p class="text-gray-300 text-lg italic border-l-4 border-accent pl-4 relative z-10">
+                "A dor é real e latente. 89% dos cidadãos entrevistados afirmaram pagar o valor de R$ 19,90 imediatamente para saber se o alvará já estava liberado sem precisar ligar para o advogado."
+            </p>
+        </section>
+
+    </main>
+
+    <!-- RODAPÉ PADRÃO -->
+    <footer class="bg-white border-t border-gray-100 pt-8 pb-8 mt-12 print-hide">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="text-gray-500 text-sm font-medium">
+                    © 2026 Clareia IA. Todos os direitos reservados.
+                </div>
+                <div class="mt-2 text-xs text-gray-400">
+                    Anexo do Modelo de Negócios.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
