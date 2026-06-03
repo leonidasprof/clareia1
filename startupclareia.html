@@ -249,10 +249,19 @@
                 <div class="flex-shrink-0 flex items-center gap-2">
                     <img src="https://clareia1.vercel.app/logo_clareia2.png" alt="Logo Clareia" class="h-20 w-auto sm:h-24 md:h-28 object-contain">
                 </div>
-                <div class="flex items-center">
-                    <button onclick="window.print()" title="Baixar PDF" class="btn-neon w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-neon hover:scale-105 transition-transform">
+                <div class="flex items-center gap-3 md:gap-4">
+                    
+                    <!-- NOVO: Botão Minimalista de Análise da Validação -->
+                    <a href="https://clareia1.vercel.app/analisepesquisa.html" class="flex items-center gap-2 px-4 py-2 rounded-full text-primary font-heading font-semibold hover:bg-primary/10 transition-colors bg-primary/5 border border-transparent hover:border-primary/20">
+                        <i class="ph-bold ph-chart-line-up text-xl"></i>
+                        <span class="hidden sm:inline text-sm md:text-base whitespace-nowrap">Análise da Validação</span>
+                    </a>
+
+                    <!-- Botão de PDF Existente -->
+                    <button onclick="window.print()" title="Baixar PDF" class="btn-neon w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-xl shadow-neon hover:scale-105 transition-transform">
                         <i class="ph-bold ph-download-simple"></i>
                     </button>
+
                 </div>
             </div>
         </div>
