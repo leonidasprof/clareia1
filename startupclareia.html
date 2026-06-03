@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clareia - Legaltech</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://clareia1.vercel.app/logo_clareia_icone.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A3AFF',
+                        accent: '#00E5FF', /* Azul Neon substituindo o verde */
+                        light: '#F8F7FF',
+                        dark: '#1A1A2E',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        soft: '0px 8px 24px rgba(74, 58, 255, 0.08)',
+                        neon: '0px 0px 20px rgba(0, 229, 255, 0.4)', /* Sombra ajustada para o novo azul */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- CSS Personalizado Baseado no Código Original -->
+    <style>
+        :root {
+            --primary-purple: #4A3AFF;
+            --accent-neon: #00E5FF; /* Azul Neon substituindo o verde */
+            --bg-light: #F8F7FF;
+            --text-dark: #1A1A2E;
+            --text-light: #FFFFFF;
+            --shadow-soft: 0px 8px 24px rgba(74, 58, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Classes de Design System da Clareia */
+        .asymmetric-left { border-radius: 32px 0px 32px 0px; }
+        .asymmetric-right { border-radius: 0px 32px 0px 32px; }
+        .basic-card { border-radius: 12px; }
+        
+        .btn-neon {
+            background-color: var(--accent-neon);
+            color: var(--text-dark);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-neon:hover {
+            box-shadow: 0px 0px 15px rgba(0, 229, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-purple {
+            background-color: var(--primary-purple);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        .btn-purple:hover {
+            background-color: #3b2ecc;
+            transform: translateY(-2px);
+        }
+
+        /* --- Estilos do Lean Canvas Original (Isolados na seção) --- */
+        .canvas-page-container {
+            padding: 40px;
+            background-color: #FFFFFF;
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .canvas-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            color: var(--primary-purple);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.5rem;
+        }
+
+        .lean-canvas-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr 2fr 1.5fr 2fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .canvas-card {
+            background: #FFFFFF;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(74, 58, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .canvas-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: var(--primary-purple);
+            display: flex;
+            align-items: center;
+        }
+
+        .canvas-column-group {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .canvas-column-group .canvas-card { flex: 1; }
+
+        .highlight-card {
+            border-radius: 24px;
+            background: var(--primary-purple);
+            color: var(--text-light);
+            justify-content: center;
+        }
+        .highlight-card h3 { color: var(--text-light); }
+
+        .card-number {
+            color: var(--accent-neon);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+
+        .uvp-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-neon);
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .card-list {
+            padding-left: 16px;
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            list-style-type: disc;
+        }
+        .card-list li { margin-bottom: 8px; }
+
+        .mt-3 { margin-top: 16px; }
+
+        .alternatives-box h4, .early-adopters-box h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: var(--primary-purple);
+            margin-bottom: 4px;
+        }
+
+        .alternatives-box p, .early-adopters-box p {
+            font-size: 0.85rem;
+            margin: 0;
+            color: #4A4A68;
+        }
+
+        .canvas-finance-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .finance-card { border-radius: 16px; }
+        .accent-border { border: 2px solid var(--accent-neon); }
+
+        .card-inline-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-inline-list li {
+            font-size: 0.9rem;
+            background: rgba(74, 58, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .accent-border .card-inline-list li {
+            background: rgba(0, 229, 255, 0.15); /* Fundo sutil do novo azul neon */
+        }
+
+        @media (max-width: 1200px) {
+            .lean-canvas-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .lean-canvas-grid, .canvas-finance-row { grid-template-columns: 1fr; }
+            .asymmetric-left, .asymmetric-right { border-radius: 16px; }
+            .canvas-page-container { padding: 20px; }
+        }
+        
+        /* Oculta scrollbar mas permite scroll no mobile */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Ajustes para Impressão (PDF) */
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: white; }
+            nav { display: none !important; }
+            section { page-break-inside: avoid; padding-top: 2rem !important; padding-bottom: 2rem !important; }
+            .canvas-page-container { break-inside: avoid; box-shadow: none; border: 1px solid #eee; }
+            .btn-neon, .btn-purple { display: none !important; }
+        }
+    </style>
+</head>
+<body class="antialiased font-sans">
+
+    <!-- Navegação -->
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md z-50 shadow-sm border-b border-primary/10 print:hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <img src="https://clareia1.vercel.app/logo_clareia2.png" alt="Logo Clareia" class="h-20 w-auto sm:h-24 md:h-28 object-contain">
+                </div>
+                <div class="flex items-center">
+                    <button onclick="window.print()" title="Baixar PDF" class="btn-neon w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-neon hover:scale-105 transition-transform">
+                        <i class="ph-bold ph-download-simple"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden relative">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 opacity-20">
+            <div class="absolute -top-[10%] -right-[10%] w-[500px] h-[500px] rounded-full bg-primary blur-[100px]"></div>
+            <div class="absolute top-[40%] -left-[10%] w-[300px] h-[300px] rounded-full bg-accent blur-[80px]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            
+            <!-- Título da Entrega Acadêmica -->
+            <div class="mb-8 border-b border-gray-200 pb-4 inline-block w-full">
+                <span class="text-gray-500 font-bold tracking-widest uppercase text-xs md:text-sm block">Entrega 10 - Estruturação Prática do Modelo de Negócio</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold mb-6 border border-primary/20">
+                        <i class="ph ph-sparkle"></i> Identificação da Startup
+                    </div>
+                    <h1 class="text-5xl lg:text-6xl font-heading font-extrabold text-dark leading-tight mb-6">
+                        Tranquilidade na <span class="text-primary relative inline-block">palma da mão<svg class="absolute w-full h-3 -bottom-1 left-0 text-accent" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="4" fill="transparent"/></svg></span>.
+                    </h1>
+                    <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
+                        Democratizamos o direito através da tradução pedagógica. Entenda o seu processo judicial em segundos, diretamente no WhatsApp ou Telegram, sem o famoso "juridiquês".
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#solucao" class="btn-purple px-8 py-4 rounded-full text-lg flex justify-center items-center gap-2">
+                            <i class="ph ph-info text-xl"></i>
+                            Ver Modelo de Negócio
+                        </a>
+                    </div>
+                    <div class="mt-8 flex items-center gap-4 text-sm font-medium text-gray-500">
+                        <div class="flex -space-x-2">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=1" alt="User">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=2" alt="User">
+                            <img class="w-8 h-8 rounded-full border-2 border-white" src="https://i.pravatar.cc/100?img=3" alt="User">
+                        </div>
+                        <p>Ajudando milhares de brasileiros a entenderem seus direitos.</p>
+                    </div>
+                </div>
+
+                <!-- Mockup App / Chat -->
+                <div class="relative mx-auto w-full max-w-[350px]">
+                    <div class="absolute inset-0 bg-primary rounded-[3rem] transform rotate-3 scale-105 opacity-20"></div>
+                    <div class="bg-[#F0F0F0] border-[6px] border-[#2C3338] rounded-[3rem] shadow-2xl overflow-hidden relative z-10 h-[680px] flex flex-col">
+                        <!-- Header App WhatsApp -->
+                        <div class="bg-[#4A72DA] px-4 py-3 flex items-center gap-3 text-white">
+                            <div class="flex items-center gap-1">
+                                <i class="ph-bold ph-arrow-left text-lg"></i>
+                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" alt="Clarinha" class="w-10 h-10 rounded-full bg-white object-contain border border-white/20 ml-1">
+                            </div>
+                            <div class="flex-1 -mt-1">
+                                <h3 class="font-bold text-[13px] leading-tight text-white mb-0">Clarinha | Tradutor<br>Jurídico</h3>
+                                <p class="text-[11px] text-blue-100/90 leading-none">Online</p>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <i class="ph-fill ph-video-camera text-xl"></i>
+                                <i class="ph-fill ph-phone text-xl"></i>
+                                <i class="ph-bold ph-dots-three-vertical text-xl"></i>
+                            </div>
+                        </div>
+                        <!-- Chat Body -->
+                        <div class="flex-1 p-3 flex flex-col gap-3 bg-[#EAE6DF] overflow-y-auto">
+                            <!-- Alerta LGPD -->
+                            <div class="bg-[#E2F5ED] text-[#1E4D3E] text-[11px] p-2.5 rounded-lg text-center shadow-sm mx-2 flex items-start gap-2 border border-[#C6E8D9]">
+                                <i class="ph-fill ph-lock-key text-sm mt-0.5 shrink-0 text-[#128C7E]"></i>
+                                <p class="leading-snug">As mensagens são protegidas por criptografia e suas informações estão seguras sob a LGPD.</p>
+                            </div>
+
+                            <!-- Mensagem 1 -->
+                            <div class="bg-white p-2.5 rounded-2xl rounded-tl-none w-[85%] shadow-sm self-start text-[14px] text-[#303030] relative pr-12 mt-2">
+                                Olá! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.
+                                <span class="text-[10px] text-gray-400 absolute bottom-1 right-2">16:32</span>
+                            </div>
+
+                            <!-- Mensagem 2 -->
+                            <div class="bg-white p-2.5 rounded-2xl rounded-tl-none w-[90%] shadow-sm self-start text-[14px] text-[#303030] relative pr-12 mt-1">
+                                Antes de começarmos, quero te garantir que nossa conversa é 100% segura e protegida pela LGPD. Seus dados estão blindados comigo! 🔒
+                                <span class="text-[10px] text-gray-400 absolute bottom-1 right-2">16:32</span>
+                            </div>
+
+                            <!-- Mensagem 3 -->
+                            <div class="bg-white p-2.5 rounded-2xl rounded-tl-none w-[88%] shadow-sm self-start text-[14px] text-[#303030] relative pr-12 mt-1">
+                                Para eu começar a te ajudar, como você prefere que eu te chame?
+                                <span class="text-[10px] text-gray-400 absolute bottom-1 right-2">16:32</span>
+                            </div>
+                        </div>
+                        <!-- Input Bar WhatsApp -->
+                        <div class="bg-[#F0F0F0] p-2 flex items-center gap-2">
+                            <div class="flex-1 bg-white rounded-full px-4 py-2 flex items-center gap-3 text-[#8596A0]">
+                                <i class="ph ph-smiley text-[22px]"></i>
+                                <span class="flex-1 text-[16px] truncate text-[#8596A0]">Mensagem</span>
+                                <i class="ph ph-paperclip text-[22px]"></i>
+                                <i class="ph ph-camera text-[22px]"></i>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-[#00A884] flex items-center justify-center text-white shrink-0 shadow-sm">
+                                <i class="ph-fill ph-microphone text-[22px]"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problema vs Solução -->
+    <section id="solucao" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">O Cenário</span>
+                <h2 class="font-heading font-bold text-3xl md:text-4xl text-primary mb-4">Problema Identificado</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">O sistema judiciário atual gera ansiedade, incerteza e um gargalo enorme para advogados que perdem tempo explicando o básico.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+                <!-- Problema -->
+                <div class="bg-light p-8 lg:p-12 asymmetric-left border border-gray-100">
+                    <div class="w-14 h-14 bg-red-100 text-red-500 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="ph ph-warning-circle text-3xl"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-2xl text-dark mb-4">O Problema</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-x-circle text-red-500 mt-1"></i>
+                            <div>
+                                <strong class="block text-dark">Barreira Linguística</strong>
+                                <span class="text-gray-600 text-sm">O "juridiquês" exclui o cidadão comum de entender o próprio processo.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-x-circle text-red-500 mt-1"></i>
+                            <div>
+                                <strong class="block text-dark">Ansiedade Constante</strong>
+                                <span class="text-gray-600 text-sm">O leigo não entende os prazos ou movimentações e vive na incerteza.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-x-circle text-red-500 mt-1"></i>
+                            <div>
+                                <strong class="block text-dark">Gargalo B2B</strong>
+                                <span class="text-gray-600 text-sm">Advogados perdem até 90% do tempo de atendimento explicando o óbvio.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Solução -->
+                <div class="bg-primary p-8 lg:p-12 asymmetric-right shadow-soft relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-accent rounded-full blur-3xl opacity-30"></div>
+                    <div class="w-14 h-14 bg-accent/20 text-accent rounded-2xl flex items-center justify-center mb-6">
+                        <i class="ph ph-check-circle text-3xl"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-2xl text-white mb-4">A Solução Clareia</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-accent mt-1"></i>
+                            <div>
+                                <strong class="block text-white">100% via WhatsApp e Telegram</strong>
+                                <span class="text-gray-300 text-sm">Sem baixar novos apps. Tradução instantânea e orientação pedagógica.</span>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="ph-fill ph-check-circle text-accent mt-1"></i>
+                            <div>
+                                <strong class="block text-white">Foco na Jornada do Leigo (Deep UX)</strong>
+                                <span class="text-gray-300 text-sm">Enquanto os outros focam no advogado, nós abraçamos a dor do cliente final.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Missão, Visão e Valores -->
+    <section class="py-20 bg-gray-50 border-y border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Identidade Organizacional</span>
+                <h2 class="font-heading font-bold text-3xl md:text-4xl text-dark mb-4">Missão, Visão e Valores</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Missão -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6">
+                        <i class="ph-fill ph-target text-2xl"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-dark mb-3">Missão</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Democratizar o acesso à justiça e eliminar a barreira do "juridiquês", trazendo paz de espírito, clareza e autonomia para o cidadão comum durante o seu processo judicial.
+                    </p>
+                </div>
+
+                <!-- Visão -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6">
+                        <i class="ph-fill ph-binoculars text-2xl"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-dark mb-3">Visão</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Ser a maior, mais humana e mais acessível plataforma de comunicação jurídica B2C do Brasil até 2030, tornando-se sinônimo de transparência no setor judiciário.
+                    </p>
+                </div>
+
+                <!-- Valores -->
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6">
+                        <i class="ph-fill ph-diamond text-2xl"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-xl text-dark mb-3">Valores</h3>
+                    <ul class="text-gray-600 text-sm leading-relaxed space-y-2">
+                        <li><strong class="text-primary">• Empatia Extrema:</strong> A dor do cliente leigo é a nossa bússola.</li>
+                        <li><strong class="text-primary">• Transparência Radical:</strong> A verdade de forma simples.</li>
+                        <li><strong class="text-primary">• Inovação com Propósito:</strong> IA para pessoas, não apenas para eficiência.</li>
+                        <li><strong class="text-primary">• Acessibilidade:</strong> Direito para todos, onde eles já estão (WhatsApp).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Viabilidade e Público -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Raio-X do Negócio</span>
+                <h2 class="font-heading font-bold text-3xl md:text-4xl text-dark mb-4">Público-Alvo & Viabilidade Inicial</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Mapeamento estruturado do ecossistema que torna a Clareia possível e escalável.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Coluna Esquerda: Público Alvo Detalhado -->
+                <div class="bg-light p-8 rounded-3xl border border-primary/10 relative overflow-hidden">
+                    <h3 class="font-heading font-bold text-2xl text-primary mb-6 border-b border-primary/10 pb-4">Nosso Público-Alvo</h3>
+                    
+                    <div class="space-y-6 relative z-10">
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                            <img src="https://clareia1.vercel.app/imagem.png" alt="Persona" class="w-20 h-20 rounded-full object-cover border-2 border-accent shadow-md shrink-0">
+                            <div>
+                                <h4 class="font-bold text-dark flex items-center gap-2 mb-1"><i class="ph-fill ph-users text-primary"></i> Perfil Principal (B2C)</h4>
+                                <p class="text-sm text-gray-600">Trabalhadores e cidadãos comuns, <strong>faixa etária de 25 a 55 anos</strong>, predominantes nas <strong>classes C, D e E</strong>.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-dark flex items-center gap-2 mb-2"><i class="ph-fill ph-map-pin text-primary"></i> Localização</h4>
+                            <p class="text-sm text-gray-600">Todo o território nacional, com foco inicial em <strong>Recife-PE</strong>.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-dark flex items-center gap-2 mb-2"><i class="ph-fill ph-brain text-primary"></i> Dores e Necessidades</h4>
+                            <p class="text-sm text-gray-600">Alta ansiedade financeira, baixo letramento jurídico. Precisam saber <strong>"ganhei ou perdi?"</strong>, <strong>"quando recebo?"</strong> e <strong>"o que eu faço agora?"</strong>. Usam WhatsApp o dia todo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita: Viabilidade -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-4">
+                        <div class="mt-1 w-10 h-10 shrink-0 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="ph-fill ph-cpu"></i></div>
+                        <div>
+                            <h4 class="font-bold text-dark mb-1">Recursos Necessários</h4>
+                            <p class="text-sm text-gray-600">Infraestrutura em Nuvem (AWS), tokens de IA (OpenAI GPT-4), API oficial do WhatsApp Business, equipe híbrida (Desenvolvedores + Especialistas em Direito para curadoria da IA).</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-4">
+                        <div class="mt-1 w-10 h-10 shrink-0 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl"><i class="ph-fill ph-handshake"></i></div>
+                        <div>
+                            <h4 class="font-bold text-dark mb-1">Principais Parceiros</h4>
+                            <p class="text-sm text-gray-600">Provedores de dados jurídicos (Datajud, Jusbrasil, Escavador), pequenos escritórios de advocacia em massa (early adopters B2B) e hubs de tecnologia (como o CESAR).</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-4">
+                        <div class="mt-1 w-10 h-10 shrink-0 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xl"><i class="ph-fill ph-warning-octagon"></i></div>
+                        <div>
+                            <h4 class="font-bold text-dark mb-1">Principais Riscos (e Mitigações)</h4>
+                            <p class="text-sm text-gray-600"><strong>Alucinação da IA:</strong> Mitigado via técnica RAG restrita ao processo.<br><strong>Privacidade (LGPD):</strong> Mitigado via anonimização de dados sensíveis antes do envio à LLM.<br><strong>Bloqueio Meta:</strong> Uso estrito das APIs oficiais do WhatsApp.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lean Canvas Section (Apresentação Estratégica) -->
+    <section id="pitch" class="py-24 bg-gray-900 overflow-hidden relative">
+        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-gray-900 to-gray-900"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12">
+                <span class="text-accent font-bold tracking-widest uppercase text-sm mb-2 block">Visão Estratégica</span>
+                <h2 class="font-heading font-bold text-3xl md:text-5xl text-white mb-4">Proposta de Valor & Lean Canvas</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Transparência é um dos nossos pilares. Conheça a tese estruturada que embasa a operação, tecnologia e escalabilidade da Clareia.</p>
+            </div>
+
+            <!-- Inserção exata do código do usuário adaptado para o container escuro -->
+            <div class="overflow-x-auto hide-scroll pb-8">
+                <div class="min-w-[1000px]">
+                    <!-- Container da Página Dupla do Caderno (Spread) -->
+                    <div class="canvas-page-container bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[32px]">
+                        <h2 class="canvas-title !text-accent flex items-center gap-3">
+                            <i class="ph-fill ph-kanban"></i> Lean Startup Canvas
+                        </h2>
+                        
+                        <div class="lean-canvas-grid">
+                            
+                            <!-- 01. PROBLEMA -->
+                            <div class="canvas-card asymmetric-left !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                <h3 class="!text-white"><span class="card-number !text-accent">01.</span> Problema</h3>
+                                <ul class="card-list text-gray-300">
+                                    <li><strong>Barreira Linguística:</strong> O "juridiquês" exclui o cidadão do próprio processo.</li>
+                                    <li><strong>Ansiedade e Incerteza:</strong> O leigo não entende prazos ou movimentações.</li>
+                                    <li><strong>Gargalo em Escritórios:</strong> Advogados gastam 90% do tempo explicando o óbvio.</li>
+                                </ul>
+                                <div class="alternatives-box mt-3">
+                                    <h4 class="!text-accent">Alternativas Existentes:</h4>
+                                    <p class="!text-gray-400">Jusbrasil, Escavador (focados no técnico) e busca manual no site do tribunal.</p>
+                                </div>
+                            </div>
+                    
+                            <!-- GRUPO DE COLUNAS: SOLUÇÃO & MÉTRICAS -->
+                            <div class="canvas-column-group">
+                                <!-- 02. SOLUÇÃO -->
+                                <div class="canvas-card basic-card !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                    <h3 class="!text-white"><span class="card-number !text-accent">02.</span> Solução</h3>
+                                    <ul class="card-list text-gray-300">
+                                        <li><strong>Arquitetura de IA Multiagente:</strong> Sistemas que buscam, interpretam e traduzem.</li>
+                                        <li><strong>Interface WhatsApp/Telegram:</strong> Sem fricção, tradução instantânea e pedagógica.</li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- 03. MÉTRICAS-CHAVE -->
+                            <div class="canvas-card basic-card !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                <h3 class="!text-white"><span class="card-number !text-accent">03.</span> Métricas-Chave</h3>
+                                <ul class="card-list text-gray-300">
+                                    <li><strong>Ativação:</strong> 1ª tradução com sucesso.</li>
+                                    <li><strong>Retenção:</strong> Taxa de retorno.</li>
+                                    <li><strong>Economia:</strong> Horas reduzidas no B2B.</li>
+                                </ul>
+                            </div>
+                        </div>
+                
+                        <!-- 04. PROPOSTA DE VALOR ÚNICA -->
+                        <div class="canvas-card highlight-card shadow-[0_0_30px_rgba(74,58,255,0.3)]">
+                            <h3><span class="card-number !text-accent">04.</span> Proposta de Valor</h3>
+                            
+                            <div class="flex-1 flex flex-col items-center justify-center text-center py-2">
+                                <!-- Seta Superior apontando para baixo -->
+                                <i class="ph-bold ph-arrow-down text-3xl text-accent mb-4 animate-bounce"></i>
+                                
+                                <p class="uvp-text leading-tight w-full">"Tranquilidade na palma da mão."</p>
+                                <p class="text-sm opacity-90 px-2">Democratizamos o direito através da tradução pedagógica, transformando processos complexos em decisões compreensíveis via WhatsApp e Telegram.</p>
+                                
+                                <!-- Seta Inferior apontando para cima -->
+                                <i class="ph-bold ph-arrow-up text-3xl text-accent mt-6 animate-bounce"></i>
+                            </div>
+                        </div>
+                
+                        <!-- GRUPO DE COLUNAS: VANTAGEM & CANAIS -->
+                        <div class="canvas-column-group">
+                            <!-- 05. VANTAGEM INJUSTA -->
+                            <div class="canvas-card basic-card !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                <h3 class="!text-white"><span class="card-number !text-accent">05.</span> Vantagem Injusta</h3>
+                                <ul class="card-list text-gray-300">
+                                    <li><strong>Deep UX for Laypeople:</strong> Foco brutal na jornada do leigo.</li>
+                                    <li><strong>Expertise Híbrida:</strong> Integração nativa entre GTI (CESAR School), Direito e IA.</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- 06. CANAIS -->
+                            <div class="canvas-card basic-card !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                <h3 class="!text-white"><span class="card-number !text-accent">06.</span> Canais</h3>
+                                <ul class="card-list text-gray-300">
+                                    <li>WhatsApp Business API</li>
+                                    <li>Parcerias B2B (Indicação)</li>
+                                    <li>Tráfego Pago ("consulta")</li>
+                                </ul>
+                            </div>
+                        </div>
+                
+                        <!-- 07. SEGMENTOS DE CLIENTES -->
+                        <div class="canvas-card asymmetric-right !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                <!-- 06. CANAIS -->
+                                <div class="canvas-card basic-card !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                    <h3 class="!text-white"><span class="card-number !text-accent">06.</span> Canais</h3>
+                                    <ul class="card-list text-gray-300">
+                                        <li>WhatsApp Business API e Telegram</li>
+                                        <li>Parcerias B2B (Indicação)</li>
+                                        <li>Tráfego Pago ("consulta")</li>
+                                    </ul>
+                                </div>
+                            </div>
+                    
+                        </div>
+                    
+                        <!-- LINHA INFERIOR: FINANCEIRO -->
+                        <div class="canvas-finance-row mt-4">
+                            <!-- 08. ESTRUTURA DE CUSTOS -->
+                            <div class="canvas-card finance-card !bg-white/10 !border-white/5 !text-white backdrop-blur-sm">
+                                <h3 class="!text-white"><span class="card-number !text-accent">08.</span> Estrutura de Custos</h3>
+                                <ul class="card-inline-list">
+                                    <li class="!bg-black/20 !text-gray-300"><strong>1.</strong> Infraestrutura Cloud: AWS/Azure</li>
+                                    <li class="!bg-black/20 !text-gray-300"><strong>2.</strong> APIs de IA: Tokens LLM (OpenAI/Anthropic)</li>
+                                    <li class="!bg-black/20 !text-gray-300"><strong>3.</strong> Integração: Custos de Crawlers/Datajud</li>
+                                    <li class="!bg-black/20 !text-gray-300"><strong>4.</strong> Compliance: LGPD e Segurança</li>
+                                </ul>
+                            </div>
+                    
+                            <!-- 09. FONTES DE RECEITA -->
+                            <div class="canvas-card finance-card accent-border !bg-white/5 backdrop-blur-sm">
+                                <h3 class="!text-white"><span class="card-number !text-accent">09.</span> Fontes de Receita</h3>
+                                <ul class="card-inline-list">
+                                    <li class="!bg-accent/10 !text-white"><strong>B2C:</strong> R$ 19,90 por consulta ou acompanhamento mensal</li>
+                                    <li class="!bg-accent/10 !text-white"><strong>B2B (SaaS):</strong> A partir de R$ 249,00/mês para integração</li>
+                                    <li class="!bg-accent/20 !text-accent font-semibold border border-accent/30"><strong>Bônus (SaaS):</strong> B2B2C - Marketplace de leads jurídicos qualificados</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-gray-500 text-sm flex items-center justify-center gap-2">
+                <i class="ph ph-swipe-right md:hidden text-lg"></i>
+                <span class="md:hidden">Deslize para ver o canvas completo</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing / CTAs -->
+    <section id="b2b" class="py-20 bg-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Monetização e Escala</span>
+                <h2 class="font-heading font-bold text-3xl md:text-4xl text-primary mb-4">Soluções para o Cidadão e para o seu Escritório</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Escolha o seu perfil para começar a usar a IA jurídica mais humana do Brasil.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- B2C Card -->
+                <div class="bg-white p-8 rounded-3xl shadow-soft border border-gray-100 flex flex-col hover:-translate-y-2 transition-transform duration-300">
+                    <span class="bg-primary/10 text-primary text-sm font-bold uppercase tracking-wider py-1 px-3 rounded-full self-start mb-4">Para Cidadãos (B2C)</span>
+                    <h3 class="font-heading font-bold text-3xl text-dark mb-2">Consulta Única</h3>
+                    <div class="text-4xl font-black text-primary mb-6">R$ 19<span class="text-xl">,90</span></div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-center gap-2 text-gray-600"><i class="ph-fill ph-check-circle text-accent text-xl"></i> Tradução de movimentação</li>
+                        <li class="flex items-center gap-2 text-gray-600"><i class="ph-fill ph-check-circle text-accent text-xl"></i> Explicação dos próximos passos</li>
+                        <li class="flex items-center gap-2 text-gray-600"><i class="ph-fill ph-check-circle text-accent text-xl"></i> Suporte 100% via WhatsApp e Telegram</li>
+                    </ul>
+                    <a href="https://t.me/Clareira_Juridico_bot" target="_blank" rel="noopener noreferrer" class="btn-purple w-full py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+                        Quero Entender Meu Processo
+                    </a>
+                </div>
+
+                <!-- B2B Card -->
+                <div class="bg-dark p-8 rounded-3xl shadow-2xl border border-gray-800 flex flex-col relative overflow-hidden hover:-translate-y-2 transition-transform duration-300">
+                    <div class="absolute top-0 right-0 bg-accent text-dark text-xs font-bold px-3 py-1 rounded-bl-lg uppercase">Escritórios</div>
+                    <span class="bg-white/10 text-white text-sm font-bold uppercase tracking-wider py-1 px-3 rounded-full self-start mb-4">Para advogados e escritórios de advocacia</span>
+                    <h3 class="font-heading font-bold text-3xl text-white mb-2">Integração SaaS</h3>
+                    <div class="text-4xl font-black text-accent mb-6">A partir de R$ 249<span class="text-xl">/mês</span></div>
+                    <ul class="space-y-3 mb-8 flex-1">
+                        <li class="flex items-center gap-2 text-gray-300"><i class="ph-fill ph-check-circle text-accent text-xl"></i> Desafogue seu atendimento</li>
+                        <li class="flex items-center gap-2 text-gray-300"><i class="ph-fill ph-check-circle text-accent text-xl"></i> Atualização automática para clientes</li>
+                        <li class="flex items-center gap-2 text-accent font-semibold bg-accent/10 p-2 rounded-lg border border-accent/20"><i class="ph-fill ph-star text-accent text-xl"></i> Bônus: Marketplace de leads (B2B2C)</li>
+                    </ul>
+                    <a href="https://t.me/Clareira_Juridico_bot" target="_blank" rel="noopener noreferrer" class="btn-neon w-full py-4 rounded-xl text-lg flex items-center justify-center gap-2">
+                        Automatizar Meu Escritório
+                    </a>
+                </div>
+            </div>
+
+            <!-- Banner Divulgação / Mockup Extra -->
+            <div class="mt-16 bg-primary rounded-[2rem] p-8 lg:p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden shadow-soft">
+                <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent"></div>
+                <div class="z-10 max-w-lg text-center md:text-left">
+                    <span class="text-accent font-bold tracking-widest uppercase text-sm mb-2 block">100% Mobile</span>
+                    <h3 class="font-heading font-bold text-3xl md:text-4xl text-white mb-4">Veja a Clareia na prática</h3>
+                    <p class="text-blue-100 text-lg mb-6">Uma interface simples, familiar e que resolve o seu problema sem a necessidade de baixar novos aplicativos.</p>
+                    <a href="https://t.me/Clareira_Juridico_bot" target="_blank" rel="noopener noreferrer" class="btn-neon px-8 py-3 rounded-full text-base inline-flex justify-center items-center gap-2">
+                        <i class="ph-bold ph-rocket text-lg"></i> Experimentar Agora
+                    </a>
+                </div>
+                <div class="z-10 w-full max-w-sm">
+                    <img src="https://clareia1.vercel.app/mockup_clareia21.png" alt="Plataforma Clareia em Ação" class="w-full h-auto drop-shadow-2xl hover:-translate-y-2 transition-transform duration-500 rounded-2xl">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Equipe Fundadora -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Quem Somos</span>
+                <h2 class="font-heading font-bold text-3xl md:text-4xl text-dark mb-4">Integrantes da Equipe</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Unindo expertise em Gestão de TI, Inteligência Artificial e Prática Jurídica.</p>
+            </div>
+
+            <!-- Grid da Equipe Atualizada -->
+            <div class="flex flex-wrap justify-center gap-8">
+                <!-- Danilo (Líder) -->
+                <div class="bg-light p-6 rounded-3xl border border-gray-100 text-center w-full max-w-xs hover:-translate-y-2 transition-transform duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-accent text-dark text-xs font-bold px-3 py-1 rounded-bl-lg uppercase z-10">Líder</div>
+                    <img src="https://clareia1.vercel.app/Danilo.jpg" alt="Danilo" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-soft object-cover relative z-10">
+                    <h3 class="font-heading font-bold text-xl text-dark">Danilo</h3>
+                    <p class="text-primary font-medium text-sm mb-3">CEO & Líder do Projeto</p>
+                    <p class="text-gray-500 text-sm">Responsável pela visão estratégica, gestão de produto e orquestração do ecossistema tecnológico e jurídico.</p>
+                </div>
+
+                <!-- Aynoã -->
+                <div class="bg-light p-6 rounded-3xl border border-gray-100 text-center w-full max-w-xs hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://clareia1.vercel.app/Ayno%C3%A3.jpg" alt="Aynoã" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-soft object-cover">
+                    <h3 class="font-heading font-bold text-xl text-dark">Aynoã</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Co-founder & UX/UI</p>
+                    <p class="text-gray-500 text-sm">Focada na jornada do usuário leigo, garantindo que a plataforma seja acessível, intuitiva e livre de fricções.</p>
+                </div>
+
+                <!-- Beatriz -->
+                <div class="bg-light p-6 rounded-3xl border border-gray-100 text-center w-full max-w-xs hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://clareia1.vercel.app/Beatriz.png" alt="Beatriz" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-soft object-cover">
+                    <h3 class="font-heading font-bold text-xl text-dark">Beatriz</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Co-founder & Jurídico</p>
+                    <p class="text-gray-500 text-sm">Garante a acurácia técnica das traduções da IA, compliance com a LGPD e mapeamento processual.</p>
+                </div>
+                
+                <!-- Cauã -->
+                <div class="bg-light p-6 rounded-3xl border border-gray-100 text-center w-full max-w-xs hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://clareia1.vercel.app/Cau%C3%A3.png" alt="Cauã" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-soft object-cover">
+                    <h3 class="font-heading font-bold text-xl text-dark">Cauã</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Co-founder & Tech Lead</p>
+                    <p class="text-gray-500 text-sm">Lidera a arquitetura técnica e integrações, transformando regras complexas em soluções de software escaláveis.</p>
+                </div>
+
+                <!-- Leônidas -->
+                <div class="bg-light p-6 rounded-3xl border border-gray-100 text-center w-full max-w-xs hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://clareia1.vercel.app/Leonidas.jpg" alt="Leônidas" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-soft object-cover">
+                    <h3 class="font-heading font-bold text-xl text-dark">Leônidas</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Co-founder & Especialista IA</p>
+                    <p class="text-gray-500 text-sm">Responsável pelo fine-tuning das LLMs, engenharia de prompts e sistemas agênticos de tradução.</p>
+                </div>
+
+                <!-- Marcela -->
+                <div class="bg-light p-6 rounded-3xl border border-gray-100 text-center w-full max-w-xs hover:-translate-y-2 transition-transform duration-300">
+                    <img src="https://clareia1.vercel.app/Marcela.jpg" alt="Marcela" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-soft object-cover">
+                    <h3 class="font-heading font-bold text-xl text-dark">Marcela</h3>
+                    <p class="text-primary font-medium text-sm mb-3">Co-founder & Operações</p>
+                    <p class="text-gray-500 text-sm">Estrutura as parcerias estratégicas B2B e o relacionamento com o mercado para expansão do negócio.</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <p class="text-sm font-medium text-gray-500 bg-gray-100 inline-block px-4 py-2 rounded-full mb-10 shadow-sm border border-gray-200">
+                    <i class="ph-fill ph-student text-primary mr-1"></i> Projeto em desenvolvimento no ecossistema CESAR School
+                </p>
+
+                <!-- Nova Seção: Ferramentas Utilizadas -->
+                <div class="max-w-5xl mx-auto border-t border-gray-100 pt-8 mt-4">
+                    <span class="text-[11px] font-bold uppercase tracking-widest text-gray-400 block mb-8">Ferramentas Utilizadas neste Entregável</span>
+                    
+                    <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+                        <!-- HTML -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-bold ph-file-html text-xl text-orange-500"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">HTML</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-40 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Estruturação semântica e base da página
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- CSS -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-bold ph-file-css text-xl text-blue-500"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">CSS</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-40 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Estilização, layout e responsividade visual
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- JavaScript -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-yellow-50 border border-yellow-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <span class="font-black text-base text-yellow-500 font-sans">JS</span>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">JS</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-40 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Lógica de interatividade e animações
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- VS Code -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-bold ph-code text-xl text-blue-600"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">VS Code</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-48 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                IDE escolhida para a edição do código
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- Git -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-[#F05032]/10 border border-[#F05032]/20 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-bold ph-git-branch text-xl text-[#F05032]"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Git</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-40 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Versionamento de branches
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- GitHub -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-fill ph-github-logo text-xl text-gray-800"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">GitHub</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-48 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Repositório em nuvem do código
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- Vercel -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-black border border-gray-900 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-fill ph-triangle text-lg text-white"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Vercel</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-32 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Deploy da aplicação
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- Pinterest -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-fill ph-pinterest-logo text-xl text-red-500"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Pinterest</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-40 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Ideias de layout e referências
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- Photoshop -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-[#001E36]/5 border border-gray-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <div class="bg-[#001E36] text-[#31A8FF] font-bold text-[10px] flex items-center justify-center rounded w-5 h-5 border border-[#31A8FF] font-sans shadow-inner">Ps</div>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Photoshop</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-40 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Edição das imagens
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+
+                        <!-- Gemini -->
+                        <div class="flex flex-col items-center gap-1.5 group cursor-default relative">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300 shadow-sm">
+                                <i class="ph-fill ph-sparkle text-xl text-indigo-500"></i>
+                            </div>
+                            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Gemini</span>
+                            <!-- Tooltip -->
+                            <div class="absolute bottom-full mb-3 w-56 p-2 bg-gray-900 text-white text-[10px] text-center rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10 shadow-xl pointer-events-none">
+                                Agente especialista em storytelling e refatoração de código
+                                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                <div class="text-gray-500 text-sm font-medium text-center">
+                    © 2026 Clareia IA. Todos os direitos reservados.
+                </div>
+            </div>
+            <div class="mt-8 text-center text-xs text-gray-400">
+                Criado com base no Lean Canvas com expertise Híbrida (GTI CESAR School / Direito / IA).
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botões de Navegação (Triângulos Transparentes estilo Glassmorphism) -->
+    <button id="btn-prev" title="Seção Anterior" class="fixed left-0 top-1/2 -translate-y-1/2 z-[60] w-10 h-32 md:w-14 md:h-44 bg-gray-900/10 hover:bg-accent/30 backdrop-blur-md transition-all duration-300 disabled:opacity-0 disabled:pointer-events-none cursor-pointer print:hidden flex items-center justify-start pl-1 group border-y border-r border-white/20" style="clip-path: polygon(100% 0, 0 50%, 100% 100%);">
+        <i class="ph-bold ph-caret-left text-gray-700 group-hover:text-dark text-2xl md:text-3xl opacity-50 group-hover:opacity-100"></i>
+    </button>
+    
+    <button id="btn-next" title="Próxima Seção" class="fixed right-0 top-1/2 -translate-y-1/2 z-[60] w-10 h-32 md:w-14 md:h-44 bg-gray-900/10 hover:bg-accent/30 backdrop-blur-md transition-all duration-300 disabled:opacity-0 disabled:pointer-events-none cursor-pointer print:hidden flex items-center justify-end pr-1 group border-y border-l border-white/20" style="clip-path: polygon(0 0, 100% 50%, 0 100%);">
+        <i class="ph-bold ph-caret-right text-gray-700 group-hover:text-dark text-2xl md:text-3xl opacity-50 group-hover:opacity-100"></i>
+    </button>
+
+    <!-- Script de Navegação Inteligente (Deslizamento Suave) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Remove as classes de bloqueio que o script antigo possa ter deixado
+            document.body.classList.remove('overflow-hidden', 'bg-dark');
+            
+            // Mapeia todas as seções importantes
+            const sections = Array.from(document.querySelectorAll('section, footer'));
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+
+            let currentSectionIndex = 0;
+
+            function updateButtons() {
+                const scrollY = window.scrollY;
+                let closest = 0;
+                let minDistance = Infinity;
+
+                // Descobre qual seção está mais visível na tela no momento
+                sections.forEach((sec, index) => {
+                    // Compensa a altura do menu fixo no topo (~96px)
+                    const distance = Math.abs(sec.offsetTop - 96 - scrollY);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closest = index;
+                    }
+                });
+
+                currentSectionIndex = closest;
+                
+                // Oculta "Voltar" se estiver no topo, Oculta "Próximo" se estiver no fim
+                if(currentSectionIndex === 0) {
+                    btnPrev.style.opacity = '0';
+                    btnPrev.style.pointerEvents = 'none';
+                } else {
+                    btnPrev.style.opacity = '1';
+                    btnPrev.style.pointerEvents = 'auto';
+                }
+
+                if(currentSectionIndex === sections.length - 1) {
+                    btnNext.style.opacity = '0';
+                    btnNext.style.pointerEvents = 'none';
+                } else {
+                    btnNext.style.opacity = '1';
+                    btnNext.style.pointerEvents = 'auto';
+                }
+            }
+
+            // Ouve o evento de rolagem livre para atualizar onde os botões nos levam
+            window.addEventListener('scroll', updateButtons, { passive: true });
+            updateButtons(); // Checagem inicial
+
+            // Ação: Descer suavemente para a próxima seção
+            btnNext.addEventListener('click', () => {
+                if (currentSectionIndex < sections.length - 1) {
+                    const nextSection = sections[currentSectionIndex + 1];
+                    window.scrollTo({
+                        top: nextSection.offsetTop - 90, // Desconto da navegação superior
+                        behavior: 'smooth' // Efeito de transição suave
+                    });
+                }
+            });
+
+            // Ação: Subir suavemente para a seção anterior
+            btnPrev.addEventListener('click', () => {
+                if (currentSectionIndex > 0) {
+                    const prevSection = sections[currentSectionIndex - 1];
+                    window.scrollTo({
+                        top: prevSection.offsetTop - 90, // Desconto da navegação superior
+                        behavior: 'smooth'
+                    });
+                }
+            });
+
+            // Mantive as setas do teclado para ajudar na hora da apresentação
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') btnNext.click();
+                if (e.key === 'ArrowLeft') btnPrev.click();
+            });
+        });
+    </script>
+</body>
+</html>
