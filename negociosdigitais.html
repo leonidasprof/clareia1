@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Estudos - Negócios Digitais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .accordion-content { transition: max-height 0.3s ease-in-out, padding 0.3s ease; max-height: 0; overflow: hidden; }
+        .accordion-content.open { max-height: 800px; padding-top: 1.5rem; padding-bottom: 1.5rem; }
+        
+        /* Custom scrollbar para manter a estética do app */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fff7ed; }
+        ::-webkit-scrollbar-thumb { background: #f97316; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ea580c; }
+    </style>
+</head>
+<body class="bg-orange-50 text-slate-800 font-sans min-h-screen">
+
+    <!-- Header com o Design System Laranja e Logo -->
+    <header class="bg-gradient-to-r from-orange-600 to-orange-500 text-white shadow-xl relative overflow-hidden">
+        <!-- Elementos decorativos de fundo -->
+        <div class="absolute -top-24 -right-24 w-80 h-80 bg-orange-400 rounded-full opacity-40 blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-64 h-64 bg-orange-800 rounded-full opacity-30 blur-2xl pointer-events-none"></div>
+        
+        <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row justify-between items-center relative z-10">
+            <div class="flex items-center gap-5 w-full">
+                <!-- Logo Container -->
+                <div class="bg-white p-3 rounded-2xl shadow-lg transform hover:scale-105 transition-transform">
+                    <img src="https://www.cesar.school/wp-content/themes/alfama/assets/img/logo_cesar.png" alt="Cesar School" class="h-10 object-contain">
+                </div>
+                <!-- Title -->
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tight drop-shadow-md">
+                        <i class="fas fa-bolt mr-2 text-yellow-300"></i> AVA: Negócios
+                    </h1>
+                    <p class="text-orange-100 text-xs md:text-sm mt-1 font-bold uppercase tracking-widest opacity-90">
+                        Revisão Ativa & UX
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-10 max-w-5xl">
+        
+        <!-- Navigation Tabs (Pill style do template) -->
+        <div class="flex flex-col md:flex-row gap-3 mb-10 bg-white p-3 rounded-[2.5rem] shadow-lg border border-orange-100 relative z-20">
+            <button onclick="switchTab('simulados')" id="tab-simulados" class="flex-1 py-4 px-8 rounded-full font-black uppercase tracking-wider transition-all duration-300 bg-orange-500 text-white shadow-md transform scale-100">
+                <i class="fas fa-list-check mr-2"></i> Treino Objetivo
+            </button>
+            <button onclick="switchTab('discursivas')" id="tab-discursivas" class="flex-1 py-4 px-8 rounded-full font-black uppercase tracking-wider transition-all duration-300 text-orange-400 hover:bg-orange-50 hover:text-orange-600 border-2 border-transparent">
+                <i class="fas fa-pen-nib mr-2"></i> Estudo Discursivo
+            </button>
+        </div>
+
+        <!-- TAB: Simulados -->
+        <div id="view-simulados" class="fade-in block">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
+                <button onclick="loadUnit(1)" id="btn-u1" class="p-6 bg-white border-4 border-orange-500 bg-orange-50 rounded-[2rem] shadow-lg transition-all text-center group transform hover:-translate-y-1">
+                    <div class="text-4xl text-orange-500 mb-3 drop-shadow-sm"><i class="fas fa-users"></i></div>
+                    <h3 class="font-black uppercase tracking-wide text-slate-800 text-sm md:text-base">U1: UX & Design</h3>
+                </button>
+                <button onclick="loadUnit(2)" id="btn-u2" class="p-6 bg-white border-4 border-transparent rounded-[2rem] shadow-sm hover:shadow-lg hover:border-orange-300 transition-all text-center group transform hover:-translate-y-1">
+                    <div class="text-4xl text-slate-300 group-hover:text-orange-400 mb-3 transition-colors"><i class="fas fa-microchip"></i></div>
+                    <h3 class="font-bold uppercase tracking-wide text-slate-500 group-hover:text-slate-800 text-sm md:text-base transition-colors">U2: Tech & Ágil</h3>
+                </button>
+                <button onclick="loadUnit(3)" id="btn-u3" class="p-6 bg-white border-4 border-transparent rounded-[2rem] shadow-sm hover:shadow-lg hover:border-orange-300 transition-all text-center group transform hover:-translate-y-1">
+                    <div class="text-4xl text-slate-300 group-hover:text-orange-400 mb-3 transition-colors"><i class="fas fa-chart-pie"></i></div>
+                    <h3 class="font-bold uppercase tracking-wide text-slate-500 group-hover:text-slate-800 text-sm md:text-base transition-colors">U3: Modelos & Mkt</h3>
+                </button>
+                <button onclick="loadUnit(4)" id="btn-u4" class="p-6 bg-white border-4 border-transparent rounded-[2rem] shadow-sm hover:shadow-lg hover:border-orange-300 transition-all text-center group transform hover:-translate-y-1">
+                    <div class="text-4xl text-slate-300 group-hover:text-orange-400 mb-3 transition-colors"><i class="fas fa-database"></i></div>
+                    <h3 class="font-bold uppercase tracking-wide text-slate-500 group-hover:text-slate-800 text-sm md:text-base transition-colors">U4: Dados & BI</h3>
+                </button>
+            </div>
+
+            <!-- Question Container -->
+            <div id="question-container" class="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-10 hidden border-t-8 border-orange-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-[100px] pointer-events-none -z-0"></div>
+                
+                <div class="relative z-10 flex justify-between items-center mb-8">
+                    <span id="unit-badge" class="bg-orange-100 text-orange-700 text-xs md:text-sm font-black px-4 py-2 rounded-full uppercase tracking-widest border border-orange-200"></span>
+                    <span id="question-progress" class="text-orange-400 font-bold text-sm tracking-widest uppercase"></span>
+                </div>
+                
+                <h2 id="question-text" class="relative z-10 text-xl md:text-2xl font-black text-slate-800 mb-8 leading-tight"></h2>
+                
+                <div id="options-container" class="space-y-4 relative z-10">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Area -->
+                <div id="feedback-area" class="relative z-10 mt-8 p-6 rounded-[2rem] hidden border-l-8 shadow-inner">
+                    <div class="flex items-start">
+                        <div id="feedback-icon" class="text-3xl mr-4 mt-1"></div>
+                        <div>
+                            <h4 id="feedback-title" class="font-black text-xl uppercase tracking-wide mb-2"></h4>
+                            <p id="feedback-text" class="font-medium leading-relaxed"></p>
+                        </div>
+                    </div>
+                    <button id="next-btn" onclick="nextQuestion()" class="mt-8 w-full bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest py-5 px-6 rounded-full transition-all shadow-xl hidden transform hover:scale-[1.02]">
+                        Avançar <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Discursivas -->
+        <div id="view-discursivas" class="fade-in hidden">
+            <div class="bg-orange-500 text-white rounded-[2rem] p-8 mb-10 shadow-xl relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-20"><i class="fas fa-brain text-[10rem]"></i></div>
+                <div class="relative z-10">
+                    <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight mb-3">Modelos Mentais</h2>
+                    <p class="text-orange-50 font-medium text-lg leading-relaxed max-w-3xl">Desconstrução pedagógica dos trabalhos <strong>Clareia</strong> e das análises do <strong>Leônidas</strong>. Entenda o "porquê" para dominar as questões abertas da prova.</p>
+                </div>
+            </div>
+
+            <div id="works-container" class="space-y-8">
+                <!-- Works injected here via JS -->
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // ==========================================
+        // DADOS CONSOLIDADOS (Com gabarito e feedbacks pedagógicos)
+        // ==========================================
+
+        const simuladoData = {
+            1: [
+                {
+                    question: "Que abordagem de design a Google utiliza para se destacar no mercado?",
+                    options: [
+                        "Inovação disruptiva.",
+                        "Usabilidade e acessibilidade.",
+                        "Design minimalista.",
+                        "Foco em publicidade."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Exato! A página inicial do Google é o exemplo clássico de Design Minimalista. Ao remover distrações (notícias, banners), eles focam 100% da atenção do usuário na tarefa principal: a barra de busca."
+                },
+                {
+                    question: "Como a evolução do design de produtos digitais é descrita no texto?",
+                    options: [
+                        "Mudança de offline para online.",
+                        "De um foco em funcionalidade para uma abordagem centrada na experiência do usuário.",
+                        "Transição de manual para automático.",
+                        "Foco exclusivo na estética."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Correto! O design moderno deixou de ser apenas sobre 'fazer funcionar' (funcionalidade). Hoje, o grande diferencial é como o usuário SE SENTE ao usar, focando na jornada e na eliminação de atritos."
+                },
+                {
+                    question: "Qual é o papel do design de produtos digitais na diferenciação de marcas e produtos em um mercado saturado?",
+                    options: [
+                        "Acelerar o tempo de lançamento do produto.",
+                        "Proporcionar uma vantagem competitiva significativa.",
+                        "Fornecer produtos mais baratos.",
+                        "Garantir a conformidade regulatória."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Perfeito! Em um mercado onde a tecnologia base é facilmente copiada (como no caso de aplicativos bancários), a Experiência do Usuário (UX) torna-se a verdadeira Vantagem Competitiva, como fez o Nubank."
+                },
+                {
+                    question: "Qual das seguintes técnicas é vital para compreender aspectos subjetivos e complexos do comportamento humano na pesquisa de usuários de tecnologia?",
+                    options: [
+                        "Modelagem de usuário.",
+                        "Técnicas qualitativas.",
+                        "Testes de usabilidade.",
+                        "Análise de tendências."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Exato! Enquanto os dados quantitativos (BI) dizem 'O QUE' aconteceu (ex: abandono de tela), as técnicas QUALITATIVAS (entrevistas, imersão) explicam o 'POR QUE' o usuário tomou aquela decisão."
+                },
+                {
+                    question: "Como os mapas de jornada do usuário auxiliam no design de experiência?",
+                    options: [
+                        "Identificando pontos de fricção e oportunidades de melhoria.",
+                        "Testando funcionalidades de produtos.",
+                        "Definindo estratégias de marketing.",
+                        "Visualizando tendências de mercado."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Isso! A jornada do usuário serve justamente para mapear cada passo do cliente com o produto e encontrar os 'gargalos' (pontos de fricção) onde ele se frustra ou desiste."
+                },
+                {
+                    question: "Segundo Cooper (2007), qual prática é fundamental no design centrado no usuário?",
+                    options: [
+                        "Prototipagem e testes iterativos.",
+                        "Análise competitiva.",
+                        "Benchmarking.",
+                        "Pesquisa de mercado."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Correto! Alan Cooper defende que não devemos assumir que sabemos o que o usuário quer. A prototipagem permite tangibilizar a ideia e iterar (melhorar repetidamente) com base em testes reais."
+                },
+                {
+                    question: "Qual é um aspecto crucial na criação de negócios digitais bem-sucedidos, conforme discutido no texto?",
+                    options: [
+                        "Estratégias de precificação.",
+                        "Foco em publicidade.",
+                        "Interação humana com a tecnologia.",
+                        "Canais de distribuição."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Exato! Negócios digitais de sucesso não são feitos apenas de código; eles dependem fundamentalmente de como as PESSOAS interagem e sentem facilidade com essa tecnologia."
+                },
+                {
+                    question: "Qual é o impacto do design centrado no usuário no sucesso de negócios digitais, como indicado no texto?",
+                    options: [
+                        "Redução de custos operacionais.",
+                        "Expansão para novos mercados.",
+                        "Melhor retenção de clientes e maior crescimento.",
+                        "Aumento na variedade de produtos."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Perfeito! Quando o produto resolve uma dor real de forma simples e intuitiva (ex: Clareia via WhatsApp), o atrito diminui, o que aumenta a Retenção (o usuário não abandona o app)."
+                },
+                {
+                    question: "Em Design in Tech Report, John Maeda (2018) destaca que o design é um fator-chave para o sucesso no mercado de tecnologia por:",
+                    options: [
+                        "simplificar processos operacionais.",
+                        "estabelecer uma conexão emocional com os usuários.",
+                        "aumentar a capacidade de produção.",
+                        "reduzir os custos de produção."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Exatamente! Maeda argumenta que o bom design transcende a funcionalidade pura ao criar laços e reações emocionais (ex: o sentimento de pertencimento à Apple ou o alívio ao entender o 'juridiquês')."
+                },
+                {
+                    question: "O que diferencia a netnografia da etnografia tradicional?",
+                    options: [
+                        "Foco no comportamento offline.",
+                        "Uso de entrevistas.",
+                        "Estudo de comunidades e interações online.",
+                        "Coleta de dados quantitativos."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Correto! A Netnografia é a adaptação da etnografia para a Internet, focando na observação de como os usuários se comportam, conversam e interagem em fóruns, redes sociais e comunidades online."
+                },
+                {
+                    question: "Segundo Philip Kotler, qual é o objetivo da análise de tendências e padrões?",
+                    options: [
+                        "Analisar a competitividade do mercado.",
+                        "Prever tendências futuras e desenvolver estratégias inovadoras.",
+                        "Criar novos produtos e serviços.",
+                        "Melhorar a comunicação com os clientes."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Isso! O Marketing moderno não é apenas reativo. Ele analisa padrões de dados para PREVER o que o usuário vai desejar no futuro, antecipando-se aos concorrentes."
+                },
+                {
+                    question: "Conforme descrito no texto, quais são as cinco fases do processo de Design Thinking?",
+                    options: [
+                        "Planejamento, Design, Execução, Controle e Encerramento.",
+                        "Pesquisa, Concepção, Construção, Avaliação e Iteração.",
+                        "Análise, Desenvolvimento, Teste, Implementação e Manutenção.",
+                        "Empatia, Definição, Ideação, Prototipagem e Testes."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Perfeito! O processo clássico começa sempre na EMPATIA (entender a dor da pessoa), seguida de Definir o problema central, Idear soluções, Prototipar rápido e Testar com o usuário."
+                },
+                {
+                    question: "Como o Design Thinking Canvas se relaciona com o processo de Design Thinking?",
+                    options: [
+                        "Substitui completamente o processo de Design Thinking.",
+                        "É uma ferramenta de marketing digital.",
+                        "Não está relacionado ao Design Thinking.",
+                        "É uma extensão do Design Thinking com foco em negócios, pessoas e tecnologia."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Correto! O Canvas pega a base do Design Thinking e a encaixa na tríade da Inovação, garantindo que a ideia seja Desejável (Pessoas), Viável financeiramente (Negócios) e Factível (Tecnologia)."
+                },
+                {
+                    question: "O que é um sprint no contexto do Scrum?",
+                    options: [
+                        "Uma reunião de revisão do projeto.",
+                        "Uma fase de testes de software.",
+                        "Uma sessão de brainstorming.",
+                        "Um ciclo iterativo e incremental de trabalho."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Isso mesmo! A Sprint é o coração da agilidade no Scrum: um bloco de tempo fixo onde a equipe foca em entregar uma fatia funcional (incremental) e validável do produto."
+                },
+                {
+                    question: "Ao escolher um método ágil para um negócio digital, o que deve ser considerado?",
+                    options: [
+                        "A localização geográfica da equipe.",
+                        "A natureza do projeto e a experiência da equipe.",
+                        "O custo das ferramentas de software.",
+                        "A preferência pessoal da equipe de gerenciamento."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Correto! Não existe metodologia 'perfeita'. Um projeto focado na criação de um produto novo pode exigir Scrum, enquanto uma equipe lidando com manutenções contínuas constantes pode fluir melhor com Kanban."
+                }
+            ],
+            2: [
+                {
+                    question: "Qual tecnologia emergente é fundamental para a segurança de transações online e registros digitais?",
+                    options: [
+                        "Realidade virtual.",
+                        "Blockchain.",
+                        "Internet das Coisas (IoT).",
+                        "Inteligência Artificial."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Correto! O Blockchain atua como um 'livro-razão' digital descentralizado e imutável. Ele garante que um registro ou transação não possa ser apagado ou fraudado, sendo a base de contratos inteligentes e da confiança digital."
+                },
+                {
+                    question: "A Inteligência Artificial é relevante em negócios digitais principalmente por:",
+                    options: [
+                        "facilitar a tomada de decisões e análise de dados.",
+                        "reduzir custos operacionais.",
+                        "melhorar a interface do usuário.",
+                        "aumentar a velocidade de processamento."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Perfeito! A IA processa volumes gigantescos de informações para encontrar padrões ocultos que humanos não veriam, gerando insights (previsões) que ajudam a diretoria a tomar decisões de negócio mais assertivas."
+                },
+                {
+                    question: "O que deve ser considerado na avaliação de compatibilidade com sistemas existentes?",
+                    options: [
+                        "Integração, escalabilidade e flexibilidade.",
+                        "Custos de marketing.",
+                        "Aspectos legais e regulatórios.",
+                        "Impacto ambiental."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Exato! Ao adotar uma nova ferramenta (como uma IA ou CRM), é crucial saber se ela consegue se conectar (Integrar) ao que a empresa já usa (Sistemas Legados) e se consegue crescer junto com o volume de dados da empresa (Escalar)."
+                },
+                {
+                    question: "Qual é o papel do Scrum Master?",
+                    options: [
+                        "Facilitar a equipe na aderência às práticas do Scrum.",
+                        "Programar o software.",
+                        "Gerenciar o orçamento do projeto.",
+                        "Definir o escopo do projeto."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Isso mesmo! O Scrum Master atua como um 'líder servidor'. Ele não manda na equipe, não programa e não define o produto (papel do PO). Ele remove obstáculos e garante que todos sigam os ritos e valores da agilidade."
+                },
+                {
+                    question: "O que caracteriza o Feature-Driven Development (FDD)?",
+                    options: [
+                        "Enfoque em aplicações móveis.",
+                        "Uso intensivo de Inteligência Artificial.",
+                        "Desenvolvimento em torno de funcionalidades discretas e gerenciáveis.",
+                        "Foco na segurança de dados."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Correto! O FDD organiza o desenvolvimento em torno de pequenas 'Features' (funcionalidades) que agregam valor direto ao cliente. Isso permite entregas contínuas e facilita a gestão do progresso visual."
+                },
+                {
+                    question: "Quando aplicamos o conceito de blockchain em negócios digitais, qual é o principal benefício para a gestão de cadeias de suprimentos?",
+                    options: [
+                        "Transparência e rastreabilidade das transações.",
+                        "Simplificação da interface do usuário.",
+                        "Aumento de publicidade.",
+                        "Redução no uso de energia."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Exato! Na cadeia de suprimentos (Supply Chain), o Blockchain permite rastrear a origem de um produto desde a matéria-prima até a prateleira de forma pública e à prova de adulterações, gerando total transparência."
+                },
+                {
+                    question: "Como a Inteligência Artificial (IA) aplicada ao Big Data pode transformar a tomada de decisões em negócios digitais?",
+                    options: [
+                        "Reduzindo os custos de armazenamento.",
+                        "Fornecendo insights preditivos e personalizados.",
+                        "Melhorando a eficiência do servidor.",
+                        "Automatizando processos de design."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Perfeito! O Big Data é o 'combustível' e a IA é o 'motor'. Juntos, eles permitem antecipar o futuro (análise preditiva) e personalizar a oferta para cada cliente em tempo real, como fazem a Netflix e a Amazon."
+                },
+                {
+                    question: "Na avaliação de viabilidade técnica, qual aspecto é crucial ao considerar a adoção de tecnologias emergentes em ambientes empresariais?",
+                    options: [
+                        "A popularidade da tecnologia.",
+                        "As tendências de mercado atuais.",
+                        "A capacidade da tecnologia de atender às necessidades do negócio.",
+                        "O impacto na cultura organizacional."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Correto! 'Não use tecnologia só porque é moda'. O pilar da viabilidade exige que a tecnologia escolhida realmente resolva uma dor do cliente e faça sentido para o modelo de negócios (estratégia)."
+                },
+                {
+                    question: "Qual é o papel da prototipagem rápida no desenvolvimento ágil de produtos digitais?",
+                    options: [
+                        "Aumento do alcance de marketing.",
+                        "Determinação do preço final do produto.",
+                        "Redução significativa dos custos de desenvolvimento.",
+                        "Testar e iterar conceitos rapidamente para aprimorar o design."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Isso! A prototipagem rápida permite colocar a ideia na mão do usuário cedo. Como diz a regra ágil: 'Erre rápido, erre barato'. Testar e iterar no protótipo evita desperdício de dinheiro programando a coisa errada."
+                },
+                {
+                    question: "Como a ética na IA impacta a confiança do consumidor em produtos digitais?",
+                    options: [
+                        "Alterando o tempo de entrada no mercado.",
+                        "Afetando a percepção da marca e a aceitação do produto.",
+                        "Modificando o design do produto.",
+                        "Influenciando estratégias de preços."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Exato! Algoritmos tendenciosos, racistas ou que violam a privacidade destroem a reputação de uma empresa. Uma IA transparente e ética é o que garante que o usuário confie seus dados à sua marca a longo prazo."
+                },
+                {
+                    question: "Qual é a principal consideração ao integrar a Internet das Coisas (IoT) em produtos digitais do ponto de vista da segurança?",
+                    options: [
+                        "A estética do produto.",
+                        "Proteção de dados e prevenção de acessos não autorizados.",
+                        "A velocidade da conexão à Internet.",
+                        "O custo dos componentes de IoT."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Correto! Cada novo dispositivo IoT (ex: uma geladeira inteligente) é um novo 'ponto de entrada' (brecha) na sua rede Wi-Fi. Por isso, garantir a proteção contra hackers e acessos não autorizados é a prioridade zero na IoT."
+                },
+                {
+                    question: "Como a adoção de tecnologias emergentes pode influenciar a vantagem competitiva de um negócio digital?",
+                    options: [
+                        "Aumentando o investimento em publicidade.",
+                        "Proporcionando inovação e diferenciação no mercado.",
+                        "Reduzindo o tempo de treinamento dos funcionários.",
+                        "Simplificando a estrutura organizacional."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Isso! Usar tecnologias emergentes (IA, Blockchain, IoT) permite criar processos muito mais eficientes e serviços completamente novos, criando um diferencial forte ('Oceano Azul') em relação aos concorrentes engessados."
+                },
+                {
+                    question: "No contexto de desenvolvimento de produtos digitais, o que caracteriza uma abordagem centrada no usuário?",
+                    options: [
+                        "Design e funcionalidades orientadas às necessidades do usuário.",
+                        "Priorização da velocidade de lançamento do produto.",
+                        "Foco na redução de custos de desenvolvimento.",
+                        "Enfoque principal na estética do produto."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Exato! Design Centrado no Usuário (DCU) não é sobre fazer um aplicativo apenas 'bonito', mas sim mapear a dor e o modelo mental de quem vai usar, criando fluxos que resolvam o problema dessa pessoa sem causar fricção."
+                },
+                {
+                    question: "Quando avaliamos a viabilidade técnica de uma nova tecnologia, qual fator é essencial para sustentar o crescimento a longo prazo do negócio?",
+                    options: [
+                        "Facilidade de uso pelo consumidor final.",
+                        "Custo inicial de implementação.",
+                        "Escalabilidade e capacidade de adaptação às mudanças futuras.",
+                        "Compatibilidade com tecnologias legadas."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Perfeito! A Escalabilidade é a capacidade de um sistema crescer (ex: passar de 100 para 1 milhão de clientes) sem travar ou perder desempenho. Se a tecnologia não for escalável, o negócio 'quebra' exatamente quando atinge o sucesso."
+                },
+                {
+                    question: "Como as considerações éticas devem ser integradas ao desenvolvimento e implementação de tecnologias emergentes em negócios digitais?",
+                    options: [
+                        "Como uma etapa posterior, após o lançamento do produto.",
+                        "Somente quando requisitado pelos reguladores.",
+                        "Por meio da subcontratação de especialistas em ética.",
+                        "Desde o início do processo de desenvolvimento."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Correto! É o que chamamos de 'Ethics by Design' ou 'Privacy by Design' (Ética desde a concepção). Você não lança uma IA ou banco de dados para depois ver se ele é seguro; a governança ética e a segurança precisam estar embutidas na arquitetura desde o dia 1."
+                }
+            ],
+            3: [
+                {
+                    question: "Qual é a principal vantagem de utilizar um modelo de negócio baseado em plataforma?",
+                    options: [
+                        "Melhoria na segurança dos dados.",
+                        "Aumento na velocidade de processamento.",
+                        "Facilitação de interações entre diferentes grupos de usuários.",
+                        "Redução de custos operacionais."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Exatamente! Modelos de plataforma (como Uber, Airbnb ou Mercado Livre) criam valor não por possuírem o estoque do produto, mas por conectarem produtores/vendedores com consumidores de forma altamente eficiente."
+                },
+                {
+                    question: "No contexto de negócios digitais, como a gamificação pode ser usada na estruturação de modelos de negócios?",
+                    options: [
+                        "Para aumentar o engajamento do usuário.",
+                        "Para melhorar a segurança do sistema.",
+                        "Para reduzir custos de desenvolvimento.",
+                        "Como uma ferramenta de análise de mercado."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Isso! A gamificação utiliza elementos de jogos (pontos, recompensas, níveis) em ambientes que não são jogos (como o Duolingo ou apps de banco) para motivar, reter e aumentar o engajamento contínuo do usuário."
+                },
+                {
+                    question: "Como o modelo de negócio freemium funciona em um contexto digital?",
+                    options: [
+                        "Oferecendo serviços exclusivamente pagos.",
+                        "Fornecendo serviços básicos gratuitamente e cobrando por funcionalidades extras.",
+                        "Proibindo publicidade.",
+                        "Utilizando exclusivamente publicidade para gerar receita."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Perfeito! 'Free' (Grátis) + 'Premium' (Pago). A versão gratuita elimina a barreira de entrada, atraindo muitos usuários. A monetização acontece quando os 'heavy users' pagam para ter acesso a recursos avançados (ex: Spotify, LinkedIn)."
+                },
+                {
+                    question: "Qual é a principal vantagem de utilizar marketing de conteúdo em negócios digitais?",
+                    options: [
+                        "Alcance global imediato.",
+                        "Implementação rápida.",
+                        "Redução direta de custos operacionais.",
+                        "Construção de relacionamento de longo prazo com o cliente."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Correto! Diferente de um anúncio pago focado em venda imediata (curto prazo), o marketing de conteúdo educa o usuário, gera valor e constrói confiança, criando uma comunidade e um relacionamento duradouro com a marca."
+                },
+                {
+                    question: "Qual é a importância do Enterprise Resource Planning (ERP) em negócios digitais?",
+                    options: [
+                        "Gerenciar apenas a relação com o cliente.",
+                        "Integrar diversos aspectos operacionais da empresa.",
+                        "Limitar-se a operações de TI.",
+                        "Focar exclusivamente na gestão financeira."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Exato! Um ERP (como SAP ou TOTVS) é o 'sistema nervoso central' da empresa. Ele integra RH, Vendas, Estoque e Financeiro em um único banco de dados, quebrando silos de informação e dando visão unificada ao negócio."
+                },
+                {
+                    question: "Qual característica define um modelo de negócio freemium?",
+                    options: [
+                        "Vendas diretas ao consumidor.",
+                        "Estratégias de marketing baseadas em influenciadores.",
+                        "Uso intensivo de publicidade paga.",
+                        "Disponibiliza uma versão gratuita básica do produto/serviço, com opções avançadas pagas."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Isso mesmo! O cerne do Freemium é usar o produto gratuito como a principal ferramenta de marketing (Product-Led Growth) para adquirir usuários e só então tentar convertê-los para os planos pagos (avançados)."
+                },
+                {
+                    question: "Como a análise de Big Data apoia a formulação de estratégias inovadoras em negócios digitais?",
+                    options: [
+                        "Reduzindo custos de marketing.",
+                        "Fornecendo insights baseados em tendências e padrões de consumo.",
+                        "Aumentando a eficiência da produção.",
+                        "Simplificando operações internas."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Perfeito! O Big Data não é apenas sobre ter muitos dados, mas sobre a capacidade de cruzar informações variadas para encontrar padrões ocultos de comportamento do consumidor, fundamentando a tomada de decisão."
+                },
+                {
+                    question: "Qual é a importância do Search Engine Optimization (SEO) em estratégias de marketing digital?",
+                    options: [
+                        "Otimização de custos publicitários.",
+                        "Direcionamento de campanhas de e-mail.",
+                        "Gerenciamento de relacionamento com o cliente.",
+                        "Melhorar a visibilidade e classificação do site nos motores de busca."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Correto! O SEO é um conjunto de técnicas orgânicas (sem pagar por anúncios) aplicadas ao site para que o Google o considere relevante e o coloque nas primeiras páginas, aumentando o tráfego qualificado."
+                },
+                {
+                    question: "No contexto de gerenciamento de projetos digitais, qual é o principal benefício da metodologia ágil?",
+                    options: [
+                        "Foco exclusivo na qualidade do produto.",
+                        "Redução de custos operacionais.",
+                        "Maior adaptabilidade e resposta rápida às mudanças.",
+                        "Implementação mais rápida de tecnologia."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Exato! Como diz o manifesto ágil: 'Responder a mudanças mais que seguir um plano'. Entregas curtas (Sprints) permitem que a equipe mude o rumo do projeto rapidamente caso o mercado ou o cliente mudem de ideia."
+                },
+                {
+                    question: "Qual é o impacto do gerenciamento de relacionamento com o cliente (CRM) em negócios digitais?",
+                    options: [
+                        "Centralização das decisões de TI.",
+                        "Melhoria da compreensão e engajamento do cliente.",
+                        "Aumento da capacidade de armazenamento de dados.",
+                        "Redução do tempo de desenvolvimento de produtos."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Isso! Ferramentas de CRM (como Salesforce) guardam todo o histórico de interação com o usuário. Isso permite saber exatamente o que o cliente quer, em qual etapa do funil ele está, e personalizar o contato para gerar mais engajamento."
+                },
+                {
+                    question: "Como a transformação digital influencia os modelos de negócios tradicionais?",
+                    options: [
+                        "Mantendo estruturas de negócios existentes.",
+                        "Enfatizando métodos tradicionais de publicidade.",
+                        "Requerendo adaptação para permanecer competitivo no mercado digital.",
+                        "Diminuindo a importância do marketing digital."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Correto! Transformação digital não é apenas criar um site ou ter redes sociais; é mudar o modelo de negócios (ex: de aluguel de fitas para streaming como a Netflix) para não ser engolido por concorrentes digitais mais ágeis."
+                },
+                {
+                    question: "Quais são os desafios de implementar a Inteligência Artificial (IA) em estratégias de negócios digitais?",
+                    options: [
+                        "Encontrar plataformas adequadas para IA.",
+                        "Dificuldades na integração com sistemas legados.",
+                        "Garantir a ética e evitar viés nos algoritmos de IA.",
+                        "Limitações na velocidade da Internet."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Perfeito! Embora a integração (B) também seja um desafio, o maior risco estratégico atual é o Viés Algorítmico (algoritmos racistas ou machistas devido a dados históricos falhos) e a quebra de ética na privacidade do usuário."
+                },
+                {
+                    question: "Qual é o papel das análises preditivas no marketing digital?",
+                    options: [
+                        "Otimizar a logística de produtos.",
+                        "Focar em estratégias de preços.",
+                        "Antecipar tendências e comportamento do consumidor.",
+                        "Simplificar o design do site."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Exatamente! A análise preditiva usa o Big Data e a IA não apenas para ver o passado (descritiva), mas para antecipar (prever) o que o consumidor vai querer comprar amanhã, permitindo ofertas ultra-segmentadas."
+                },
+                {
+                    question: "Como o conceito de sustentabilidade pode ser integrado em modelos de negócios digitais?",
+                    options: [
+                        "Focando exclusivamente em lucratividade.",
+                        "Reduzindo o alcance global.",
+                        "Desenvolvendo práticas de negócios que são ecologicamente e socialmente responsáveis.",
+                        "Limitando o uso de tecnologias emergentes."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Correto! O pilar ESG (Environmental, Social, and Governance) exige que os negócios digitais equilibrem o lucro com a responsabilidade social (ex: diversidade na equipe) e ecológica (ex: servidores alimentados por energia renovável)."
+                },
+                {
+                    question: "No gerenciamento de projetos digitais, qual é a importância de uma comunicação eficaz entre as equipes?",
+                    options: [
+                        "Simplificação da estrutura organizacional.",
+                        "Facilitação da colaboração e do alinhamento dos objetivos do projeto.",
+                        "Redução direta dos custos do projeto.",
+                        "Centralização do processo decisório."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Isso! Negócios digitais unem profissionais muito diferentes (Devs, Designers UX, Negócios). A comunicação clara (como as Dailies no Scrum) garante que todos quebrem seus silos e trabalhem alinhados com o valor entregue ao cliente."
+                }
+            ],
+            4: [
+                {
+                    question: "Como as ferramentas de visualização de dados auxiliam os negócios digitais?",
+                    options: [
+                        "Facilitando a interpretação e comunicação de insights complexos.",
+                        "Automatizando processos de entrada de dados.",
+                        "Gerenciando recursos humanos.",
+                        "Fornecendo segurança de dados."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Perfeito! A visualização de dados (dashboards, gráficos) traduz números complexos e planilhas ilegíveis em informações visuais rápidas. Isso permite que a diretoria tome decisões sem precisar ser especialista em estatística."
+                },
+                {
+                    question: "Como o Business Intelligence (BI) se diferencia da análise de dados tradicional?",
+                    options: [
+                        "Uso de dados não estruturados.",
+                        "Transformação de dados brutos em informações estratégicas.",
+                        "Análise de dados em tempo real.",
+                        "Foco exclusivo em dados financeiros."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Correto! A análise tradicional frequentemente apenas olha um dado estático (ex: tivemos 100 cliques). O BI cruza esses dados brutos com as metas de negócio para gerar inteligência acionável (ex: por que os 100 cliques não geraram lucro?)."
+                },
+                {
+                    question: "Como o Big Data pode ser usado para melhorar a experiência do cliente?",
+                    options: [
+                        "Reduzindo custos de produtos.",
+                        "Focando em publicidade tradicional.",
+                        "Aumentando a frequência de e-mails promocionais.",
+                        "Personalizando serviços com base em análises de comportamento."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Exatamente! O Big Data permite rastrear milhares de cliques e preferências. Com isso, empresas como Netflix e Amazon deixam de oferecer 'tudo para todos' e entregam recomendações hiper-personalizadas para cada usuário."
+                },
+                {
+                    question: "Como a narrativa pode ser integrada na visualização de dados?",
+                    options: [
+                        "Utilizando somente textos descritivos.",
+                        "Contando uma história para transmitir insights de maneira mais eficaz.",
+                        "Focando exclusivamente em gráficos estatísticos.",
+                        "Apresentando apenas dados brutos."
+                    ],
+                    correctAnswer: 1,
+                    explanation: "Isso! É o chamado Data Storytelling. Não basta jogar um gráfico de barras na tela; é preciso construir uma narrativa (Início, Meio e Fim) que guie a audiência pelo problema e justifique a decisão proposta."
+                },
+                {
+                    question: "Qual técnica de visualização é mais eficaz para comparar categorias distintas de dados?",
+                    options: [
+                        "Gráficos de barras.",
+                        "Árvores de decisão.",
+                        "Mapas de calor.",
+                        "Linhas do tempo."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Correto! Para comparações simples de tamanho ou volume entre diferentes categorias (exemplo: vendas na Região Norte vs Região Sul), o gráfico de barras é o formato cognitivamente mais rápido de ser absorvido pelo cérebro humano."
+                },
+                {
+                    question: "Qual técnica de análise de dados é essencial para identificar padrões ocultos em grandes conjuntos de dados?",
+                    options: [
+                        "Mineração de dados.",
+                        "Análise de custo-benefício.",
+                        "Análise SWOT.",
+                        "Análise de tendências."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Exato! A Mineração de Dados (Data Mining) utiliza algoritmos avançados para varrer bases gigantescas e encontrar correlações que não seriam óbvias a olho nu, como descobrir que 'quem compra fraldas à noite também compra cerveja'."
+                },
+                {
+                    question: "No contexto de Big Data, a quê “velocidade” se refere?",
+                    options: [
+                        "Duração do ciclo de vida dos dados.",
+                        "Velocidade da Internet.",
+                        "Rapidez na tomada de decisões.",
+                        "Rapidez na geração e processamento dos dados."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Isso! A Velocidade (um dos 'Vs' do Big Data) trata do ritmo absurdo em que os dados nascem hoje (ex: milhares de tweets por segundo) e a necessidade tecnológica de capturá-los e processá-los quase em tempo real."
+                },
+                {
+                    question: "Qual é o principal benefício do uso de dashboards interativos em Business Intelligence?",
+                    options: [
+                        "Facilitação do acesso e interpretação de dados em tempo real.",
+                        "Automatização completa do processo decisório.",
+                        "Redução do volume de dados.",
+                        "Eliminação da necessidade de análise manual."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Perfeito! Em vez de receber um PDF estático gerado no mês passado, o dashboard interativo permite que o gestor 'brinque' com a tela, aplicando filtros e descobrindo a saúde da empresa naquele exato segundo."
+                },
+                {
+                    question: "Como a análise preditiva difere da análise descritiva?",
+                    options: [
+                        "Foca exclusivamente em dados históricos.",
+                        "Limita-se a descrever os dados atuais.",
+                        "Utiliza apenas dados financeiros.",
+                        "Prevê futuras tendências e comportamentos com base em dados existentes."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Correto! A análise descritiva olha pelo retrovisor (o que aconteceu ontem?). A preditiva pega esse histórico, aplica modelos de Machine Learning, e antecipa o futuro (ex: probabilidade de um cliente cancelar o serviço amanhã)."
+                },
+                {
+                    question: "Qual é o papel da visualização de dados na comunicação de insights para não especialistas?",
+                    options: [
+                        "Focar apenas em aspectos visuais.",
+                        "Reduzir a quantidade de dados apresentados.",
+                        "Tornar informações complexas mais compreensíveis e acessíveis.",
+                        "Substituir completamente a análise textual."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Isso! Diretores e stakeholders não têm tempo de ler tabelas SQL de 50 mil linhas. A visualização age como um tradutor: converte a complexidade técnica em uma imagem rápida que impulsiona a ação de negócio."
+                },
+                {
+                    question: "O que representa a “variabilidade” no Big Data?",
+                    options: [
+                        "Diferenças nas fontes de dados.",
+                        "Variação nos tipos de dados.",
+                        "Mudanças nas estruturas de dados ao longo do tempo.",
+                        "Flutuações nos volumes de dados."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Atenção a esta pegadinha! 'Variedade' são os formatos (texto, imagem). A 'VARIABILIDADE' diz respeito à inconstância: flutuações e picos no fluxo de dados (como um pico de acessos na Black Friday) que exigem infraestrutura elástica."
+                },
+                {
+                    question: "Como a governança de dados influencia a qualidade da análise de Big Data?",
+                    options: [
+                        "Assegurando a precisão e confiabilidade dos dados.",
+                        "Aumentando a velocidade do processamento.",
+                        "Focando em dados quantitativos.",
+                        "Reduzindo o custo do armazenamento de dados."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Exato! Existe uma regra em TI: 'Garbage in, garbage out' (Se entra lixo, sai lixo). A governança padroniza as fontes; se ela falhar, a base fica suja e as previsões da IA serão perigosamente incorretas."
+                },
+                {
+                    question: "Qual é a importância do storytelling na visualização de dados?",
+                    options: [
+                        "Reduzir a necessidade de análise técnica.",
+                        "Aumentar a quantidade de dados apresentados.",
+                        "Criar entretenimento.",
+                        "Transmitir insights de forma envolvente e memorável."
+                    ],
+                    correctAnswer: 3,
+                    explanation: "Correto! Um gráfico cru diz que as vendas caíram 30%. O storytelling conta a história da crise de mercado que gerou isso, conectando-se emocionalmente com a diretoria para aprovar um plano de ação emergencial."
+                },
+                {
+                    question: "Como a personalização baseada em análise de dados melhora a experiência do cliente?",
+                    options: [
+                        "Oferecendo serviços e produtos mais alinhados às suas preferências.",
+                        "Simplificando interfaces de usuário.",
+                        "Reduzindo os custos para o cliente.",
+                        "Aumentando a publicidade direcionada."
+                    ],
+                    correctAnswer: 0,
+                    explanation: "Isso! Ninguém gosta de ser bombardeado com ofertas inúteis. Ao analisar padrões de compra (Data Analytics), o negócio reduz a carga cognitiva do cliente mostrando apenas o que ele tem alta chance de amar comprar."
+                },
+                {
+                    question: "Qual é o impacto da análise de sentimentos em dados de mídias sociais para negócios digitais?",
+                    options: [
+                        "Aumento na eficiência operacional.",
+                        "Redução direta dos custos de marketing.",
+                        "Compreensão aprofundada das percepções e emoções dos clientes.",
+                        "Melhoria na segurança dos dados."
+                    ],
+                    correctAnswer: 2,
+                    explanation: "Perfeito! Usando IA e Processamento de Linguagem Natural (NLP), a Análise de Sentimentos lê 100 mil tweets em segundos e diz instantaneamente se o lançamento do seu produto gerou alegria, raiva ou indiferença na rede."
+                }
+            ]
+        };
+
+        const discursivasData = [
+            {
+                title: "Estudo de Caso 1: O Projeto Clareia (Legaltech)",
+                context: "Assistente jurídico via WhatsApp criado pelo grupo para democratizar o 'juridiquês'. Houve 30% de abandono do fluxo devido a respostas longas, resolvido com IA e automação (n8n) para resumir textos.",
+                terms: [
+                    {
+                        term: "Design Centrado no Usuário (DCU) & UI Invisível",
+                        definition: "Construir a solução onde o usuário já está, utilizando seus modelos mentais existentes para reduzir o atrito.",
+                        why: "Na prova, use o Clareia como exemplo clássico: ao escolher o WhatsApp (uma UI que o usuário já domina) em vez de criar um app novo do zero, a equipe eliminou a 'curva de aprendizado', reduzindo a barreira de acesso à justiça."
+                    },
+                    {
+                        term: "Data Storytelling & Causa Raiz",
+                        definition: "A arte de cruzar dados quantitativos e qualitativos para contar a história de um problema e embasar a decisão.",
+                        why: "Argumente que o dado quantitativo (30% de abandono) apontou ONDE o erro ocorria, mas só o qualitativo (feedbacks de 'texto muito longo') revelou o POR QUÊ. O storytelling traduziu isso para a diretoria: a falta de empatia textual quebrava a experiência."
+                    },
+                    {
+                        term: "A Tríade do Business Design",
+                        definition: "O ponto ideal de inovação que cruza Desejabilidade (Pessoas), Factibilidade (Tecnologia) e Viabilidade (Negócios).",
+                        why: "Explique a conexão: O usuário desejava respostas simples (Desejável). A equipe tornou isso Factível usando IA (n8n + prompts). O resultado foi a Viabilidade do negócio: menor atrito gera mais indicação boca-a-boca, reduzindo o Custo de Aquisição (CAC)."
+                    }
+                ]
+            },
+            {
+                title: "Estudo de Caso 2: Métricas de Vaidade vs. BI Real",
+                context: "Baseado na situação-problema respondida por Leônidas, onde um gestor de marketing comemorava o aumento de Cliques (CTR), ignorando que a empresa perdia dinheiro (CPA alto).",
+                terms: [
+                    {
+                        term: "Métricas de Vaidade (CTR) vs. Saúde Financeira (ROI/CPA)",
+                        definition: "Taxa de Cliques (CTR) atrai atenção, mas Custo por Aquisição (CPA) e Retorno sobre Investimento (ROI) garantem o lucro.",
+                        why: "Use a excelente analogia do Leônidas na prova: 'Comemorar só o CTR alto é fazer uma festa onde a loja lota, mas ninguém compra nada'. Se o CPA é maior que a margem de lucro, a campanha destrói o negócio. Cliques não pagam boletos."
+                    },
+                    {
+                        term: "O papel investigativo do Business Intelligence (BI)",
+                        definition: "Sair da leitura estática de indicadores isolados e cruzar bases de dados para entender o comportamento real do consumidor.",
+                        why: "Se cair BI, argumente que ele resolve o 'jogo de empurra' entre as áreas. Ele cruza o clique no anúncio com o abandono no carrinho para descobrir a frustração real (ex: o anúncio sugeria frete grátis, mas a tela cobrava 50 reais). O BI tira a gestão do 'achismo'."
+                    }
+                ]
+            },
+            {
+                title: "Estudo de Caso 3: Agilidade e Vantagem Competitiva",
+                context: "Análises aprofundadas sobre como gigantes como o Nubank ganharam mercado e por que a metodologia ágil é a melhor proteção contra falências de software.",
+                terms: [
+                    {
+                        term: "A Complementaridade: Qualitativo e Quantitativo",
+                        definition: "Uso conjunto de métricas numéricas e pesquisas em profundidade (entrevistas, imersões).",
+                        why: "Cite que o Quanti é um radar: mostra que os alunos/clientes desistem na tela de pagamento. O Quali é a lupa: conversar com eles revela que o botão estava confuso. Um direciona, o outro aprofunda."
+                    },
+                    {
+                        term: "DCU como Vantagem Competitiva de Mercado (Caso Nubank)",
+                        definition: "A tecnologia usada puramente como meio para destruir a burocracia e melhorar a vida do cliente.",
+                        why: "O Nubank não inventou o cartão de crédito. Sua vantagem foi eliminar a dor do cliente (filas, tarifas ocultas). Demonstre na prova que a Vantagem Competitiva não nasce do código, mas da cultura focada em simplificar a experiência, transformando clientes em promotores."
+                    },
+                    {
+                        term: "Entrega Incremental (Scrum) e a Redução de Risco",
+                        definition: "Construir e lançar o produto em pequenos pedaços (sprints) ao invés de fazer um projeto de um ano às cegas.",
+                        why: "Argumento de ouro para a prova: O maior risco no meio digital é passar 1 ano programando algo que ninguém quer. O Ágil fatia esse risco. Cada sprint é uma pequena aposta testada no mercado. Errar custa apenas 2 semanas de trabalho, permitindo uma adaptação de rota rápida e barata."
+                    }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // LÓGICA DE NAVEGAÇÃO E ESTADO
+        // ==========================================
+
+        let currentUnit = 1;
+        let currentQuestionIndex = 0;
+        let isQuestionAnswered = false;
+
+        function switchTab(tabId) {
+            document.getElementById('view-simulados').classList.add('hidden');
+            document.getElementById('view-discursivas').classList.add('hidden');
+            
+            // Estilos inativos
+            const inactiveClass = "flex-1 py-4 px-8 rounded-full font-black uppercase tracking-wider transition-all duration-300 text-orange-400 hover:bg-orange-50 hover:text-orange-600 border-2 border-transparent";
+            
+            document.getElementById('tab-simulados').className = inactiveClass;
+            document.getElementById('tab-discursivas').className = inactiveClass;
+
+            // Ativação
+            const activeClass = "flex-1 py-4 px-8 rounded-full font-black uppercase tracking-wider transition-all duration-300 bg-orange-500 text-white shadow-md transform scale-100";
+
+            if (tabId === 'simulados') {
+                document.getElementById('view-simulados').classList.remove('hidden');
+                document.getElementById('tab-simulados').className = activeClass;
+            } else {
+                document.getElementById('view-discursivas').classList.remove('hidden');
+                document.getElementById('tab-discursivas').className = activeClass;
+                renderDiscursivas();
+            }
+        }
+
+        function loadUnit(unitNumber) {
+            currentUnit = unitNumber;
+            currentQuestionIndex = 0;
+            
+            for(let i=1; i<=4; i++) {
+                let btn = document.getElementById(`btn-u${i}`);
+                if (i === unitNumber) {
+                    btn.classList.add('border-orange-500', 'bg-orange-50');
+                    btn.classList.remove('border-transparent');
+                    btn.querySelector('div').classList.add('text-orange-500');
+                    btn.querySelector('div').classList.remove('text-slate-300');
+                    btn.querySelector('h3').classList.add('text-slate-800');
+                    btn.querySelector('h3').classList.remove('text-slate-500');
+                } else {
+                    btn.classList.remove('border-orange-500', 'bg-orange-50');
+                    btn.classList.add('border-transparent');
+                    btn.querySelector('div').classList.remove('text-orange-500');
+                    btn.querySelector('div').classList.add('text-slate-300');
+                    btn.querySelector('h3').classList.remove('text-slate-800');
+                    btn.querySelector('h3').classList.add('text-slate-500');
+                }
+            }
+
+            document.getElementById('question-container').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            isQuestionAnswered = false;
+            const questions = simuladoData[currentUnit];
+            
+            if (!questions || questions.length === 0 || currentQuestionIndex >= questions.length) {
+                document.getElementById('question-container').innerHTML = `
+                    <div class="text-center py-16 fade-in">
+                        <div class="inline-block bg-orange-100 p-6 rounded-full mb-6">
+                            <i class="fas fa-trophy text-6xl text-orange-500 drop-shadow-md"></i>
+                        </div>
+                        <h2 class="text-3xl font-black uppercase text-slate-800 mb-2">Unidade ${currentUnit} Finalizada!</h2>
+                        <p class="text-slate-500 font-medium mb-8">Excelente trabalho. Você revisou os principais conceitos.</p>
+                        <button onclick="location.reload()" class="bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 rounded-full font-black uppercase tracking-wider transition-all shadow-xl hover:scale-105 transform">
+                            Voltar ao Início
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const q = questions[currentQuestionIndex];
+            
+            document.getElementById('unit-badge').textContent = `Unidade ${currentUnit}`;
+            document.getElementById('question-progress').textContent = `Questão ${currentQuestionIndex + 1} de ${questions.length}`;
+            document.getElementById('question-text').textContent = q.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-5 rounded-2xl border-2 border-slate-100 hover:border-orange-400 hover:bg-orange-50 hover:shadow-md transition-all font-bold text-slate-600 option-btn flex items-center relative z-10 group';
+                btn.innerHTML = `
+                    <span class="flex-shrink-0 inline-flex justify-center items-center w-10 h-10 rounded-full bg-slate-100 text-slate-400 group-hover:bg-orange-200 group-hover:text-orange-600 text-lg font-black mr-5 transition-colors">
+                        ${String.fromCharCode(65 + index)}
+                    </span> 
+                    <span class="leading-relaxed text-base">${opt}</span>
+                `;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+
+            const feedbackArea = document.getElementById('feedback-area');
+            feedbackArea.classList.add('hidden');
+            feedbackArea.className = 'relative z-10 mt-8 p-6 rounded-[2rem] hidden border-l-8 shadow-inner';
+            document.getElementById('next-btn').classList.add('hidden');
+        }
+
+        function selectOption(selectedIndex, buttonElement) {
+            if (isQuestionAnswered) return;
+            isQuestionAnswered = true;
+
+            const q = simuladoData[currentUnit][currentQuestionIndex];
+            const isCorrect = selectedIndex === q.correctAnswer;
+            const allButtons = document.querySelectorAll('.option-btn');
+
+            allButtons.forEach((btn, index) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-orange-400', 'hover:bg-orange-50', 'border-slate-100', 'group');
+                
+                const badge = btn.querySelector('span:first-child');
+
+                if (index === q.correctAnswer) {
+                    btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900', 'shadow-md');
+                    badge.classList.add('bg-emerald-500', 'text-white');
+                    badge.classList.remove('bg-slate-100', 'text-slate-400');
+                } else if (index === selectedIndex && !isCorrect) {
+                    btn.classList.add('border-rose-400', 'bg-rose-50', 'text-rose-900');
+                    badge.classList.add('bg-rose-500', 'text-white');
+                    badge.classList.remove('bg-slate-100', 'text-slate-400');
+                } else {
+                    btn.classList.add('opacity-40', 'border-slate-50', 'bg-slate-50');
+                }
+            });
+
+            showFeedback(isCorrect, q.explanation);
+        }
+
+        function showFeedback(isCorrect, explanation) {
+            const feedbackArea = document.getElementById('feedback-area');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackText = document.getElementById('feedback-text');
+            const nextBtn = document.getElementById('next-btn');
+
+            feedbackArea.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedbackArea.classList.add('bg-emerald-50', 'border-emerald-400');
+                feedbackArea.classList.remove('bg-rose-50', 'border-rose-400');
+                feedbackIcon.innerHTML = '<i class="fas fa-check-circle text-emerald-500"></i>';
+                feedbackTitle.textContent = 'Exato! Muito bem.';
+                feedbackTitle.className = 'font-black text-xl uppercase tracking-wide mb-2 text-emerald-800';
+                feedbackText.className = 'font-bold text-emerald-700 leading-relaxed';
+            } else {
+                feedbackArea.classList.add('bg-rose-50', 'border-rose-400');
+                feedbackArea.classList.remove('bg-emerald-50', 'border-emerald-400');
+                feedbackIcon.innerHTML = '<i class="fas fa-exclamation-circle text-rose-500"></i>';
+                feedbackTitle.textContent = 'Atenção ao Conceito!';
+                feedbackTitle.className = 'font-black text-xl uppercase tracking-wide mb-2 text-rose-800';
+                feedbackText.className = 'font-bold text-rose-700 leading-relaxed';
+            }
+
+            feedbackText.textContent = explanation;
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            renderQuestion();
+        }
+
+        // Lógica das Discursivas
+        function renderDiscursivas() {
+            const container = document.getElementById('works-container');
+            container.innerHTML = '';
+
+            discursivasData.forEach((work, workIndex) => {
+                let termsHTML = '';
+                work.terms.forEach((term, termIndex) => {
+                    const uniqueId = `term-${workIndex}-${termIndex}`;
+                    termsHTML += `
+                        <div class="border-b border-orange-100 last:border-0">
+                            <button onclick="toggleAccordion('${uniqueId}')" class="w-full text-left py-5 flex justify-between items-center focus:outline-none group">
+                                <span class="font-black uppercase tracking-wide text-slate-700 group-hover:text-orange-600 transition-colors text-base md:text-lg flex items-center">
+                                    <i class="fas fa-caret-right mr-3 text-orange-300 group-hover:text-orange-500 transition-transform" id="caret-${uniqueId}"></i>
+                                    ${term.term}
+                                </span>
+                            </button>
+                            <div id="content-${uniqueId}" class="accordion-content text-slate-600 text-sm">
+                                <p class="mb-5 ml-6 text-base font-medium leading-relaxed"><strong class="text-slate-800">Definição Acadêmica:</strong> ${term.definition}</p>
+                                <div class="ml-6 bg-orange-100 border-l-4 border-orange-500 p-5 rounded-r-xl text-orange-900 shadow-sm">
+                                    <strong class="flex items-center text-orange-800 mb-2 uppercase tracking-wide font-black text-xs md:text-sm"><i class="fas fa-fire text-orange-500 mr-2 text-lg"></i> Por que isso dá nota na prova?</strong>
+                                    <p class="leading-relaxed font-medium text-[15px] text-orange-800 opacity-90">${term.why}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const workCard = `
+                    <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border-2 border-transparent hover:border-orange-200 transition-colors mb-8">
+                        <div class="bg-slate-800 text-white p-6 md:p-8 flex items-center relative overflow-hidden">
+                            <div class="absolute -right-6 -top-6 text-slate-700 opacity-30"><i class="fas fa-briefcase text-8xl"></i></div>
+                            <div class="relative z-10 flex items-center">
+                                <div class="bg-orange-500 w-12 h-12 rounded-full flex justify-center items-center mr-5 shadow-lg">
+                                    <i class="fas fa-folder-open text-xl text-white"></i>
+                                </div>
+                                <h3 class="text-xl md:text-2xl font-black uppercase tracking-wide">${work.title}</h3>
+                            </div>
+                        </div>
+                        <div class="p-6 md:p-8">
+                            <div class="mb-8 pb-8 border-b border-orange-100">
+                                <h4 class="text-xs md:text-sm font-black uppercase tracking-widest text-orange-500 mb-3">Contexto do Estudo de Caso</h4>
+                                <p class="text-slate-600 font-medium italic border-l-4 border-orange-300 pl-4 py-1 text-base">"${work.context}"</p>
+                            </div>
+                            <div>
+                                <h4 class="text-xs md:text-sm font-black uppercase tracking-widest text-orange-500 mb-4">Mapeamento para Questões Abertas</h4>
+                                <div class="bg-white rounded-xl">
+                                    ${termsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += workCard;
+            });
+        }
+
+        function toggleAccordion(id) {
+            const content = document.getElementById(`content-${id}`);
+            const caret = document.getElementById(`caret-${id}`);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                caret.style.transform = 'rotate(0deg)';
+                caret.classList.replace('text-orange-500', 'text-orange-300');
+            } else {
+                content.classList.add('open');
+                caret.style.transform = 'rotate(90deg)';
+                caret.classList.replace('text-orange-300', 'text-orange-500');
+            }
+        }
+
+        // Iniciar visualização padrão
+        loadUnit(1);
+
+    </script>
+</body>
+</html>

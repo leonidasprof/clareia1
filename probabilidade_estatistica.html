@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Interativo: Estatística e Probabilidade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        /* Animações suaves para a revelação das respostas */
+        .reveal-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out, margin 0.5s ease-out;
+            opacity: 0;
+        }
+        .reveal-content.open {
+            max-height: 1000px; /* Altura suficiente para o conteúdo */
+            opacity: 1;
+            margin-top: 1rem;
+        }
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body class="bg-[#fdf6f0] text-[#4a2e1b] font-sans antialiased">
+
+    <!-- Container Principal -->
+    <div class="max-w-4xl mx-auto p-4 md:p-8">
+        
+        <!-- Cabeçalho -->
+        <header class="text-center mb-10 bg-white p-8 rounded-3xl shadow-sm border-2 border-[#fbd4c4]">
+            <img src="https://www.cesar.school/wp-content/themes/alfama/assets/img/marca.svg" alt="CESAR School Logo" class="h-16 mx-auto mb-6">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-[#ff5a1f] mb-3 tracking-tight">Simulado Interativo</h1>
+            <h2 class="text-xl font-semibold text-[#4a2e1b] mb-4">Estatística e Probabilidade</h2>
+            <p class="text-[#7c5b47] max-w-2xl mx-auto font-medium">
+                Bem-vindo ao seu guia de estudos definitivo! Tente responder cada questão clicando na alternativa, e depois clique no botão para revelar o raciocínio e a resposta final. Boa sorte!
+            </p>
+        </header>
+
+        <!-- Área onde o conteúdo será injetado pelo JS -->
+        <main id="app-content"></main>
+
+        <!-- Rodapé -->
+        <footer class="text-center text-[#7c5b47] mt-12 mb-8 text-sm font-semibold">
+            <p>Bons estudos! Lembre-se: errar faz parte do processo de aprendizagem.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Dados do Simulado extraídos do material
+        const quizData = [
+            {
+                unit: "🧮 Unidade 1: Análise Combinatória e Probabilidade Básica",
+                summary: "Resumo Teórico da Unidade 1: Arranjo vs Combinação - Se a ordem importar (ex: pódio), é Arranjo. Se a ordem não importar (ex: fazer uma salada de frutas), é Combinação! O Espaço Amostral é simplesmente a lista de TUDO o que pode acontecer.",
+                questions: [
+                    {
+                        id: "1.1",
+                        text: "Qual a probabilidade de um número par aparecer no lançamento de um dado não viciado?",
+                        options: { a: "1/2", b: "5/6", c: "1/6", d: "1/3" },
+                        correct: "a",
+                        think: "Imagine que o dado tem 6 lados, certo? Quantos deles são números pares? O 2, o 4 e o 6. Ou seja, você tem 3 'lados vencedores' num total de 6 lados.",
+                        stepByStep: "Casos favoráveis (pares): 3<br>Total de casos: 6<br>Fração: 3/6. Dividindo o número de cima e o de baixo por 3 (simplificando), temos 1/2."
+                    },
+                    {
+                        id: "1.2",
+                        text: "Um número inteiro é escolhido aleatoriamente dentre os números 1, 2, 3, …, 50. Qual a probabilidade de ser primo?",
+                        options: { a: "1/5", b: "1/9", c: "3/10", d: "3/5" },
+                        correct: "c",
+                        think: "Números primos são como super-heróis solitários: eles só podem ser divididos por 1 e por eles mesmos. O número 1 NÃO é primo. Vamos contar nossos heróis do 1 ao 50.",
+                        stepByStep: "Primos até 50: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47. (São 15 números).<br>Probabilidade = (casos favoráveis) / (total) = 15 / 50.<br>Simplificando (dividindo por 5): 3 / 10."
+                    },
+                    {
+                        id: "1.3",
+                        text: "Qual a probabilidade de sair um rei ou uma carta de copas quando retiramos uma carta de um baralho?",
+                        options: { a: "4/42", b: "4/13", c: "1/52", d: "13/52" },
+                        correct: "b",
+                        think: "Pense em figurinhas. Você quer qualquer figurinha brilhante (Rei) ou qualquer figurinha vermelha com coração (Copas). Mas cuidado: existe uma figurinha que é as duas coisas ao mesmo tempo (o Rei de Copas)! Não podemos contá-la duas vezes.",
+                        stepByStep: "Baralho total = 52 cartas.<br>Reis = 4. Copas = 13.<br>Rei de Copas (já contado nas duas listas) = 1.<br>Total favorável = 4 + 13 - 1 = 16.<br>Probabilidade = 16 / 52. Dividindo tudo por 4, temos 4/13."
+                    },
+                    {
+                        id: "1.4",
+                        text: "Dois dados são lançados simultaneamente. Qual a probabilidade de a soma ser 9?",
+                        options: { a: "1/12", b: "1/3", c: "1/9", d: "5/12" },
+                        correct: "c",
+                        think: "Você tem dois dados. Quantas combinações dão 9 pontos se você somar? E lembre-se: tirar 3 no primeiro e 6 no segundo é diferente de tirar 6 no primeiro e 3 no segundo!",
+                        stepByStep: "Total de combinações possíveis nos dois dados: 6 x 6 = 36.<br>Combinações que dão 9: (3,6), (4,5), (5,4), (6,3). (São 4 casos).<br>Probabilidade = 4 / 36. Simplificando por 4, temos 1/9."
+                    },
+                    {
+                        id: "1.5",
+                        text: "Dois dados são lançados. Qual a prob. do primeiro resultado ser maior que o segundo?",
+                        options: { a: "1/9", b: "5/12", c: "5/9", d: "1/12" },
+                        correct: "b",
+                        think: "Num jogo de empate, ganha ou perde, existem 36 resultados. Em 6 resultados, os dois dados empatam (1-1, 2-2...). Sobram 30. Nesses 30, metade das vezes o primeiro dado ganha, e na outra metade ele perde!",
+                        stepByStep: "Total: 36.<br>Empates: 6. Restam: 36 - 6 = 30 resultados onde os dados são diferentes.<br>Destes 30, exatamente a metade terá o 1º maior que o 2º. (30 / 2 = 15).<br>Probabilidade = 15 / 36. Simplificando por 3, temos 5/12."
+                    },
+                    {
+                        id: "1.6",
+                        text: "Um lote é formado por 10 peças boas, 4 com defeitos e 2 com defeitos graves. Uma peça é escolhida. Qual a probabilidade de NÃO ter defeitos graves?",
+                        options: { a: "1/7", b: "1/4", c: "1/8", d: "7/8" },
+                        correct: "d",
+                        think: "Se você colocar todos os seus brinquedos num baú (10 novos, 4 arranhados e 2 quebrados) e quiser pegar um de olho fechado que NÃO esteja quebrado... você só não pode pegar os 2 quebrados. O resto todo serve!",
+                        stepByStep: "Total de peças = 10 + 4 + 2 = 16.<br>Peças sem defeitos graves = boas (10) + defeitos simples (4) = 14.<br>Probabilidade = 14 / 16. Simplificando por 2, temos 7/8."
+                    }
+                ]
+            },
+            {
+                unit: "🕵️‍♂️ Unidade 2: Probabilidade Condicional e Teorema de Bayes",
+                questions: [
+                    {
+                        id: "2.1",
+                        text: "Duas caixas: C1 (3 brancas, 7 pretas), C2 (1 branca, 5 pretas). Sorteia-se uma bola e ela é preta. Qual a prob. de ter vindo da C1?",
+                        options: { a: "7/10", b: "1/2", c: "5/6", d: "21/46" },
+                        correct: "d",
+                        think: "Imagine que você estava vendado e pegou uma jujuba preta. O detetive Bayes diz: 'Descubra de qual caixa veio!' Primeiro, calculamos qual a chance de pegar uma jujuba preta no geral (probabilidade total). Depois, pegamos só a 'parte' dessa chance que pertence à Caixa 1.",
+                        stepByStep: "Prob. de escolher cada caixa: P(C1) = 1/2, P(C2) = 1/2.<br>Prob. de tirar Preta em C1: 7/10. Em C2: 5/6.<br>Teorema da Probabilidade Total (Preta): (1/2 * 7/10) + (1/2 * 5/6) = 7/20 + 5/12. O MMC é 60. Fica: 21/60 + 25/60 = 46/60 = 23/30.<br>Teorema de Bayes (Parte da C1 nisso): (7/20) / (23/30) = (7/20) * (30/23) = 210/460 = 21/46."
+                    },
+                    {
+                        id: "2.2",
+                        text: "5% dos homens e 2% das mulheres têm +1,80m. 60% são homens. Se um estudante tem +1,80m, qual a prob. de ser mulher?",
+                        options: { a: "0,02", b: "0,21", c: "0,38", d: "0,05" },
+                        correct: "b",
+                        think: "De novo o detetive! Vemos um pé gigante saindo de trás da cortina (sabemos que a pessoa tem mais de 1,80m). O normal é ter mais homens altos, então a chance de ser mulher é menor. Vamos usar a 'fórmula da fatia de pizza de Bayes'.",
+                        stepByStep: "Homens(H) = 0.60. Mulheres(M) = 0.40.<br>Altos dado H = 0.05. Altos dado M = 0.02.<br>Regra de Bayes: P(M | Alto) = [P(Alto | M) * P(M)] / [ P(Alto|M)*P(M) + P(Alto|H)*P(H) ]<br>= (0.02 * 0.40) / [ (0.02 * 0.40) + (0.05 * 0.60) ]<br>= 0.008 / [ 0.008 + 0.030 ] = 0.008 / 0.038 = 8/38 = 4/19 ≈ 0,21."
+                    },
+                    {
+                        id: "2.3",
+                        text: "A probabilidade de A resolver um problema é 2/3, e de B é 3/4. Se ambos tentarem, qual a prob. do problema NÃO ser resolvido?",
+                        options: { a: "1/3", b: "1/12", c: "1/4", d: "11/12" },
+                        correct: "b",
+                        think: "Pense em dois atacantes chutando pro gol. Para o time perder, os DOIS têm que errar o chute. O A acerta 2/3 das vezes, então erra 1/3. O B acerta 3/4, então erra 1/4.",
+                        stepByStep: "Eventos independentes: nós multiplicamos as chances deles falharem juntos.<br>P(A falhar) = 1 - 2/3 = 1/3.<br>P(B falhar) = 1 - 3/4 = 1/4.<br>P(Ambos falharem) = (1/3) * (1/4) = 1/12."
+                    },
+                    {
+                        id: "2.4",
+                        text: "Apenas 1 em cada 10 tem tuberculose (TB). Teste Y dá positivo em 80% dos com TB e 30% dos sem TB. Uma pessoa tem o teste positivo. Qual a prob. de ter TB?",
+                        options: { a: "0,8", b: "0,23", c: "0,9", d: "0,35" },
+                        correct: "b",
+                        think: "O teste médico se confunde às vezes! Como pouca gente tem a doença no mundo real, a maioria dos 'positivos' são só falsos alarmes. Vamos ver quantos doentes reais estão nesse grupo de testes que apitaram.",
+                        stepByStep: "P(TB) = 0.10. P(Sem TB) = 0.90.<br>P(+ | TB) = 0.80. P(+ | Sem TB) = 0.30.<br>P(TB | +) = (0.10 * 0.80) / [ (0.10 * 0.80) + (0.90 * 0.30) ]<br>= 0.08 / [ 0.08 + 0.27 ] = 0.08 / 0.35 = 8 / 35 ≈ 0,228 (que aproxima para 0,23)."
+                    }
+                ]
+            },
+            {
+                unit: "📊 Unidade 3: Estatística Descritiva e Esperança",
+                questions: [
+                    {
+                        id: "3.1",
+                        text: "Uma seguradora cobra R$ 1.000 por ano. Em caso de sinistro (prob de 5%), paga R$ 10.000. Qual é o valor esperado do contrato para o segurado?",
+                        options: { a: "R$-500", b: "R$-350", c: "R$-400", d: "R$-450" },
+                        correct: "a",
+                        think: "'Valor esperado' é perguntar: se eu jogasse esse jogo mil vezes, na média, eu ganharia ou perderia dinheiro? Você sempre perde 1.000 reais da carteira. Mas, numa rara sorte (5%), você recebe os 10.000 do prêmio.",
+                        stepByStep: "Cenário 1 (Não tem acidente - 95% de chance): Você perde R$ 1.000.<br>Cenário 2 (Tem acidente - 5% de chance): Você ganha R$ 10.000, mas já tinha pago 1.000, então seu saldo final do evento é +9.000.<br>Esperança = (0.95 * -1000) + (0.05 * 9000) = -950 + 450 = -500.<br>Na média, o segurado perde 500 reais."
+                    },
+                    {
+                        id: "3.2",
+                        text: "Qual medida de tendência central é mais adequada para descrever um conjunto com valores extremos ou outliers?",
+                        options: { a: "Mediana", b: "Moda", c: "Variância", d: "Esperança" },
+                        correct: "a",
+                        think: "Imagine que 4 crianças têm R$ 10 no bolso e uma criança tem R$ 1.000.000 (o outlier). Se a gente usar a Média, vai parecer que todo mundo ali é rico. Mas se pegarmos a criança que está no MEIO da fila (Mediana), veremos que o normal daquele grupo é ter R$ 10.",
+                        stepByStep: "A Média é muito sensível a valores bizarros (outliers) e seu valor se distorce para o lado deles.<br>A Mediana apenas olha para a posição central dos dados ordenados, ignorando quão grandes são os extremos."
+                    },
+                    {
+                        id: "3.3",
+                        text: "Em um lançamento de um dado justo, qual é o valor esperado para o resultado?",
+                        options: { a: "2,5", b: "4", c: "3,5", d: "3" },
+                        correct: "c",
+                        think: "Se você somar todos os lados do dado e multiplicar pela chance de cair (que é igual para todos), você encontra o 'ponto de equilíbrio' dele. É como tentar equilibrar uma régua no dedo!",
+                        stepByStep: "Faces: 1, 2, 3, 4, 5, 6. Cada uma tem probabilidade 1/6.<br>Esperança E(X) = (1*(1/6) + 2*(1/6) + 3*(1/6) + 4*(1/6) + 5*(1/6) + 6*(1/6))<br>= (1 + 2 + 3 + 4 + 5 + 6) / 6 = 21 / 6 = 3,5."
+                    },
+                    {
+                        id: "3.4",
+                        text: "Dado o conjunto 3, 5, 8 e 10, qual é o desvio padrão populacional?",
+                        options: { a: "3,16", b: "2,69", c: "2,87", d: "2,45" },
+                        correct: "b",
+                        think: "O desvio padrão é uma fita métrica que diz o quanto a turma está espalhada ou pertinho uns dos outros. Primeiro calculamos o meio (média) e depois vemos a distância de cada um para o meio.",
+                        stepByStep: "Média = (3+5+8+10) / 4 = 26 / 4 = 6,5.<br>Distância da média ao quadrado: (3-6.5)² = 12.25 | (5-6.5)² = 2.25 | (8-6.5)² = 2.25 | (10-6.5)² = 12.25<br>Soma = 12.25 + 2.25 + 2.25 + 12.25 = 29.<br>Variância populacional = 29 / 4 = 7,25.<br>Desvio padrão = √7.25 ≈ 2,69."
+                    }
+                ]
+            },
+            {
+                unit: "📈 Unidade 4: Distribuições Discretas e Contínuas",
+                questions: [
+                    {
+                        id: "4.1",
+                        text: "Em uma distribuição binomial com n=5 ensaios e p=0,3, qual é a probabilidade de obter exatamente 2 sucessos?",
+                        options: { a: "0,3086", b: "0,263", c: "0,308", d: "0,163" },
+                        correct: "a",
+                        think: "Imagine que você vai tentar acertar a cesta de basquete 5 vezes. Você não é muito bom, sua chance de acertar (sucesso) é de 30% (0,3). Queremos saber a chance exata de você acertar 2 vezes e errar 3 vezes.",
+                        stepByStep: "Fórmula Binomial: P(X=k) = C(n, k) * (p)^k * (1-p)^(n-k).<br>C(5,2) = 5! / (2! * 3!) = 10 maneiras de as cestas caírem.<br>Acertar 2 vezes: (0,3)² = 0,09.<br>Errar 3 vezes: (0,7)³ = 0,343.<br>Conta final: 10 * 0,09 * 0,343 = 0,3087 (As alternativas usam aproximações, a mais próxima é a)."
+                    },
+                    {
+                        id: "4.2",
+                        text: "Jogue uma moeda 10 vezes. Calcule a probabilidade de dar exatamente 6 caras.",
+                        options: { a: "105/1024", b: "105/512", c: "1/1024", d: "1/512" },
+                        correct: "b",
+                        think: "Se você jogar 10 moedas para cima, qual a chance de exatas 6 caírem com a cara para cima e 4 caírem com a coroa? É a mesma 'Receita de Bolo' da Binomial ali de cima!",
+                        stepByStep: "Combinação de 10 jogadas escolhendo 6 caras: C(10,6) = 210.<br>Chance de Cara: (1/2)^6. Chance de Coroa: (1/2)^4.<br>Probabilidade total = 210 * (1/2)^6 * (1/2)^4 = 210 * (1/2)^10 = 210 / 1024.<br>Dividindo em cima e embaixo por 2 (simplificando): 105 / 512."
+                    },
+                    {
+                        id: "4.3",
+                        text: "Lâmpadas: 60% verdes, 30% azuis, 10% amarelas. Em 5 lâmpadas, encontre a prob. de serem 2 verdes, 1 azul e 2 amarelas.",
+                        options: { a: "0,5", b: "0,016", c: "0,0324", d: "0,001" },
+                        correct: "c",
+                        think: "Isso aqui é uma 'Binomial Turbinada' (Distribuição Multinomial), porque temos mais de 2 cores. É como colocar a mão num saco de bolinhas mágicas.",
+                        stepByStep: "Fatorial do total / fatoriais das partes: 5! / (2! * 1! * 2!) = 120 / 4 = 30 arranjos possíveis.<br>Probabilidade combinada delas: (0.60)² * (0.30)¹ * (0.10)²<br>Conta: 30 * (0.36) * (0.3) * (0.01) = 30 * 0.00108 = 0.0324."
+                    },
+                    {
+                        id: "4.4",
+                        text: "Em uma distribuição normal com média 50 e desvio padrão 5, qual é a probabilidade de uma variável aleatória ser menor ou igual a 45?",
+                        options: { a: "0,8413", b: "0,1587", c: "0,5", d: "0,9772" },
+                        correct: "b",
+                        think: "A distribuição Normal é como o desenho de um sino ou uma montanha. O pico da montanha fica no 50 (a média). A largura dos 'passos' descendo a montanha é 5 (desvio padrão). Chegar no 45 significa dar 1 passo inteiro para trás (-1) a partir do pico.",
+                        stepByStep: "Calculamos o Z-score (Quantos passos demos?): Z = (45 - 50) / 5 = -1.<br>Olhando na Tabela da Distribuição Normal: a área à esquerda (abaixo) de Z = -1 é 0,1587 ou 15,87%."
+                    },
+                    {
+                        id: "4.5",
+                        text: "O salário semanal dos operários é normalmente distribuído com média de R$ 180 e desvio padrão de R$ 25. Prob. de um salário estar entre R$ 150 e R$ 178?",
+                        options: { a: "0,353", b: "0,87", c: "0,798", d: "0,512" },
+                        correct: "a",
+                        think: "Imagine que R$ 180 é o ponto zero do seu mapa do tesouro. Precisamos descobrir a distância do 150 e a distância do 178 e ver o tamanho da 'fatia' do gráfico que fica entre os dois.",
+                        stepByStep: "Ponto Z para o 150: (150 - 180) / 25 = -1,2. Na tabela normal, a área total até -1.2 é 0,1151.<br>Ponto Z para o 178: (178 - 180) / 25 = -0,08. Na tabela normal, a área total até -0.08 é 0,4681.<br>A probabilidade de estar no meio dos dois é só subtrair a área menor da área maior: 0,4681 - 0,1151 = 0,3530."
+                    }
+                ]
+            }
+        ];
+
+        // Estado da aplicação
+        const state = {
+            selections: {}, // { "1.1": "a" }
+            revealed: {}    // { "1.1": true }
+        };
+
+        // Função principal de renderização
+        function render() {
+            const app = document.getElementById('app-content');
+            let html = '';
+
+            quizData.forEach((unit, unitIndex) => {
+                html += `
+                    <div class="mb-14">
+                        <h2 class="text-2xl font-extrabold text-[#ff5a1f] mb-6 pb-2 border-b-4 border-[#ffc2aa]">
+                            ${unit.unit}
+                        </h2>
+                `;
+
+                unit.questions.forEach((q) => {
+                    const isRevealed = state.revealed[q.id];
+                    const selected = state.selections[q.id];
+                    const isCorrect = selected === q.correct;
+
+                    html += `
+                        <div class="bg-white rounded-3xl shadow-sm border-2 border-[#fbd4c4] p-6 md:p-8 mb-6 transition-all hover:shadow-md hover:border-[#ffc2aa]" id="q-${q.id}">
+                            <div class="flex items-start gap-4 mb-6">
+                                <div class="bg-[#ff5a1f] text-white px-4 py-1.5 rounded-lg font-bold text-sm shrink-0">
+                                    Q ${q.id}
+                                </div>
+                                <h3 class="text-xl text-[#4a2e1b] font-bold leading-snug">${q.text}</h3>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pl-0 md:pl-20">
+                    `;
+
+                    // Renderizar alternativas
+                    Object.entries(q.options).forEach(([key, value]) => {
+                        let btnClass = "option-btn border-2 border-[#fbd4c4] bg-white text-[#7c5b47] hover:bg-[#fff7f3] hover:border-[#ff5a1f] rounded-2xl p-4 text-left font-semibold w-full flex items-center justify-between cursor-pointer";
+                        let icon = "";
+
+                        if (selected === key) {
+                            btnClass = "option-btn border-2 border-[#ff5a1f] bg-[#fff7f3] text-[#ff5a1f] rounded-2xl p-4 text-left font-bold w-full flex items-center justify-between cursor-pointer";
+                        }
+
+                        if (isRevealed) {
+                            btnClass += " cursor-default opacity-80"; // desabilita clique visualmente
+                            
+                            if (key === q.correct) {
+                                btnClass = "option-btn border-2 border-green-500 bg-green-50 text-green-700 rounded-2xl p-4 text-left font-bold w-full flex items-center justify-between";
+                                icon = `<svg class="text-green-600" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+                            } else if (key === selected && !isCorrect) {
+                                btnClass = "option-btn border-2 border-red-500 bg-red-50 text-red-700 rounded-2xl p-4 text-left font-bold w-full flex items-center justify-between";
+                                icon = `<svg class="text-red-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+                            } else {
+                                btnClass = "option-btn border-2 border-slate-100 bg-slate-50 text-slate-400 rounded-2xl p-4 text-left font-semibold w-full flex items-center justify-between";
+                            }
+                        }
+
+                        html += `
+                            <button 
+                                onclick="selectOption('${q.id}', '${key}')" 
+                                class="${btnClass}"
+                                ${isRevealed ? 'disabled' : ''}>
+                                <span><strong class="uppercase mr-3 text-lg">${key}.</strong> ${value}</span>
+                                ${icon}
+                            </button>
+                        `;
+                    });
+
+                    html += `</div>`; // Fim do grid de opções
+
+                    // Botão de Revelar / Feedback
+                    html += `<div class="pl-0 md:pl-20">`;
+                    if (!isRevealed) {
+                        html += `
+                            <button 
+                                onclick="revealAnswer('${q.id}')"
+                                class="bg-[#4a2e1b] hover:bg-[#321c0e] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-colors focus:ring-4 focus:ring-[#ffc2aa] disabled:opacity-50 disabled:cursor-not-allowed"
+                                ${!selected ? 'disabled title="Selecione uma opção primeiro"' : ''}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-9 5 18 3-9h5"/></svg>
+                                Revelar Raciocínio
+                            </button>
+                            ${!selected ? '<span class="text-sm font-medium text-[#c49a83] ml-3">Escolha uma alternativa para revelar a resposta.</span>' : ''}
+                        `;
+                    } else {
+                        const feedbackClass = isCorrect ? 'text-green-800 bg-green-100 border-green-300' : 'text-red-800 bg-red-100 border-red-300';
+                        const feedbackText = isCorrect ? '🎉 Excelente! Você acertou.' : '👀 Ops! Não foi dessa vez, mas veja a explicação.';
+                        
+                        html += `
+                            <div class="inline-block px-5 py-2.5 rounded-xl font-bold mb-4 border-2 ${feedbackClass}">
+                                ${feedbackText}
+                            </div>
+                        `;
+                    }
+                    
+                    // Conteúdo revelado (Explicação)
+                    html += `
+                            <div class="reveal-content bg-[#fff7f3] rounded-2xl border-2 border-[#fbd4c4] ${isRevealed ? 'open' : ''}">
+                                <div class="p-6 md:p-8">
+                                    <div class="mb-5">
+                                        <h4 class="text-[#ff5a1f] font-extrabold flex items-center gap-2 mb-2 text-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="22" y1="12" x2="9" y2="12"/></svg>
+                                            Como pensar:
+                                        </h4>
+                                        <p class="text-[#7c5b47] font-medium italic border-l-4 border-[#ffc2aa] pl-4 text-lg">${q.think}</p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-[#4a2e1b] font-extrabold flex items-center gap-2 mb-2 text-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                                            Passo a Passo Matemático:
+                                        </h4>
+                                        <div class="text-[#4a2e1b] bg-white p-5 rounded-xl border-2 border-[#fbd4c4] font-mono text-sm leading-relaxed font-semibold">
+                                            ${q.stepByStep}
+                                        </div>
+                                    </div>
+                                    <div class="mt-6 pt-6 border-t-2 border-[#fbd4c4]">
+                                        <p class="font-extrabold text-[#4a2e1b] text-lg">
+                                            Resposta Final: <span class="text-[#ff5a1f] uppercase bg-[#fff7f3] px-3 py-1 rounded-lg border-2 border-[#ffc2aa]">${q.correct}. ${q.options[q.correct]}</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                });
+
+                // Se houver resumo da unidade, exibe no final
+                if (unit.summary) {
+                    html += `
+                        <div class="bg-[#4a2e1b] border-l-8 border-[#ff5a1f] p-6 rounded-r-2xl mb-12 text-[#fdf6f0] shadow-md">
+                            <strong class="text-[#ffc2aa] text-lg block mb-1">💡 Dica / Resumo:</strong> 
+                            <span class="font-medium leading-relaxed">${unit.summary}</span>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`; // Fim da Unidade
+            });
+
+            app.innerHTML = html;
+        }
+
+        // Lidar com a seleção de alternativas
+        window.selectOption = function(questionId, optionKey) {
+            if (state.revealed[questionId]) return; // Não permite mudar após revelar
+            state.selections[questionId] = optionKey;
+            render();
+        }
+
+        // Revelar a resposta
+        window.revealAnswer = function(questionId) {
+            if (!state.selections[questionId]) return; // Exige seleção
+            state.revealed[questionId] = true;
+            render();
+            
+            // Pequeno delay para garantir que o DOM atualizou antes da transição CSS rodar suave
+            setTimeout(() => {
+                const el = document.querySelector(`#q-${questionId} .reveal-content`);
+                if(el) el.classList.add('open');
+            }, 10);
+        }
+
+        // Inicializar a aplicação
+        document.addEventListener('DOMContentLoaded', () => {
+            render();
+        });
+    </script>
+</body>
+</html>
