@@ -61,6 +61,23 @@
         .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
 
         @media print { nav, .controls { display: none !important; } .slide { page-break-after: always; min-height: auto; padding: 2rem; } }
+        
+        /* Estilos específicos para o WhatsApp Mockup */
+        .wa-bg { background-color: #EFEAE2; }
+        .wa-bot-bubble {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            border-top-left-radius: 0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .wa-user-bubble {
+            background-color: #D9FDD3;
+            border-radius: 8px;
+            border-top-right-radius: 0;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .wa-scrollbar::-webkit-scrollbar { width: 4px; }
+        .wa-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(0,0,0,0.2); border-radius: 4px; }
     </style>
 </head>
 <body class="antialiased font-sans">
@@ -81,16 +98,16 @@
                     Tranquilidade na <span class="text-gradient">palma da mão.</span>
                 </h1>
                 <p class="text-xl text-gray-600 mb-8 max-w-lg">
-                    A primeira IA que traduz processos judiciais para linguagem acessível, diretamente no WhatsApp e Telegram.
+                    A Clareia traduz processos judiciais para linguagem acessível, diretamente no WhatsApp e Telegram.
                 </p>
                 <div class="flex flex-wrap gap-2">
                     <!-- Avatares Equipe -->
-                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://clareia1.vercel.app/Danilo.jpg" alt="Danilo"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Danilo</span><br><span class="text-accent">CEO & Jurídico</span></div></div>
-                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://clareia1.vercel.app/Ayno%C3%A3.jpg" alt="Aynoã"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Aynoã</span><br><span class="text-accent">UX/UI</span></div></div>
-                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://clareia1.vercel.app/Beatriz.png" alt="Beatriz"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Beatriz</span><br><span class="text-accent">Operações</span></div></div>
-                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://clareia1.vercel.app/Cau%C3%A3.png" alt="Cauã"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Cauã</span><br><span class="text-accent">Tech Lead</span></div></div>
-                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://clareia1.vercel.app/Leonidas.jpg" alt="Leônidas"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Leônidas</span><br><span class="text-accent">Spec. IA</span></div></div>
-                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-sm" src="https://clareia1.vercel.app/Marcela.jpg" alt="Marcela"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Marcela</span><br><span class="text-accent">Operações</span></div></div>
+                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Danilo.jpg" alt="Danilo"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Danilo</span><br><span class="text-accent">CEO & Jurídico</span></div></div>
+                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Ayno%C3%A3.jpg" alt="Aynoã"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Aynoã</span><br><span class="text-accent">UX/UI</span></div></div>
+                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Beatriz.png" alt="Beatriz"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Beatriz</span><br><span class="text-accent">Operações</span></div></div>
+                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Cau%C3%A3.png" alt="Cauã"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Cauã</span><br><span class="text-accent">Tech Lead</span></div></div>
+                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Leonidas.jpg" alt="Leônidas"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Leônidas</span><br><span class="text-accent">Spec. IA</span></div></div>
+                    <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Marcela.jpg" alt="Marcela"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Marcela</span><br><span class="text-accent">Operações</span></div></div>
                 </div>
             </div>
             <div class="relative mx-auto w-full max-w-[420px]">
@@ -108,7 +125,6 @@
                 <h2 class="font-heading font-bold text-4xl text-dark mb-4">O Problema Real e a Oportunidade</h2>
             </div>
             
-            <!-- ADDED: Dados Reais (Requisito SR2) -->
             <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex-1">
                     <h4 class="font-bold text-dark text-lg mb-2"><i class="ph-fill ph-chart-line-up text-primary"></i> A Dor em Números (Oportunidade)</h4>
@@ -150,7 +166,7 @@
         </div>
     </section>
 
-    <!-- SLIDE 3: O Protótipo -->
+    <!-- SLIDE 3: O Protótipo (Estilo WhatsApp) -->
     <section class="slide">
         <div class="max-w-6xl w-full text-center">
             <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">A Solução</span>
@@ -168,45 +184,111 @@
                         <span class="text-xs font-bold uppercase text-gray-400 block mb-3">Stack & Ferramentas de Prototipação</span>
                         <div class="flex flex-wrap gap-2">
                             <!-- Dev & Deploy -->
-                            <span class="bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-file-html"></i> HTML</span>
-                            <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-file-css"></i> CSS</span>
-                            <span class="bg-yellow-50 text-yellow-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><span class="font-black">JS</span> JS</span>
-                            <span class="bg-blue-50 text-blue-800 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-code"></i> VSCode</span>
-                            <span class="bg-orange-50 text-orange-500 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-git-branch"></i> Git</span>
-                            <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-github-logo"></i> GitHub</span>
-                            <span class="bg-black text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-caret-up"></i> Vercel</span>
+                            <div class="relative group cursor-help">
+                                <span class="bg-orange-50 text-orange-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-file-html"></i> HTML</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Estrutura da página</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-blue-50 text-blue-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-file-css"></i> CSS</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Estilos e Design visual</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-yellow-50 text-yellow-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><span class="font-black">JS</span> JS</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Interatividade e Lógica</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-blue-50 text-blue-800 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-code"></i> VSCode</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Editor de Código</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-orange-50 text-orange-500 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-git-branch"></i> Git</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Versionamento do código</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-github-logo"></i> GitHub</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Repositório do projeto</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-black text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-caret-up"></i> Vercel</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Deploy e Hospedagem</div>
+                            </div>
                             
                             <!-- Design -->
-                            <span class="bg-red-50 text-red-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-pinterest-logo"></i> Pinterest</span>
-                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-image"></i> Photoshop</span>
+                            <div class="relative group cursor-help">
+                                <span class="bg-red-50 text-red-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-pinterest-logo"></i> Pinterest</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Ideia de layout e referências</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-image"></i> Photoshop</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Edição das imagens</div>
+                            </div>
                             
                             <!-- IA -->
-                            <span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-fill ph-sparkle"></i> Gemini</span>
-                            <span class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-brain"></i> GPT</span>
-                            <span class="bg-gray-200 text-black px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><strong class="text-[10px]">X</strong> Grok</span>
+                            <div class="relative group cursor-help">
+                                <span class="bg-indigo-50 text-indigo-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-fill ph-sparkle"></i> Gemini</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Motor da Clareia API key</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-emerald-50 text-emerald-600 px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><i class="ph-bold ph-brain"></i> GPT</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Storytelling e Refatoração de código</div>
+                            </div>
+                            <div class="relative group cursor-help">
+                                <span class="bg-gray-200 text-black px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1"><strong class="text-[10px]">X</strong> Grok</span>
+                                <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">Motor da Clareia API key</div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Mockup Telegram Interativo -->
-                <div class="w-full md:w-[300px] shrink-0 bg-[#E3E7EA] rounded-3xl border-[6px] border-gray-800 shadow-xl relative h-[450px] overflow-hidden flex flex-col">
-                    <div class="bg-[#179CDE] text-white px-3 py-3 flex items-center gap-2 shadow-md z-10">
-                        <i class="ph-bold ph-arrow-left text-lg"></i>
-                        <img src="https://clareia1.vercel.app/logo_clareia_icone.png" class="w-8 h-8 rounded-full bg-white object-cover">
-                        <div class="leading-none">
-                            <div class="font-bold text-[14px]">Clarinha | Clareia</div>
-                            <div class="text-[11px] text-blue-100">bot</div>
+                <!-- Mockup WhatsApp Interativo -->
+                <div class="w-full md:w-[340px] shrink-0 wa-bg rounded-[2.5rem] border-[12px] border-[#2D3136] shadow-xl relative h-[600px] overflow-hidden flex flex-col font-[Helvetica,Arial,sans-serif]">
+                    
+                    <!-- Header WhatsApp -->
+                    <div class="bg-[#5281ce] text-white px-3 py-2.5 flex items-center justify-between shadow-sm z-20 shrink-0">
+                        <div class="flex items-center gap-2">
+                            <i class="ph-bold ph-arrow-left text-[22px]"></i>
+                            <div class="relative">
+                                <img src="https://clareia1.vercel.app/logo_clareia_icone.png" class="w-10 h-10 rounded-full bg-white object-cover border border-white/50">
+                            </div>
+                            <div class="leading-tight ml-1">
+                                <div class="font-semibold text-[16px] tracking-wide">Clarinha | Tradutor<br>Jurídico</div>
+                                <div class="text-[12px] text-white/80 font-medium">Online</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 text-white">
+                            <i class="ph-fill ph-video-camera text-[22px]"></i>
+                            <i class="ph-fill ph-phone text-[22px]"></i>
+                            <i class="ph-bold ph-dots-three-vertical text-[22px] -ml-2"></i>
                         </div>
                     </div>
                     
-                    <div id="chat-messages" class="p-3 space-y-3 flex-1 overflow-y-auto text-[13px] bg-[#E3E7EA] bg-[url('https://web.telegram.org/a/chat-bg-pattern-light.png')] bg-cover relative scroll-smooth">
-                        <div class="absolute inset-0 bg-white/50"></div>
-                        <!-- Mensagens dinâmicas entrarão aqui -->
+                    <!-- Area de Chat -->
+                    <div id="chat-messages" class="p-3 space-y-2 flex-1 overflow-y-auto wa-scrollbar relative scroll-smooth flex flex-col">
+                        
+                        <!-- Banner LGPD -->
+                        <div class="bg-[#E4F2F1] text-[#2F736E] text-[11px] leading-tight p-2.5 rounded-lg text-center flex items-start gap-2 shadow-sm mx-auto mb-3 w-[95%]">
+                            <i class="ph-fill ph-lock-key text-sm shrink-0 mt-0.5"></i>
+                            <p>As mensagens são protegidas por criptografia e suas informações estão seguras sob a LGPD.</p>
+                        </div>
+
+                        <!-- As mensagens iniciais serão injetadas aqui pelo JS -->
                     </div>
-                    <form id="chat-form" class="bg-white p-2 flex items-center gap-2 border-t border-gray-200 z-10" onsubmit="event.preventDefault(); handleChatSubmit();">
-                        <input type="text" id="chat-input" placeholder="Mensagem" class="flex-1 outline-none text-sm ml-2 bg-transparent" autocomplete="off">
-                        <button type="submit" id="send-btn" class="p-1 text-[#179CDE] hover:text-blue-600 transition disabled:opacity-50"><i class="ph-fill ph-paper-plane-right text-xl"></i></button>
-                    </form>
+
+                    <!-- Footer Input WhatsApp -->
+                    <div class="bg-[#F0F0F0] p-2 flex items-end gap-2 z-10 shrink-0">
+                        <div class="bg-white flex-1 rounded-[1.5rem] px-3 py-2.5 flex items-center gap-3 shadow-sm border border-gray-200">
+                            <i class="ph-regular ph-smiley text-[#8696A0] text-[24px]"></i>
+                            <form id="chat-form" class="flex-1 flex" onsubmit="event.preventDefault(); handleChatSubmit();">
+                                <input type="text" id="chat-input" placeholder="Mensagem" class="w-full outline-none text-[16px] bg-transparent text-[#303030]" autocomplete="off">
+                            </form>
+                            <i class="ph-regular ph-paperclip text-[#8696A0] text-[22px] transform -rotate-45"></i>
+                            <i class="ph-regular ph-camera text-[#8696A0] text-[22px]"></i>
+                        </div>
+                        <button type="submit" form="chat-form" id="send-btn" class="w-12 h-12 rounded-full bg-[#00A884] flex items-center justify-center text-white shrink-0 shadow-sm hover:bg-[#018b6d] transition-colors">
+                            <i class="ph-fill ph-microphone text-[22px]" id="send-icon"></i>
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -230,7 +312,7 @@
                 <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
                     <h3 class="font-heading font-bold text-lg mb-2 text-accent"><i class="ph-fill ph-flask"></i> O Método & Instrumentos</h3>
                     <ul class="text-gray-300 text-sm space-y-1 list-disc pl-4">
-                        <li><strong>Método:</strong> Teste de Usabilidade Assistido.</li>
+                        <li><strong>Método:</strong> Teste de Usabilidade.</li>
                         <li><strong>Instrumento 1:</strong> Interação com MVP (Chat).</li>
                         <li><strong>Instrumento 2:</strong> Roteiro de Entrevista estruturado pós-teste.</li>
                     </ul>
@@ -244,22 +326,34 @@
                 </div>
             </div>
 
-            <!-- ADDED: Evidências da Aplicação (Requisito SR2) -->
             <div class="bg-white/10 p-6 rounded-2xl border border-white/20 backdrop-blur-md">
                 <h3 class="text-sm font-bold uppercase tracking-wider mb-4 flex items-center gap-2"><i class="ph-bold ph-camera"></i> Evidências da Aplicação</h3>
-                <div class="flex flex-wrap gap-4 justify-center">
-                    <div class="bg-white p-2 rounded transform -rotate-2 w-48 shadow-lg">
-                        <img src="https://clareia1.vercel.app/usu%C3%A1rio_interagindo.png" alt="Usuário interagindo" class="h-28 w-full object-cover mb-2 border border-gray-200 rounded-sm">
-                        <p class="text-xs text-gray-800 text-center font-bold">Usuário interagindo</p>
+                <div class="flex flex-wrap gap-8 justify-center mt-4">
+                    
+                    <!-- Evidência 1 -->
+                    <div class="group relative flex flex-col items-center z-10 hover:z-50">
+                        <div class="w-56 h-36 rounded-xl overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-[2.2] group-hover:-translate-y-8 cursor-zoom-in border-2 border-white/20 group-hover:border-accent group-hover:shadow-neon bg-white">
+                            <img src="https://clareia1.vercel.app/usu%C3%A1rio_interagindo.png" alt="Usuário interagindo" class="w-full h-full object-cover object-top">
+                        </div>
+                        <p class="text-sm text-white mt-4 font-bold tracking-wide transition-colors group-hover:text-accent">Usuário interagindo</p>
                     </div>
-                    <div class="bg-white p-2 rounded transform rotate-3 w-48 shadow-lg">
-                        <img src="https://clareia1.vercel.app/entrevista_on-line.png" alt="Entrevista Online" class="h-28 w-full object-cover mb-2 border border-gray-200 rounded-sm">
-                        <p class="text-xs text-gray-800 text-center font-bold">Entrevista Online</p>
+
+                    <!-- Evidência 2 -->
+                    <div class="group relative flex flex-col items-center z-10 hover:z-50">
+                        <div class="w-56 h-36 rounded-xl overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-[2.2] group-hover:-translate-y-8 cursor-zoom-in border-2 border-white/20 group-hover:border-accent group-hover:shadow-neon bg-white">
+                            <img src="https://clareia1.vercel.app/entrevista_on-line.png" alt="Entrevista Online" class="w-full h-full object-cover object-top">
+                        </div>
+                        <p class="text-sm text-white mt-4 font-bold tracking-wide transition-colors group-hover:text-accent">Entrevista Online</p>
                     </div>
-                    <div class="bg-white p-2 rounded transform -rotate-1 w-48 shadow-lg">
-                        <img src="https://clareia1.vercel.app/coleta_feedback.png" alt="Coleta de Feedback" class="h-28 w-full object-cover mb-2 border border-gray-200 rounded-sm">
-                        <p class="text-xs text-gray-800 text-center font-bold">Coleta de Feedbacks</p>
+
+                    <!-- Evidência 3 -->
+                    <div class="group relative flex flex-col items-center z-10 hover:z-50">
+                        <div class="w-56 h-36 rounded-xl overflow-hidden shadow-lg transition-all duration-300 transform group-hover:scale-[2.2] group-hover:-translate-y-8 cursor-zoom-in border-2 border-white/20 group-hover:border-accent group-hover:shadow-neon bg-white">
+                            <img src="https://clareia1.vercel.app/coleta_feedback.png" alt="Coleta de Feedback" class="w-full h-full object-cover object-top">
+                        </div>
+                        <p class="text-sm text-white mt-4 font-bold tracking-wide transition-colors group-hover:text-accent">Coleta de Feedbacks</p>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -271,7 +365,6 @@
             <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Análise de Dados</span>
             <h2 class="font-heading font-bold text-4xl text-dark mb-10">Resultados da Validação</h2>
 
-            <!-- ADDED: Apresentação em Gráficos Visuais (Requisito SR2) -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
                 <!-- Gráfico 1 -->
                 <div class="flex flex-col items-center">
@@ -337,7 +430,7 @@
         <div class="max-w-6xl w-full">
             <div class="text-center mb-10">
                 <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Aprendizado Contínuo</span>
-                <h2 class="font-heading font-bold text-4xl text-dark mb-4">Feedbacks e Pivôs Executados</h2>
+                <h2 class="font-heading font-bold text-4xl text-dark mb-4">Feedbacks x Melhorias</h2>
             </div>
 
             <div class="space-y-6">
@@ -378,11 +471,10 @@
     <section class="slide bg-gray-50">
         <div class="max-w-6xl w-full">
             <div class="text-center mb-8">
-                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Viabilidade</span>
-                <h2 class="font-heading font-bold text-4xl text-dark mb-4">Lean Startup Canvas (Completo)</h2>
+                <span class="text-primary font-bold tracking-widest uppercase text-sm mb-2 block">Lean Startup Canvas</span>
+                <h2 class="font-heading font-bold text-4xl text-dark mb-4">Viabilidade</h2>
             </div>
 
-            <!-- ADDED: Lean Canvas de 9 Blocos (Requisito SR2) -->
             <div class="canvas-9-grid mb-8 hidden md:grid">
                 <div class="c-card c-prob">
                     <div class="c-title"><span>1. Problema</span><i class="ph-fill ph-warning-circle"></i></div>
@@ -427,7 +519,6 @@
                 </div>
             </div>
 
-            <!-- Mobile fallback para Canvas (simplificado em texto) -->
             <div class="md:hidden text-center text-sm text-gray-500 mb-4 italic">
                 *O Lean Canvas completo está otimizado para visualização em telas maiores.*
             </div>
@@ -437,8 +528,8 @@
     <!-- SLIDE 8: Oceano Azul e Mercado -->
     <section class="slide bg-dark text-white">
         <div class="max-w-6xl w-full text-center relative z-10">
-            <span class="text-accent font-bold tracking-widest uppercase text-sm mb-2 block"><i class="ph-fill ph-waves"></i> Potencial Competitivo</span>
-            <h2 class="font-heading font-bold text-4xl text-white mb-10">Nossa Estratégia "Oceano Azul"</h2>
+            <span class="text-accent font-bold tracking-widest uppercase text-sm mb-2 block"><i class="ph-fill ph-waves"></i> Nossa Estratégia</span>
+            <h2 class="font-heading font-bold text-4xl text-white mb-10">Potencial Competitivo</h2>
 
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-left backdrop-blur-sm">
@@ -450,7 +541,7 @@
                 <div class="bg-white/5 p-8 rounded-3xl border border-white/10 text-left backdrop-blur-sm relative overflow-hidden">
                     <div class="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-xl">Visão Futura</div>
                     <div class="w-12 h-12 bg-primary/30 rounded-full flex items-center justify-center text-white mb-4 text-2xl"><i class="ph-fill ph-bank"></i></div>
-                    <h3 class="font-heading font-bold text-xl mb-2">Legal-Fintech (Oceano Azul)</h3>
+                    <h3 class="font-heading font-bold text-xl mb-2">Legal-Fintech</h3>
                     <p class="text-gray-400 mb-4 text-sm">A IA lê que o processo foi "Ganho" e oferecemos antecipação financeira do valor da sentença via fundos parceiros.</p>
                     <div class="text-primary font-bold text-sm"><i class="ph-fill ph-trend-up"></i> Sustentabilidade: Comissão (5 a 10%)</div>
                 </div>
@@ -473,7 +564,6 @@
             </div>
 
             <div class="relative inline-block mt-4">
-                <!-- Mascote Pousada -->
                 <img src="https://clareia1.vercel.app/clareia_coruja.png" alt="Coruja Clareia" class="absolute -top-[4.5rem] -right-8 w-24 h-24 object-contain animate-bounce z-20">
                 <div class="bg-primary/10 px-12 py-5 rounded-full text-primary font-bold text-3xl border border-primary/20 shadow-sm relative z-10">
                     Dúvidas?
@@ -510,27 +600,48 @@
             });
 
             updateSlide();
-            initChat(); // Inicia o protótipo interativo
+            initChat(); 
         });
 
         // ==========================================
-        // LÓGICA DO PROTÓTIPO INTERATIVO (TELEGRAM)
+        // LÓGICA DO PROTÓTIPO INTERATIVO (WHATSAPP)
         // ==========================================
         const chatMessages = document.getElementById('chat-messages');
         const chatInput = document.getElementById('chat-input');
+        const sendIcon = document.getElementById('send-icon');
         
-        // Chaves de API fornecidas
+        // Altera ícone de mic para seta quando digita (Comportamento do WA)
+        chatInput.addEventListener('input', () => {
+            if (chatInput.value.trim().length > 0) {
+                sendIcon.className = "ph-fill ph-paper-plane-right text-[22px]";
+            } else {
+                sendIcon.className = "ph-fill ph-microphone text-[22px]";
+            }
+        });
+
         const GEMINI_API_KEY = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc";
-        const GROK_API_KEY = "xai-mUcobgtD9I3Hll4lX9YPHX0ph6zjp1WdwNbw1pFXDG9Y2mJ1hkbMJXp7Pspb7S2Nv8yBhiSAHX33jheQ";
         
         let chatState = 0;
         let userName = "";
         
+        function getTimeString() {
+            const now = new Date();
+            return now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
         function initChat() {
-            chatMessages.innerHTML = '<div class="absolute inset-0 bg-white/50"></div>';
+            // Inicializa com as 3 mensagens exatamente como na imagem enviada
             setTimeout(() => {
-                appendBotMsg("Olá! Sou a Clarinha 🦉. Como você gostaria de ser chamado?");
-            }, 800);
+                appendBotMsg("Olá! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.", "16:32");
+            }, 300);
+            
+            setTimeout(() => {
+                appendBotMsg("Antes de começarmos, quero te garantir que nossa conversa é 100% segura e protegida pela LGPD. Seus dados estão blindados comigo! 🔒", "16:32");
+            }, 1000);
+            
+            setTimeout(() => {
+                appendBotMsg("Para eu começar a te ajudar, como você prefere que eu te chame?", "16:32");
+            }, 1800);
         }
 
         async function handleChatSubmit() {
@@ -541,6 +652,7 @@
             chatInput.value = '';
             chatInput.disabled = true;
             document.getElementById('send-btn').disabled = true;
+            sendIcon.className = "ph-fill ph-microphone text-[22px]"; // Volta p/ mic
             
             showTyping();
             
@@ -563,14 +675,12 @@
                     
                     showTyping();
                     
-                    // Passo 1: Simula o retorno dos dados oficiais (juridiquês) do tribunal
                     setTimeout(async () => {
                         hideTyping();
                         appendBotMsg(`📋 <strong>Dados do Tribunal:</strong><br><br><strong>Nº:</strong> ${processo}<br><strong>Classe:</strong> Procedimento Comum Cível<br><strong>Última Movimentação:</strong> <em>"Expedição de Alvará"</em>.<br><br>Estou traduzindo o que isso significa pra você...`);
                         
                         showTyping();
                         
-                        // Passo 2: Fallback com Gemini API para gerar a tradução humanizada
                         try {
                             const resposta = await consultarGemini(userName, processo);
                             hideTyping();
@@ -581,17 +691,15 @@
                             appendBotMsg(`💡 <strong>Traduzindo o juridiquês:</strong><br><br>Boas notícias, ${userName}! Isso significa que o juiz assinou o documento liberando o seu dinheiro. O valor já está disponível para saque! 🎉`);
                         }
                         
-                        // Reativa o input de texto caso queiram continuar testando na banca
                         chatInput.disabled = false;
                         document.getElementById('send-btn').disabled = false;
                         chatInput.focus();
                         
                     }, 2000);
                     
-                    return; // Retorna aqui para não acionar a reativação padrão abaixo imediatamente
+                    return;
                 }
                 
-                // Reativa o input de texto caso ainda não tenha finalizado o fluxo
                 if (chatState <= 3) {
                     chatInput.disabled = false;
                     document.getElementById('send-btn').disabled = false;
@@ -600,20 +708,33 @@
             }, 1200);
         }
 
-        function appendBotMsg(text) {
-            const msgHtml = `<div class="bg-white p-2.5 rounded-2xl rounded-tl-sm w-[90%] text-gray-800 shadow-sm border-l-4 border-accent relative mb-3 opacity-0 animate-fade-in z-10">${text}</div>`;
+        function appendBotMsg(text, forceTime = null) {
+            const time = forceTime || getTimeString();
+            const msgHtml = `
+            <div class="wa-bot-bubble p-2 w-fit max-w-[85%] text-[#303030] relative mb-1 opacity-0 animate-fade-in z-10 self-start ml-2">
+                <div class="absolute -left-2 top-0 w-4 h-4 wa-bot-bubble rounded-none" style="clip-path: polygon(100% 0, 0 0, 100% 100%);"></div>
+                <div class="text-[14.5px] leading-snug pr-10 pb-1">${text}</div>
+                <div class="text-[10px] text-gray-400 absolute bottom-1 right-2">${time}</div>
+            </div>`;
             chatMessages.insertAdjacentHTML('beforeend', msgHtml);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function appendUserMsg(text) {
-            const msgHtml = `<div class="bg-[#EEFFDE] p-2.5 rounded-2xl rounded-tr-sm w-[85%] ml-auto text-gray-800 shadow-sm relative mb-3 opacity-0 animate-fade-in z-10">${text}</div>`;
+            const time = getTimeString();
+            const msgHtml = `
+            <div class="wa-user-bubble p-2 w-fit max-w-[85%] text-[#303030] relative mb-1 opacity-0 animate-fade-in z-10 self-end mr-2">
+                <div class="absolute -right-2 top-0 w-4 h-4 wa-user-bubble rounded-none" style="clip-path: polygon(0 0, 100% 0, 0 100%);"></div>
+                <div class="text-[14.5px] leading-snug pr-14 pb-1">${text}</div>
+                <div class="text-[10px] text-gray-500 absolute bottom-1 right-2 flex items-center gap-1">${time} <i class="ph-bold ph-check-fat text-[#53bdeb]"></i></div>
+            </div>`;
             chatMessages.insertAdjacentHTML('beforeend', msgHtml);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
         function showTyping() {
-            const html = `<div id="typing-indicator" class="bg-white p-2.5 rounded-2xl rounded-tl-sm w-16 text-gray-800 shadow-sm relative mb-3 flex gap-1 items-center justify-center z-10 opacity-0 animate-fade-in">
+            const html = `<div id="typing-indicator" class="wa-bot-bubble p-3 w-16 text-gray-800 relative mb-1 flex gap-1 items-center justify-center z-10 opacity-0 animate-fade-in self-start ml-2">
+                <div class="absolute -left-2 top-0 w-4 h-4 wa-bot-bubble rounded-none" style="clip-path: polygon(100% 0, 0 0, 100% 100%);"></div>
                 <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
                 <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
                 <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
@@ -642,7 +763,6 @@
             if (!response.ok) throw new Error("Falha na API");
             
             const data = await response.json();
-            // Substitui \n por <br> para manter a formatação do Telegram
             return data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
         }
     </script>
