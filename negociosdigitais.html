@@ -87,28 +87,44 @@
             <div id="question-container" class="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-10 hidden border-t-8 border-orange-500 relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-[100px] pointer-events-none -z-0"></div>
                 
-                <div class="relative z-10 flex justify-between items-center mb-8">
-                    <span id="unit-badge" class="bg-orange-100 text-orange-700 text-xs md:text-sm font-black px-4 py-2 rounded-full uppercase tracking-widest border border-orange-200"></span>
-                    <span id="question-progress" class="text-orange-400 font-bold text-sm tracking-widest uppercase"></span>
-                </div>
-                
-                <h2 id="question-text" class="relative z-10 text-xl md:text-2xl font-black text-slate-800 mb-8 leading-tight"></h2>
-                
-                <div id="options-container" class="space-y-4 relative z-10">
-                    <!-- Options injected here -->
+                <!-- Visão da Questão Ativa -->
+                <div id="question-content" class="fade-in">
+                    <div class="relative z-10 flex justify-between items-center mb-8">
+                        <span id="unit-badge" class="bg-orange-100 text-orange-700 text-xs md:text-sm font-black px-4 py-2 rounded-full uppercase tracking-widest border border-orange-200"></span>
+                        <span id="question-progress" class="text-orange-400 font-bold text-sm tracking-widest uppercase"></span>
+                    </div>
+                    
+                    <h2 id="question-text" class="relative z-10 text-xl md:text-2xl font-black text-slate-800 mb-8 leading-tight"></h2>
+                    
+                    <div id="options-container" class="space-y-4 relative z-10">
+                        <!-- Options injected here -->
+                    </div>
+
+                    <!-- Feedback Area -->
+                    <div id="feedback-area" class="relative z-10 mt-8 p-6 rounded-[2rem] hidden border-l-8 shadow-inner">
+                        <div class="flex items-start">
+                            <div id="feedback-icon" class="text-3xl mr-4 mt-1"></div>
+                            <div>
+                                <h4 id="feedback-title" class="font-black text-xl uppercase tracking-wide mb-2"></h4>
+                                <p id="feedback-text" class="font-medium leading-relaxed"></p>
+                            </div>
+                        </div>
+                        <button id="next-btn" onclick="nextQuestion()" class="mt-8 w-full bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest py-5 px-6 rounded-full transition-all shadow-xl hidden transform hover:scale-[1.02]">
+                            Avançar <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Feedback Area -->
-                <div id="feedback-area" class="relative z-10 mt-8 p-6 rounded-[2rem] hidden border-l-8 shadow-inner">
-                    <div class="flex items-start">
-                        <div id="feedback-icon" class="text-3xl mr-4 mt-1"></div>
-                        <div>
-                            <h4 id="feedback-title" class="font-black text-xl uppercase tracking-wide mb-2"></h4>
-                            <p id="feedback-text" class="font-medium leading-relaxed"></p>
-                        </div>
+                <!-- Visão de Unidade Concluída -->
+                <div id="completion-content" class="hidden relative z-10 text-center py-16 fade-in">
+                    <div class="inline-block bg-orange-100 p-6 rounded-full mb-6">
+                        <i class="fas fa-trophy text-6xl text-orange-500 drop-shadow-md"></i>
                     </div>
-                    <button id="next-btn" onclick="nextQuestion()" class="mt-8 w-full bg-orange-600 hover:bg-orange-700 text-white font-black uppercase tracking-widest py-5 px-6 rounded-full transition-all shadow-xl hidden transform hover:scale-[1.02]">
-                        Avançar <i class="fas fa-arrow-right ml-2"></i>
+                    <h2 id="completion-title" class="text-3xl font-black uppercase text-slate-800 mb-2">Unidade Finalizada!</h2>
+                    <p class="text-slate-500 font-medium mb-6">Excelente trabalho. Você revisou os principais conceitos.</p>
+                    <p class="text-orange-600 font-bold mb-8">Selecione outra unidade acima para continuar estudando ou revise esta novamente.</p>
+                    <button onclick="loadUnit(currentUnit)" class="bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 rounded-full font-black uppercase tracking-wider transition-all shadow-xl hover:scale-105 transform">
+                        <i class="fas fa-rotate-right mr-2"></i> Refazer Unidade
                     </button>
                 </div>
             </div>
@@ -797,7 +813,7 @@
                     question: "Qual é o impacto da análise de sentimentos em dados de mídias sociais para negócios digitais?",
                     options: [
                         "Aumento na eficiência operacional.",
-                        "Redução direta dos custos de marketing.",
+                        "Reduzindo direta dos custos de marketing.",
                         "Compreensão aprofundada das percepções e emoções dos clientes.",
                         "Melhoria na segurança dos dados."
                     ],
@@ -903,6 +919,7 @@
             currentUnit = unitNumber;
             currentQuestionIndex = 0;
             
+            // Atualiza os estilos dos botões de unidade
             for(let i=1; i<=4; i++) {
                 let btn = document.getElementById(`btn-u${i}`);
                 if (i === unitNumber) {
@@ -930,21 +947,20 @@
             isQuestionAnswered = false;
             const questions = simuladoData[currentUnit];
             
+            const questionContent = document.getElementById('question-content');
+            const completionContent = document.getElementById('completion-content');
+            
+            // Se as questões terminaram, mostra a tela de conclusão (ao invés de resetar o HTML e bugar as tabs)
             if (!questions || questions.length === 0 || currentQuestionIndex >= questions.length) {
-                document.getElementById('question-container').innerHTML = `
-                    <div class="text-center py-16 fade-in">
-                        <div class="inline-block bg-orange-100 p-6 rounded-full mb-6">
-                            <i class="fas fa-trophy text-6xl text-orange-500 drop-shadow-md"></i>
-                        </div>
-                        <h2 class="text-3xl font-black uppercase text-slate-800 mb-2">Unidade ${currentUnit} Finalizada!</h2>
-                        <p class="text-slate-500 font-medium mb-8">Excelente trabalho. Você revisou os principais conceitos.</p>
-                        <button onclick="location.reload()" class="bg-orange-600 hover:bg-orange-700 text-white px-10 py-4 rounded-full font-black uppercase tracking-wider transition-all shadow-xl hover:scale-105 transform">
-                            Voltar ao Início
-                        </button>
-                    </div>
-                `;
+                questionContent.classList.add('hidden');
+                completionContent.classList.remove('hidden');
+                document.getElementById('completion-title').textContent = `Unidade ${currentUnit} Finalizada!`;
                 return;
             }
+
+            // Exibindo a área da questão e escondendo o sucesso
+            questionContent.classList.remove('hidden');
+            completionContent.classList.add('hidden');
 
             const q = questions[currentQuestionIndex];
             
