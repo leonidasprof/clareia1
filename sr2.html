@@ -101,7 +101,6 @@
                     A Clareia traduz processos judiciais para linguagem acessível, diretamente no WhatsApp e Telegram.
                 </p>
                 <div class="flex flex-wrap gap-2">
-                    <!-- Avatares Equipe -->
                     <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Danilo.jpg" alt="Danilo"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Danilo</span><br><span class="text-accent">CEO & Jurídico</span></div></div>
                     <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Ayno%C3%A3.jpg" alt="Aynoã"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Aynoã</span><br><span class="text-accent">UX/UI</span></div></div>
                     <div class="relative group"><img class="w-12 h-12 rounded-full border-2 border-white object-cover shadow-md drop-shadow-md" src="https://clareia1.vercel.app/Beatriz.png" alt="Beatriz"><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-[10px] text-center rounded opacity-0 group-hover:opacity-100 transition-opacity"><span class="font-bold">Beatriz</span><br><span class="text-accent">Operações</span></div></div>
@@ -177,7 +176,7 @@
                     <h3 class="font-heading font-bold text-3xl text-primary mb-4">Deep UX para o Cidadão</h3>
                     <ul class="space-y-4 mb-8">
                         <li class="flex items-start gap-3"><i class="ph-fill ph-check-circle text-accent text-2xl mt-1"></i><div><strong class="block text-lg text-dark">Integração Nativa</strong><span class="text-gray-600 text-sm">Sem atrito. Zero downloads. Curva de aprendizado nula via Telegram/WhatsApp.</span></div></li>
-                        <li class="flex items-start gap-3"><i class="ph-fill ph-check-circle text-accent text-2xl mt-1"></i><div><strong class="block text-lg text-dark">Tradução Pedagógica</strong><span class="text-gray-600 text-sm">A IA entende o termo técnico e explica com analogias simples.</span></div></li>
+                        <li class="flex items-start gap-3"><i class="ph-fill ph-check-circle text-accent text-2xl mt-1"></i><div><strong class="block text-lg text-dark">Tradução Pedagógica</strong><span class="text-gray-600 text-sm">A IA entende o termo técnico e explica com analogias simples respeitando a idade.</span></div></li>
                     </ul>
                     
                     <div class="pt-6 border-t border-gray-100">
@@ -241,37 +240,30 @@
                 </div>
                 
                 <!-- Mockup WhatsApp Interativo -->
-                <div class="w-full md:w-[340px] shrink-0 wa-bg rounded-[2.5rem] border-[12px] border-[#2D3136] shadow-xl relative h-[600px] overflow-hidden flex flex-col font-[Helvetica,Arial,sans-serif]">
+                <div class="w-full md:w-[320px] shrink-0 wa-bg rounded-[2.5rem] border-[10px] border-[#2D3136] shadow-xl relative h-[550px] overflow-hidden flex flex-col font-[Helvetica,Arial,sans-serif]">
                     
                     <!-- Header WhatsApp -->
                     <div class="bg-[#5281ce] text-white px-3 py-2.5 flex items-center justify-between shadow-sm z-20 shrink-0">
-                        <div class="flex items-center gap-2">
-                            <i class="ph-bold ph-arrow-left text-[22px]"></i>
-                            <div class="relative">
+                        <div class="flex items-center gap-2 overflow-hidden">
+                            <i class="ph-bold ph-arrow-left text-[22px] shrink-0"></i>
+                            <div class="relative shrink-0">
                                 <img src="https://clareia1.vercel.app/logo_clareia_icone.png" class="w-10 h-10 rounded-full bg-white object-cover border border-white/50">
                             </div>
-                            <div class="leading-tight ml-1">
-                                <div class="font-semibold text-[16px] tracking-wide">Clarinha | Tradutor<br>Jurídico</div>
-                                <div class="text-[12px] text-white/80 font-medium">Online</div>
+                            <div class="leading-tight ml-1 overflow-hidden">
+                                <div class="font-semibold text-[14.5px] tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">Clarinha | Tradutor Jurídico</div>
+                                <div class="text-[11px] text-white/90 font-medium mt-0.5">Online</div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4 text-white">
+                        <div class="flex items-center gap-3 text-white shrink-0 ml-2">
                             <i class="ph-fill ph-video-camera text-[22px]"></i>
                             <i class="ph-fill ph-phone text-[22px]"></i>
-                            <i class="ph-bold ph-dots-three-vertical text-[22px] -ml-2"></i>
+                            <i class="ph-bold ph-dots-three-vertical text-[22px] -ml-1"></i>
                         </div>
                     </div>
                     
                     <!-- Area de Chat -->
                     <div id="chat-messages" class="p-3 space-y-2 flex-1 overflow-y-auto wa-scrollbar relative scroll-smooth flex flex-col">
-                        
-                        <!-- Banner LGPD -->
-                        <div class="bg-[#E4F2F1] text-[#2F736E] text-[11px] leading-tight p-2.5 rounded-lg text-center flex items-start gap-2 shadow-sm mx-auto mb-3 w-[95%]">
-                            <i class="ph-fill ph-lock-key text-sm shrink-0 mt-0.5"></i>
-                            <p>As mensagens são protegidas por criptografia e suas informações estão seguras sob a LGPD.</p>
-                        </div>
-
-                        <!-- As mensagens iniciais serão injetadas aqui pelo JS -->
+                        <!-- Mensagens renderizadas via JS -->
                     </div>
 
                     <!-- Footer Input WhatsApp -->
@@ -579,6 +571,9 @@
     </div>
 
     <script>
+        // ==========================================
+        // LÓGICA DE NAVEGAÇÃO DOS SLIDES
+        // ==========================================
         document.addEventListener("DOMContentLoaded", () => {
             const slides = document.querySelectorAll('.slide');
             const prevBtn = document.getElementById('prevBtn');
@@ -610,7 +605,14 @@
         const chatInput = document.getElementById('chat-input');
         const sendIcon = document.getElementById('send-icon');
         
-        // Altera ícone de mic para seta quando digita (Comportamento do WA)
+        // CHAVE DA API GEMINI: O ambiente da plataforma gerencia isso.
+        const apiKey = ""; 
+        
+        // Estado da Conversa (Controla rigidamente as etapas)
+        let chatState = 0;
+        let userName = "";
+        let userAge = 0;
+        
         chatInput.addEventListener('input', () => {
             if (chatInput.value.trim().length > 0) {
                 sendIcon.className = "ph-fill ph-paper-plane-right text-[22px]";
@@ -619,29 +621,20 @@
             }
         });
 
-        const GEMINI_API_KEY = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc";
-        
-        let chatState = 0;
-        let userName = "";
-        
         function getTimeString() {
             const now = new Date();
             return now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
 
+        // ETAPA 1: Boas vindas
         function initChat() {
-            // Inicializa com as 3 mensagens exatamente como na imagem enviada
             setTimeout(() => {
-                appendBotMsg("Olá! 🦉 Eu sou a Clarinha, a corujinha assistente da Clareia.", "16:32");
-            }, 300);
+                appendBotMsg("Olá! 🦉 Eu sou a Clarinha, a assistente inteligente da startup Clareia.");
+            }, 500);
             
             setTimeout(() => {
-                appendBotMsg("Antes de começarmos, quero te garantir que nossa conversa é 100% segura e protegida pela LGPD. Seus dados estão blindados comigo! 🔒", "16:32");
-            }, 1000);
-            
-            setTimeout(() => {
-                appendBotMsg("Para eu começar a te ajudar, como você prefere que eu te chame?", "16:32");
-            }, 1800);
+                appendBotMsg("Para começarmos, como você prefere que eu te chame?");
+            }, 1500);
         }
 
         async function handleChatSubmit() {
@@ -652,64 +645,216 @@
             chatInput.value = '';
             chatInput.disabled = true;
             document.getElementById('send-btn').disabled = true;
-            sendIcon.className = "ph-fill ph-microphone text-[22px]"; // Volta p/ mic
+            sendIcon.className = "ph-fill ph-microphone text-[22px]";
             
             showTyping();
             
             setTimeout(async () => {
                 hideTyping();
+                
+                // ETAPA 2: Aviso LGPD e Coleta de Idade
                 if (chatState === 0) {
                     userName = text;
-                    appendBotMsg(`Prazer, ${userName}! Qual é a sua data de nascimento?`);
-                    chatState++;
-                } else if (chatState === 1) {
-                    appendBotMsg("Obrigada! Como posso te ajudar hoje?");
-                    chatState++;
-                } else if (chatState === 2) {
-                    appendBotMsg("Entendi. Pode me informar o número do seu processo, por favor?");
-                    chatState++;
-                } else if (chatState === 3) {
+                    const lgpdBanner = `
+                        <div class="bg-[#E4F2F1] text-[#2F736E] text-[11px] leading-tight p-2.5 rounded-lg text-center flex items-start gap-2 shadow-sm mx-auto mb-2 mt-2 w-[95%] animate-fade-in">
+                            <i class="ph-fill ph-lock-key text-sm shrink-0 mt-0.5"></i>
+                            <p>A Clareia é 100% alinhada com a LGPD. Seus dados estão totalmente seguros e em sigilo comigo! 🔒</p>
+                        </div>`;
+                    chatMessages.insertAdjacentHTML('beforeend', lgpdBanner);
+                    appendBotMsg(`Prazer, ${userName}! Antes de continuarmos, qual é a sua data de nascimento ou idade? Isso me ajuda a adaptar nossa conversa para ficar mais confortável para você. 😊`);
+                    chatState = 1; 
+                } 
+                
+                // ETAPA 3: Adaptação e Intenção
+                else if (chatState === 1) {
+                    let numStr = text.replace(/[^0-9]/g, '');
+                    if (numStr.length >= 4) {
+                        userAge = new Date().getFullYear() - parseInt(numStr.substring(numStr.length-4));
+                    } else if (numStr.length > 0) {
+                        userAge = parseInt(numStr);
+                    } else {
+                        userAge = 35; // default
+                    }
+                    
+                    let adaptText = "";
+                    if (userAge <= 30) {
+                        adaptText = `Massa, ${userName}! 🚀 Como posso te ajudar hoje?`;
+                    } else if (userAge <= 50) {
+                        adaptText = `Perfeito, ${userName}. Como posso auxiliar você hoje?`;
+                    } else {
+                        adaptText = `Entendido, ${userName}. Como eu posso ajudar o(a) senhor(a) hoje?`;
+                    }
+
+                    appendBotMsg(`${adaptText}<br><br>Você pode me enviar:<br>1️⃣ O número do processo<br>2️⃣ Um arquivo PDF<br>3️⃣ A foto de um documento que recebeu`);
+                    chatState = 2; 
+                } 
+                
+                // ETAPA 4 e 5: Simulação de Busca e Tradução Pedagógica
+                else if (chatState === 2) {
                     const processo = text;
-                    appendBotMsg(`Só um minutinho, ${userName}. Estou consultando os sistemas do tribunal... ⏳`);
-                    chatState++;
+                    let searchMsg = userAge > 50 
+                        ? `Só um minutinho. Estou indo até o tribunal responsável buscar as novidades exatas da Vara em que o processo está correndo... ⏳`
+                        : `Só um minutinho, ${userName}. Estou indo até os sistemas do tribunal buscar as novidades da Vara do seu processo... ⏳`;
+                        
+                    appendBotMsg(searchMsg);
+                    chatState = 3; 
                     
                     showTyping();
                     
+                    // Simulação da busca demora 4s (aumentado para dar mais realidade)
                     setTimeout(async () => {
                         hideTyping();
-                        appendBotMsg(`📋 <strong>Dados do Tribunal:</strong><br><br><strong>Nº:</strong> ${processo}<br><strong>Classe:</strong> Procedimento Comum Cível<br><strong>Última Movimentação:</strong> <em>"Expedição de Alvará"</em>.<br><br>Estou traduzindo o que isso significa pra você...`);
+                        appendBotMsg(`📋 *DADOS DO TRIBUNAL:*<br>Última Movimentação: _"Expedição de Alvará"_.<br><br>Estou traduzindo o que isso significa...`);
                         
                         showTyping();
                         
                         try {
-                            const resposta = await consultarGemini(userName, processo);
+                            const respostaIA = await consultarGeminiTradução(userName, userAge);
                             hideTyping();
-                            appendBotMsg(resposta);
+                            appendBotMsg(formatarWhatsApp(respostaIA));
                         } catch (error) {
-                            console.error("Erro na API Gemini. Usando fallback de segurança:", error);
+                            console.error("Erro na API Gemini.", error);
                             hideTyping();
-                            appendBotMsg(`💡 <strong>Traduzindo o juridiquês:</strong><br><br>Boas notícias, ${userName}! Isso significa que o juiz assinou o documento liberando o seu dinheiro. O valor já está disponível para saque! 🎉`);
+                            let fallbackMsg = "";
+                            if(userAge <= 30) {
+                                fallbackMsg = `💡 *Traduzindo pra você:*<br><br>Boas notícias, ${userName}! 🎉<br><br>👉 *O que rolou:* O juiz assinou o documento liberando a grana (o tal do Alvará).<br>👉 *Na prática:* Sabe quando o motorista do app aceita a corrida? É isso! O dinheiro tá pronto pra cair na conta.<br>👉 *Próximo passo:* Agora é só aguardar o banco transferir. Demora poucos dias.<br><br>Ficou alguma dúvida?`;
+                            } else if (userAge <= 50) {
+                                fallbackMsg = `💡 *Traduzindo pra você:*<br><br>Temos ótimas notícias, ${userName}! 🎊<br><br>👉 *O que aconteceu:* O juiz expediu o alvará. Isso é a autorização oficial para liberar o seu dinheiro.<br>👉 *Na prática:* Significa que você ganhou e o valor já está liberado para saque.<br>👉 *Próximo passo:* Basta aguardar o prazo do banco para a transferência, que costuma ser rápido.<br><br>Ficou alguma dúvida sobre isso?`;
+                            } else {
+                                fallbackMsg = `💡 *Traduzindo para o(a) senhor(a):*<br><br>Trago boas notícias! ✨<br><br>👉 *O que aconteceu:* O juiz assinou um documento chamado "alvará".<br>👉 *Na prática:* Isso é a autorização para liberar o dinheiro que é de direito do(a) senhor(a).<br>👉 *Próximo passo:* Agora o banco recebe esse documento e fará o pagamento nos próximos dias.<br><br>O(a) senhor(a) conseguiu entender? Ficou alguma dúvida?`;
+                            }
+                            appendBotMsg(formatarWhatsApp(fallbackMsg));
                         }
                         
                         chatInput.disabled = false;
                         document.getElementById('send-btn').disabled = false;
                         chatInput.focus();
                         
-                    }, 2000);
+                    }, 4000);
                     
-                    return;
+                    return; // Para o fluxo de habilitar o input até o timeout acima terminar
+                }
+
+                // ETAPA 6: Dúvidas e Marketplace (Conexão com ou sem Inteligência Ativa)
+                else if (chatState === 3) {
+                    const textoLimpo = text.toLowerCase().trim();
+                    const semDuvidas = ["não", "nao", "nenhuma", "tudo certo", "entendi", "claro", "nenhum"];
+                    
+                    // Verifica se o usuário disse apenas que não tem dúvidas (palavras curtas)
+                    const isSemDuvidas = semDuvidas.some(palavra => textoLimpo.includes(palavra)) && textoLimpo.length < 20;
+
+                    if (isSemDuvidas) {
+                        let leadMsg = userAge > 50 
+                            ? `Que ótimo que pude ajudar. Por acaso, o(a) senhor(a) já tem um advogado ou advogada cuidando desse processo?`
+                            : `Que bom que ficou claro! 😊 Por acaso, você já tem um advogado ou advogada cuidando desse processo para você?`;
+                        
+                        appendBotMsg(leadMsg);
+                        chatState = 4;
+                        
+                        chatInput.disabled = false;
+                        document.getElementById('send-btn').disabled = false;
+                        chatInput.focus();
+                    } else {
+                        // Se o usuário digitou uma DÚVIDA REAL (ex: "preciso entrar em contato com o advogado?")
+                        showTyping();
+                        try {
+                            const respostaDuvida = await consultarGeminiDuvida(userName, userAge, text);
+                            hideTyping();
+                            appendBotMsg(formatarWhatsApp(respostaDuvida));
+                            
+                            // Emenda a pergunta do Marketplace logo a seguir
+                            setTimeout(() => {
+                                let leadMsg = userAge > 50 
+                                    ? `Aproveitando a nossa conversa, o(a) senhor(a) já tem um advogado ou advogada cuidando desse processo?`
+                                    : `Aproveitando a sua dúvida... você já tem um advogado ou advogada cuidando desse processo para você?`;
+                                appendBotMsg(leadMsg);
+                                chatState = 4;
+                                
+                                chatInput.disabled = false;
+                                document.getElementById('send-btn').disabled = false;
+                                chatInput.focus();
+                            }, 2500);
+                            
+                        } catch (error) {
+                            console.error("Erro na API", error);
+                            hideTyping();
+                            appendBotMsg("Ter um acompanhamento profissional nesse momento ajuda muito a agilizar o saque desse dinheiro para a sua conta.");
+                            setTimeout(() => {
+                                let leadMsg = userAge > 50 
+                                    ? `Por acaso, o(a) senhor(a) já tem um advogado cuidando do caso?`
+                                    : `Por acaso, você já tem um advogado cuidando do caso?`;
+                                appendBotMsg(leadMsg);
+                                chatState = 4;
+                                
+                                chatInput.disabled = false;
+                                document.getElementById('send-btn').disabled = false;
+                                chatInput.focus();
+                            }, 1500);
+                        }
+                    }
+                    return; // Previne habilitar input precocemente
                 }
                 
-                if (chatState <= 3) {
-                    chatInput.disabled = false;
-                    document.getElementById('send-btn').disabled = false;
-                    chatInput.focus();
+                else if (chatState === 4) {
+                    appendBotMsg(`Ter um acompanhamento profissional é muito importante para garantir seus direitos. Recomendo essa profissional parceira da Clareia que pode te ajudar:`);
+                    
+                    setTimeout(() => {
+                        const contactCard = `
+                        <div class="wa-bot-bubble w-[85%] relative mb-1 opacity-0 animate-fade-in z-10 self-start ml-2 overflow-hidden border border-gray-200">
+                            <div class="absolute -left-2 top-0 w-4 h-4 wa-bot-bubble rounded-none" style="clip-path: polygon(100% 0, 0 0, 100% 100%);"></div>
+                            
+                            <div class="bg-[#00A884] text-white p-2 font-bold flex gap-2 items-center text-sm">
+                                <i class="ph-fill ph-user-circle text-2xl"></i> Contato Recomendado
+                            </div>
+                            <div class="p-3 text-[13px] leading-relaxed text-[#303030]">
+                                <div class="font-bold text-[15px] mb-1">👩🏽‍💼 Dra. Camila Barros</div>
+                                <div class="text-gray-500 text-[11px] mb-2 border-b pb-2">OAB/PE 45.XXX</div>
+                                <div class="mb-2">⚖️ *Especialidades:*<br>Trabalhista, Família e Pequenas Causas.</div>
+                                <div class="mb-3 text-gray-600">📜 *Resumo:*<br>Há mais de 10 anos ajudando cidadãos a garantirem seus direitos com agilidade, transparência e linguagem humana.</div>
+                                <div class="bg-[#F0F2F5] p-2 rounded flex flex-col gap-1 font-medium">
+                                    <span class="text-[#00A884] flex items-center gap-1"><i class="ph-fill ph-whatsapp-logo text-lg"></i> (81) 99999-0000</span>
+                                    <span class="text-blue-600 flex items-center gap-1"><i class="ph-fill ph-envelope text-lg"></i> contato@camilabarrosadv.com.br</span>
+                                </div>
+                            </div>
+                            <div class="text-[10px] text-gray-400 p-2 text-right border-t border-gray-100 bg-gray-50">${getTimeString()}</div>
+                        </div>`;
+                        chatMessages.insertAdjacentHTML('beforeend', formatarWhatsApp(contactCard));
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                        setTimeout(() => {
+                            appendBotMsg("Gostaria que eu enviasse uma mensagem automática para ela avisando que você vai entrar em contato?");
+                        }, 1000);
+                        
+                    }, 800);
+                    
+                    chatState = 5; 
                 }
-            }, 1200);
+                
+                else if (chatState === 5) {
+                    const resposta = text.toLowerCase();
+                    if (resposta.includes('sim') || resposta.includes('quero') || resposta.includes('pode') || resposta.includes('s') || resposta.includes('claro')) {
+                        appendBotMsg("Prontinho! 🚀 Acabei de avisar a Dra. Camila e ela já está esperando a sua mensagem. Boa sorte com o seu processo e conte sempre com a Clareia! 🦉💙");
+                    } else {
+                        appendBotMsg("Tudo bem! Pode chamá-la quando se sentir mais confortável. Boa sorte com o seu processo e conte sempre com a Clareia! 🦉💙");
+                    }
+                    chatState = 6; 
+                }
+                
+                else if (chatState >= 6) {
+                    appendBotMsg("O nosso atendimento foi concluído por agora. Se precisar de traduzir outro processo no futuro, basta mandar o número! ✨");
+                }
+                
+                // Habilita a caixa de texto novamente após processamento
+                chatInput.disabled = false;
+                document.getElementById('send-btn').disabled = false;
+                chatInput.focus();
+                
+            }, 800);
         }
 
-        function appendBotMsg(text, forceTime = null) {
-            const time = forceTime || getTimeString();
+        // Funções de UI do Chat
+        function appendBotMsg(text) {
+            const time = getTimeString();
             const msgHtml = `
             <div class="wa-bot-bubble p-2 w-fit max-w-[85%] text-[#303030] relative mb-1 opacity-0 animate-fade-in z-10 self-start ml-2">
                 <div class="absolute -left-2 top-0 w-4 h-4 wa-bot-bubble rounded-none" style="clip-path: polygon(100% 0, 0 0, 100% 100%);"></div>
@@ -726,7 +871,11 @@
             <div class="wa-user-bubble p-2 w-fit max-w-[85%] text-[#303030] relative mb-1 opacity-0 animate-fade-in z-10 self-end mr-2">
                 <div class="absolute -right-2 top-0 w-4 h-4 wa-user-bubble rounded-none" style="clip-path: polygon(0 0, 100% 0, 0 100%);"></div>
                 <div class="text-[14.5px] leading-snug pr-14 pb-1">${text}</div>
-                <div class="text-[10px] text-gray-500 absolute bottom-1 right-2 flex items-center gap-1">${time} <i class="ph-bold ph-check-fat text-[#53bdeb]"></i></div>
+                <div class="text-[10px] text-[#53bdeb] absolute bottom-1 right-2 flex items-center gap-0.5">${time} 
+                    <svg viewBox="0 0 16 15" width="15" height="14" class="ml-0.5">
+                        <path fill="#53bdeb" d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.32.32 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"></path>
+                    </svg>
+                </div>
             </div>`;
             chatMessages.insertAdjacentHTML('beforeend', msgHtml);
             chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -748,20 +897,64 @@
             if (indicator) indicator.remove();
         }
 
-        async function consultarGemini(nome, processo) {
-            const prompt = `Você é a Clarinha, uma assistente jurídica virtual empática. O usuário ${nome} informou o processo ${processo}. Você acabou de informar a ele que a última movimentação oficial no tribunal foi "Expedição de Alvará". Agora, mande uma mensagem curta e amigável (estilo WhatsApp) começando com um emoji de lâmpada 💡 dizendo "Traduzindo pra você:" e explique de forma muito simples que isso significa que o juiz assinou o documento liberando o dinheiro e que ele já pode receber. Use tags HTML simples como <strong> e <br> para formatação, e inclua emojis.`;
+        function formatarWhatsApp(texto) {
+            let formatado = texto.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+            formatado = formatado.replace(/_(.*?)_/g, '<em>$1</em>');
+            return formatado;
+        }
+
+        // Função para Tradução Principal
+        async function consultarGeminiTradução(nome, idade) {
+            if(!apiKey || apiKey === "") throw new Error("Fallback mode");
+
+            const prompt = `
+            O usuário chama-se ${nome} e tem ${idade} anos.
+            O processo dele teve a seguinte movimentação: "Expedição de Alvará".
+
+            INSTRUÇÕES:
+            1. Comece a mensagem com 💡 dizendo "Traduzindo pra você:" (ou "para o senhor/senhora").
+            2. Adapte a linguagem rigorosamente para a idade dele (${idade} anos).
+            3. Estruture em 3 partes: O que aconteceu; O que significa na prática; Próximo passo esperado.
+            4. Finalize perguntando se ficou alguma dúvida.
+            5. Formate usando padrão de WhatsApp (*para negrito*).
+            `;
             
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { temperature: 0.7, maxOutputTokens: 250 }
+                    generationConfig: { temperature: 0.7, maxOutputTokens: 300 }
                 })
             });
-            
             if (!response.ok) throw new Error("Falha na API");
+            const data = await response.json();
+            return data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
+        }
+
+        // NOVA FUNÇÃO: Responder a Dúvidas Intermediárias com IA
+        async function consultarGeminiDuvida(nome, idade, duvida) {
+            if(!apiKey || apiKey === "") throw new Error("Fallback mode");
+
+            const prompt = `
+            O usuário ${nome} (${idade} anos) recebeu a notícia que o "Alvará foi expedido" (dinheiro liberado no processo).
+            Agora ele perguntou: "${duvida}"
+
+            Responda a esta dúvida de forma muito curta, simples e empática (1 ou 2 parágrafos no máximo).
+            Se a dúvida for sobre contato com advogado, confirme que sim, que é importante falar com o advogado para acelerar o recebimento na conta bancária.
+            Adapte o tom de voz para a idade dele (${idade} anos).
+            Formate usando padrão de WhatsApp (*para negrito*). NÃO faça novas perguntas no final.
+            `;
             
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { temperature: 0.7, maxOutputTokens: 200 }
+                })
+            });
+            if (!response.ok) throw new Error("Falha na API");
             const data = await response.json();
             return data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
         }
