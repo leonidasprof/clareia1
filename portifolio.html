@@ -39,7 +39,7 @@
 
         /* Modo Claro */
         body.light-mode {
-            --bg-main: #FFFFFF; /* Fundo totalmente branco conforme solicitado */
+            --bg-main: #FFFFFF; 
             --text-main: #334155; 
             --text-heading: #0A2463; 
             --bg-card: #FFFFFF;
@@ -98,13 +98,14 @@
             padding: 10px 0;
         }
 
+        /* Ajuste na navegação para alinhar a logo bem à esquerda */
         .nav-container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
+            padding: 0 4vw;
         }
 
         .logo-area img {
@@ -298,7 +299,6 @@
             height: 115%;
             width: auto;
             z-index: 3;
-            /* Múltiplos shadows para criar borda sólida contornando a silhueta, seguido de uma sombra de profundidade */
             filter: drop-shadow(2px 2px 0px #FFFFFF) 
                     drop-shadow(-2px -2px 0px #FFFFFF) 
                     drop-shadow(2px -2px 0px #FFFFFF) 
@@ -310,7 +310,6 @@
         }
 
         .hero-avatar:hover {
-            /* Descola a figurinha do fundo e muda o contorno para neon no hover */
             transform: translateX(-50%) scale(1.05);
             filter: drop-shadow(2px 2px 0px var(--neon-cyan)) 
                     drop-shadow(-2px -2px 0px var(--neon-cyan)) 
@@ -423,7 +422,7 @@
             display: flex;
             gap: 20px;
             background: var(--bg-card);
-            border: 1px solid var(--neon-cyan); /* Cor alterada para ciano */
+            border: 1px solid var(--neon-cyan); 
             padding: 20px;
             border-radius: 16px;
             align-items: center;
@@ -432,7 +431,7 @@
 
         .contact-box:hover {
             transform: translateY(-3px);
-            box-shadow: 0px 5px 15px rgba(0, 191, 255, 0.15); /* Brilho neon suave no hover */
+            box-shadow: 0px 5px 15px rgba(0, 191, 255, 0.15);
         }
 
         .qr-placeholder {
@@ -441,17 +440,17 @@
             border-radius: 8px;
             overflow: hidden;
             flex-shrink: 0;
-            background-color: #FFFFFF; /* Fundo branco adicionado para visibilidade do QR */
+            background-color: #FFFFFF; 
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 5px; /* Margem interna para o QR não tocar na borda */
+            padding: 5px; 
         }
         
         .qr-placeholder img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Para garantir que o logo dentro do QR apareça corretamente */
+            object-fit: contain; 
         }
 
         .contact-info h4 {
@@ -468,7 +467,7 @@
         }
         .contact-info ul li { margin-bottom: 6px; display: flex; align-items: center; gap: 8px;}
 
-        /* Destaque Visual para o bloco de Hard Skills em formato de Colchetes [ ] */
+        /* Destaque Visual para o bloco de Hard Skills */
         .hard-skills-brackets {
             position: relative;
             padding: 20px 35px;
@@ -483,7 +482,7 @@
             bottom: 0;
             width: 25px;
             border: 4px solid var(--neon-cyan);
-            border-radius: 8px; /* Cantos levemente arredondados no colchete */
+            border-radius: 8px; 
             transition: all 0.3s ease;
             pointer-events: none;
         }
@@ -502,7 +501,6 @@
             border-bottom-left-radius: 0;
         }
 
-        /* Efeito de hover nos colchetes (eles se afastam e brilham) */
         .hard-skills-brackets:hover::before {
             transform: translateX(-5px);
             box-shadow: -4px 0px 15px rgba(0, 191, 255, 0.2);
@@ -516,7 +514,7 @@
         /* Mural de Memories (Lousa) */
         .memories-board {
             background: var(--bg-main);
-            border: 1px solid var(--neon-cyan); /* Alterado de dashed para sólido neon */
+            border: 1px solid var(--neon-cyan);
             border-radius: 16px;
             padding: 20px;
             position: relative;
@@ -525,13 +523,13 @@
         
         .memories-board:hover {
             transform: translateY(-3px);
-            box-shadow: 0px 5px 15px rgba(0, 191, 255, 0.15); /* Brilho neon suave no hover */
+            box-shadow: 0px 5px 15px rgba(0, 191, 255, 0.15); 
         }
 
         .memories-header {
             text-align: center;
             margin-bottom: 20px;
-            border-bottom: 2px dotted var(--neon-cyan); /* Linha inferior do título padronizada em ciano */
+            border-bottom: 2px dotted var(--neon-cyan); 
             padding-bottom: 10px;
         }
 
@@ -637,7 +635,6 @@
             font-weight: 600;
         }
 
-        /* Ajuste de scroll para a âncora do Menu Trajetória não ficar embaixo do header */
         #experiencia {
             scroll-margin-top: 100px;
         }
@@ -688,7 +685,6 @@
             color: var(--text-main);
         }
 
-        /* Nuvens de Skills Atualizadas */
         .skills-editorial-cloud {
             display: flex;
             flex-wrap: wrap;
@@ -729,7 +725,6 @@
             border-color: var(--neon-cyan);
         }
 
-        /* Títulos Sobrepostos (Cases) */
         .overlapping-title-container {
             text-align: center;
             position: relative;
@@ -767,7 +762,7 @@
             border-radius: 8px;
         }
 
-        /* Cards de Cases com Links */
+        /* Cards de Cases */
         .cases-editorial-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -941,6 +936,7 @@
 
         /* Responsividade */
         @media (max-width: 900px) {
+            .nav-container { padding: 0 5vw; }
             .hero { grid-template-columns: 1fr; text-align: center; }
             .giant-title { font-size: 80px; }
             .giant-title .t-bottom { margin-left: 0; }
@@ -1336,7 +1332,6 @@
                     </div>
                 </div>
 
-                <!-- NOVO CASE E-BOOK ADICIONADO AQUI -->
                 <div class="case-card-ed">
                     <h4>
                         <svg height="18" viewBox="0 0 1155 1000" fill="currentColor" style="vertical-align: middle; margin-right: 5px; margin-top: -3px;"><path d="M577.344 0L1154.69 1000H0L577.344 0Z"></path></svg>
@@ -1356,7 +1351,6 @@
                     </div>
                 </div>
 
-                <!-- NOVO CASE REBRANDING ADICIONADO AQUI -->
                 <div class="case-card-ed">
                     <h4>
                         <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" alt="Photoshop" style="height: 18px; vertical-align: middle; margin-right: 5px; margin-top: -3px;">
@@ -1376,33 +1370,51 @@
             </div>
         </section>
 
+        <!-- Certificados Atualizados e Adicionados -->
         <section class="section-container" style="padding-top: 0;">
              <h3 class="resume-section-title" style="margin-top: 40px;">Certifications</h3>
              <div class="cert-grid">
+                
                 <div class="cert-card">
-                    <img src="https://scontent.frec41-1.fna.fbcdn.net/v/t39.30808-6/705682172_3162790907242170_2559088805996017605_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHtH3hhByZ3sx6teEbsXWIHzhZjDSWhDvHOFmMNJaEO8b-I-nVMrQZbsSaBylhCuWKC3cJN177M6eXI0u0kJPfI&_nc_ohc=KZplzkogQmIQ7kNvwGPQ7IC&_nc_oc=AdojyJ5rjE-GpjQNRHrwtTvdEMv4yAZbax_Br7lHlf-QKZ95AGeMWoHSpKZxAtVlApY&_nc_zt=23&_nc_ht=scontent.frec41-1.fna&_nc_gid=v1eMU23lz91c8jmHhWvz7Q&_nc_ss=7b2a8&oh=00_Af8kfkMk9Tzw-_49XdTKrC8zPI_z4KnYQMQZPAYoZhv2ow&oe=6A2341D3" alt="SENAI">
+                    <img src="https://clareia1.vercel.app/senai_analise_dados.png" alt="Análise de Dados">
                     <span>Análise de Dados</span>
                 </div>
+                
                 <div class="cert-card">
-                    <img src="https://scontent.frec41-1.fna.fbcdn.net/v/t51.82787-15/652807141_18413378098123182_5669900493669669146_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeG1IrIXGdG4sDUHnSbI0v7aEWQK4o0KEiMRZArijQoSIxGFTzVK9c9OR9ZJfX5_C1zUknMxA26KsRWEUc5nBmCa&_nc_ohc=ocWemiPjT8MQ7kNvwH8XTuQ&_nc_oc=Adp6YaxNETDn25_GjAPm0kNezidNYA5NZstLpY-v1ygOKZdDz4pKaWC5hUNMhGKlNuE&_nc_zt=23&_nc_ht=scontent.frec41-1.fna&_nc_gid=G-Yu1jHrMy3e-5Dtrg-J_A&_nc_ss=7b2a8&oh=00_Af8S6cJEjbKPrhbf2IHvs50Uj1sHvyJ4EYjvr4MJIDP5EA&oe=6A23515E" alt="Gran">
+                    <img src="https://clareia1.vercel.app/gran_eng_prompt.png" alt="Eng. de Prompt">
                     <span>Eng. de Prompt</span>
                 </div>
+                
                 <div class="cert-card">
-                    <img src="https://scontent.frec41-1.fna.fbcdn.net/v/t39.30808-6/631274626_3062896767231585_7580992886667997570_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEz9ox1HWhoWqbafI2E0ARFVcFXGJlH46dVwVcYmUfjpw9qBTA0qlbIkXq-MjV2TkIGAMk5Md2LID9i-uuaDtT-&_nc_ohc=-5sMgdj3BiwQ7kNvwGi5c9m&_nc_oc=AdpejyZLhOgFrZD_cWjLI2X8Rmt1VZuFm-5fi1o_EGmZFT7z3xH_U8p_ZqyTzwV7e9A&_nc_zt=23&_nc_ht=scontent.frec41-1.fna&_nc_gid=yx_xED5P0XIPFz3d11lhkg&_nc_ss=7b2a8&oh=00_Af8fzsiIhBEoFLv8Bz_1BAKg2M8rcFEisCbjGxMdCWjtfA&oe=6A234D42" alt="CESAR InfoSec">
+                    <img src="https://clareia1.vercel.app/seg_informacao.png" alt="Segurança da Informação">
                     <span>Seg. da Informação</span>
                 </div>
+                
                 <div class="cert-card">
-                    <img src="https://scontent.frec41-1.fna.fbcdn.net/v/t39.30808-6/574499421_2970537416467521_1618808725255023098_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeHZ84Cld3azUGWBZN9PZTmA20njUrlcjlXbSeNSuVyOVYv-xjIiQN1khO1RYikBxit4IvcLFm4oV4E6shJDLnN1&_nc_ohc=SjjcmvdFXVMQ7kNvwFgx2ce&_nc_oc=Ado6kQ6xsOxTUueA5Vlgo0DORj1TvNjvyO5k81a0O95Kc3Hz7_W52P10oZXVuHk3myk&_nc_zt=23&_nc_ht=scontent.frec41-1.fna&_nc_gid=FnQ_B3q23ebjv-RDVOEtfg&_nc_ss=7b2a8&oh=00_Af9QBZZwAKQXoPrd5P8A9d9bovr5j1A9nl6TXHHBjpVECQ&oe=6A234943" alt="CESAR Quantum">
+                    <img src="https://clareia1.vercel.app/acedemia_quantum.png" alt="Comp. Quântica">
                     <span>Comp. Quântica</span>
                 </div>
+                
                 <div class="cert-card">
-                    <img src="https://scontent.frec41-1.fna.fbcdn.net/v/t39.30808-6/505078110_2826432594211338_7210072570906887250_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEcip6p7YNHL33oR8RB4DBxsi-wgGZ-TLuyL7CAZn5Mu-V1YaRMMTV0aDkvhtkCIoj9WJhYmlSEDaOOjGyU-ktn&_nc_ohc=d3oDwPqF3DsQ7kNvwEY0rzG&_nc_oc=Adp0Ud0PhlHG3e67dxtO2xZreYDYoR3cqDsIbCBLzB-hPK0Ka9-W8CNcKEk3oNspBB0&_nc_zt=23&_nc_ht=scontent.frec41-1.fna&_nc_gid=xhzJPJHyfBSOxBy0sGFOIg&_nc_ss=7b2a8&oh=00_Af_XAOO-i8ylBVTSsGKGgcUyF3ANKNy9utAXWTUra9fbyQ&oe=6A235128" alt="Figma">
+                    <img src="https://clareia1.vercel.app/figama_framer.png" alt="Figma e Framer">
                     <span>Figma e Framer</span>
                 </div>
+                
                 <div class="cert-card">
-                    <img src="https://scontent.frec41-1.fna.fbcdn.net/v/t39.30808-6/505415953_2826430104211587_4243868217980255940_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeGwTfpFhDTi4EMglpHjryiTWP1ozxIwXgBY_WjPEjBeAKOIIMmrAX-wb74wwx4whzrPApn40EU4D2WeuS1mrnWI&_nc_ohc=fXhMXYGoYZ0Q7kNvwEL7WGR&_nc_oc=Adogr17K5mjooDekQAkkORjJjn9zq_QL7rUUMV3TQrc3uHAjM5bBZzKc4WPQsWf8HwY&_nc_zt=23&_nc_ht=scontent.frec41-1.fna&_nc_gid=MyIepGvT3SjAwChw5DlHhA&_nc_ss=7b2a8&oh=00_Af_vq-b5ImfStxe1LDW4q_HmPb_2OsGu0StdxhITGEguxw&oe=6A235FDC" alt="CESAR Soft Skill">
-                    <span>Next Soft Skill</span>
+                    <img src="https://clareia1.vercel.app/figma.png" alt="Figma">
+                    <span>Figma Design</span>
                 </div>
+                
+                <div class="cert-card">
+                    <img src="https://clareia1.vercel.app/fast.png" alt="Metodologia FAST">
+                    <span>Metodologia FAST</span>
+                </div>
+                
+                <div class="cert-card">
+                    <img src="https://clareia1.vercel.app/palestrante_recnplay.png" alt="Palestrante Rec'n'Play">
+                    <span>Palestrante Rec'n'Play</span>
+                </div>
+
                 <div class="cert-card">
                     <img src="https://clareia1.vercel.app/logica_python.png" alt="Lógica e Python">
                     <span>Lógica & Python</span>
