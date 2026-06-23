@@ -766,49 +766,82 @@
         /* Cards de Cases */
         .cases-editorial-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
         }
 
         .case-card-ed {
             background: var(--bg-card);
-            border: 1px solid var(--line-color);
-            border-radius: var(--radius-card);
-            padding: 30px;
+            border: 6px solid var(--neon-cyan); /* Borda espessa ciano como no design */
+            border-radius: 40px; /* Cantos super arredondados */
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            transition: transform 0.3s, border-color 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
         }
 
         .case-card-ed:hover {
             transform: translateY(-5px);
-            border-color: var(--neon-cyan);
+            box-shadow: 0px 15px 30px rgba(0, 191, 255, 0.2);
+        }
+
+        .case-img-wrapper {
+            display: block;
+            width: 100%;
+            border-bottom: 2px solid var(--bg-main); /* Linha divisória sutil da imagem */
+            overflow: hidden;
+        }
+
+        .case-img-wrapper img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .case-img-wrapper:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Novo container interno para manter o espaçamento do texto */
+        .case-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
         }
 
         .case-card-ed h4 {
-            font-size: 20px;
+            font-size: 24px;
             color: var(--text-heading);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
         }
         
         .case-card-ed p {
-            font-size: 14px;
+            font-size: 16px;
             color: var(--text-main);
             flex-grow: 1;
+            line-height: 1.5;
+            font-weight: 500;
         }
 
         .case-techs {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
         }
         
         .case-techs span {
-            font-size: 11px;
-            padding: 3px 8px;
-            background: var(--bg-pill);
+            font-size: 13px;
+            padding: 6px 12px;
+            background: rgba(0, 191, 255, 0.1); /* Fundo sutil esverdeado/ciano */
             color: var(--text-heading);
-            border-radius: 4px;
+            border-radius: 8px; /* Cantos arredondados quadrados */
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -816,25 +849,28 @@
 
         .case-links-sm {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            border-top: 1px solid var(--line-color);
-            padding-top: 15px;
+            gap: 15px;
+            margin-top: 15px;
+            border-top: 1px solid rgba(144, 224, 239, 0.15); /* Linha divisória para os botões */
+            padding-top: 25px;
         }
 
         .case-links-sm a {
-            font-size: 12px;
+            font-size: 14px;
             text-decoration: none;
             color: var(--text-heading);
-            border: 1px solid var(--line-color);
-            padding: 6px 12px;
-            border-radius: var(--radius-pill);
+            border: 1px solid rgba(144, 224, 239, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px; /* Formato de Pílula arredondada do design */
             transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
         }
 
         .case-links-sm a:hover {
-            background: var(--neon-cyan);
-            color: #000;
+            background: rgba(144, 224, 239, 0.1);
             border-color: var(--neon-cyan);
         }
 
@@ -1267,106 +1303,127 @@
 
         <section id="cases" class="section-container">
             <div class="editorial-divider">
-                <span>Cases Of Success</span>
+                <span>Projects</span>
                 <div class="line"></div>
                 <div class="circle-btn-sm"><i class="fa-solid fa-chevron-right"></i></div>
             </div>
 
             <div class="overlapping-title-container">
                 <div class="bg-huge-text">“ PORTFOLIO ”</div>
-                <h2 class="fg-huge-text">“ PROJECTS. ”</h2>
+                <h2 class="fg-huge-text">“ PRO<span>JE</span>CTS . ”</h2>
             </div>
 
             <div class="cases-editorial-grid">
                 
                 <div class="case-card-ed">
-                    <h4>Clareia – Fintech Whatsapp</h4>
-                    <div class="case-techs">
-                        <span>IA Generativa</span> <span>Sistemas Agênticos</span> <span>n8n</span> <span>Lean</span>
-                    </div>
-                    <p>Legal-Fintech integrada ao Whatsapp para democratizar e traduzir termos jurídicos automatizando o autoatendimento.</p>
-                    <div class="case-links-sm">
-                        <a href="https://clareia1.vercel.app/clareia.html" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
-                        <a href="https://github.com/leonidasprof/clareia1" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
-                    </div>
-                </div>
-
-                <div class="case-card-ed">
-                    <h4>Recentro Conecta</h4>
-                    <div class="case-techs">
-                        <span>Scrum</span> <span>PostgreSQL</span> <span>Supabase</span> <span>Vercel</span>
-                    </div>
-                    <p>Plataforma digital escalável para controle de acesso e agendamento de grupos substituindo fluxo manual do Parque de Esculturas Francisco Brennand.</p>
-                    <div class="case-links-sm">
-                        <a href="https://v0-recentro-conecta-prototype.vercel.app/" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
-                        <a href="https://github.com/leonidasprof/RecentroConecta-n6" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="https://clareia1.vercel.app/clareia.html" target="_blank" class="case-img-wrapper">
+                        <img src="https://clareia1.vercel.app/cabecalho_clareia.png" alt="Prévia Clareia">
+                    </a>
+                    <div class="case-content">
+                        <h4>Clareia – Fintech Whatsapp</h4>
+                        <div class="case-techs">
+                            <span>IA Generativa</span> <span>Sistemas Agênticos</span> <span>n8n</span> <span>Lean</span>
+                        </div>
+                        <p>Legal-Fintech integrada ao Whatsapp para democratizar e traduzir termos jurídicos automatizando o autoatendimento.</p>
+                        <div class="case-links-sm">
+                            <a href="https://clareia1.vercel.app/clareia.html" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
+                            <a href="https://github.com/leonidasprof/clareia1" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="case-card-ed">
-                    <h4>TechTalent – Plataforma</h4>
-                    <div class="case-techs">
-                        <span>Lean UX</span> <span>UML</span> <span>BDD</span> <span>Figma</span>
+                    <a href="https://v0-recentro-conecta-prototype.vercel.app/" target="_blank" class="case-img-wrapper">
+                        <img src="https://clareia1.vercel.app/cabecalho_recentroconecta.png" alt="Prévia Recentro Conecta">
+                    </a>
+                    <div class="case-content">
+                        <h4>Recentro Conecta</h4>
+                        <div class="case-techs">
+                            <span>Scrum</span> <span>PostgreSQL</span> <span>Supabase</span> <span>Vercel</span>
+                        </div>
+                        <p>Plataforma digital escalável para controle de acesso e agendamento de grupos substituindo fluxo manual do Parque de Esculturas Francisco Brennand.</p>
+                        <div class="case-links-sm">
+                            <a href="https://v0-recentro-conecta-prototype.vercel.app/" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
+                            <a href="https://github.com/leonidasprof/RecentroConecta-n6" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                        </div>
                     </div>
-                    <p>Projeto focado em mitigar o gap de contratação através da avaliação de skills, validação de conhecimentos através de testes específicos e geração de PDI automatizado.</p>
-                    <div class="case-links-sm">
-                        <a href="https://sites.google.com/cesar.school/techtalent/home" target="_blank"><i class="fa-solid fa-desktop"></i> Produto</a>
-                        <a href="https://github.com/leonidasprof/https-github.com-leonidasprof-techtalent" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                </div>
+
+                <div class="case-card-ed">
+                    <a href="https://v0-tech-talent.vercel.app/" target="_blank" class="case-img-wrapper">
+                        <img src="https://clareia1.vercel.app/cabecalho_techtalent.png" alt="Prévia TechTalent">
+                    </a>
+                    <div class="case-content">
+                        <h4>TechTalent – Plataforma</h4>
+                        <div class="case-techs">
+                            <span>Lean UX</span> <span>UML</span> <span>BDD</span> <span>Figma</span>
+                        </div>
+                        <p>Projeto focado em mitigar o gap de contratação através da avaliação de skills, validação de conhecimentos através de testes específicos e geração de PDI automatizado.</p>
+                        <div class="case-links-sm">
+                            <a href="https://v0-tech-talent.vercel.app/" target="_blank"><i class="fa-solid fa-desktop"></i> Produto</a>
+                            <a href="https://github.com/leonidasprof/https-github.com-leonidasprof-techtalent" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="case-card-ed">
-                    <h4>
-                        <img src="https://streamlit.io/images/brand/streamlit-mark-color.png" alt="Streamlit" style="height: 18px; vertical-align: middle; margin-right: 5px; margin-top: -3px;">
-                        Números de corridas da UBER em Nova York
-                    </h4>
-                    <div class="case-techs">
-                        <span>
-                            <img src="https://streamlit.io/images/brand/streamlit-mark-color.png" style="width: 12px; vertical-align: middle; margin-right: 4px; margin-top: -2px;"> Streamlit
-                        </span>
-                        <span><i class="fa-brands fa-python"></i> Python</span> 
-                        <span>Pandas</span> 
-                        <span>NumPy</span>
-                    </div>
-                    <p>Dashboard interativo focado na análise de dados das corridas de Uber na cidade de Nova York, explorando padrões e insights geolocalizados de forma visual.</p>
-                    <div class="case-links-sm">
-                        <a href="https://dashboard-app-corridasuber.streamlit.app/" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
-                        <a href="https://github.com/leonidasprof/Data_Analytics" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
-                    </div>
-                </div>
-
-                <div class="case-card-ed">
-                    <h4>
-                        <svg height="18" viewBox="0 0 1155 1000" fill="currentColor" style="vertical-align: middle; margin-right: 5px; margin-top: -3px;"><path d="M577.344 0L1154.69 1000H0L577.344 0Z"></path></svg>
-                        E-Book Eng. de Prompt
-                    </h4>
-                    <div class="case-techs">
-                        <span>
-                            <svg height="12" viewBox="0 0 1155 1000" fill="currentColor" style="vertical-align: middle; margin-right: 4px; margin-top: -2px;"><path d="M577.344 0L1154.69 1000H0L577.344 0Z"></path></svg> v0.dev
-                        </span>
-                        <span><i class="fa-solid fa-sparkles"></i> Prompt Eng.</span> 
-                        <span><i class="fa-solid fa-book-open"></i> E-Book</span>
-                    </div>
-                    <p>Desenvolvimento e estruturação de um E-Book completo sobre Engenharia de Prompt, construído com o auxílio da IA generativa do v0 (Vercel) para design e interfaces.</p>
-                    <div class="case-links-sm">
-                        <a href="https://shre.ink/ebookengenhariadeprompt" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
-                        <a href="https://github.com/leonidasprof/v0-e-book-engenharia-de-prompt" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <div class="case-content">
+                        <h4>
+                            <img src="https://streamlit.io/images/brand/streamlit-mark-color.png" alt="Streamlit" style="height: 18px; vertical-align: middle; margin-right: 5px; margin-top: -3px;">
+                            Números de corridas da UBER em Nova York
+                        </h4>
+                        <div class="case-techs">
+                            <span>
+                                <img src="https://streamlit.io/images/brand/streamlit-mark-color.png" style="width: 12px; vertical-align: middle; margin-right: 4px; margin-top: -2px;"> Streamlit
+                            </span>
+                            <span><i class="fa-brands fa-python"></i> Python</span> 
+                            <span>Pandas</span> 
+                            <span>NumPy</span>
+                        </div>
+                        <p>Dashboard interativo focado na análise de dados das corridas de Uber na cidade de Nova York, explorando padrões e insights geolocalizados de forma visual.</p>
+                        <div class="case-links-sm">
+                            <a href="https://dashboard-app-corridasuber.streamlit.app/" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
+                            <a href="https://github.com/leonidasprof/Data_Analytics" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="case-card-ed">
-                    <h4>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" alt="Photoshop" style="height: 18px; vertical-align: middle; margin-right: 5px; margin-top: -3px;">
-                        Ideias de Rebranding - Exata Contábil
-                    </h4>
-                    <div class="case-techs">
-                        <span><i class="fa-solid fa-palette"></i> CorelDraw</span> 
-                        <span><i class="fa-solid fa-image"></i> Photoshop</span> 
-                        <span><i class="fa-solid fa-sparkles"></i> Nanobana (Gemini)</span>
+                    <div class="case-content">
+                        <h4>
+                            <svg height="18" viewBox="0 0 1155 1000" fill="currentColor" style="vertical-align: middle; margin-right: 5px; margin-top: -3px;"><path d="M577.344 0L1154.69 1000H0L577.344 0Z"></path></svg>
+                            E-Book Eng. de Prompt
+                        </h4>
+                        <div class="case-techs">
+                            <span>
+                                <svg height="12" viewBox="0 0 1155 1000" fill="currentColor" style="vertical-align: middle; margin-right: 4px; margin-top: -2px;"><path d="M577.344 0L1154.69 1000H0L577.344 0Z"></path></svg> v0.dev
+                            </span>
+                            <span><i class="fa-solid fa-sparkles"></i> Prompt Eng.</span> 
+                            <span><i class="fa-solid fa-book-open"></i> E-Book</span>
+                        </div>
+                        <p>Desenvolvimento e estruturação de um E-Book completo sobre Engenharia de Prompt, construído com o auxílio da IA generativa do v0 (Vercel) para design e interfaces.</p>
+                        <div class="case-links-sm">
+                            <a href="https://shre.ink/ebookengenhariadeprompt" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
+                            <a href="https://github.com/leonidasprof/v0-e-book-engenharia-de-prompt" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                        </div>
                     </div>
-                    <p>Estudo e projeto de reestruturação visual e rebranding da marca Exata Contábil, focado em criar uma nova identidade corporativa moderna e alinhada ao mercado.</p>
-                    <div class="case-links-sm">
-                        <a href="https://exata-nine.vercel.app/" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
+                </div>
+
+                <div class="case-card-ed">
+                    <div class="case-content">
+                        <h4>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" alt="Photoshop" style="height: 18px; vertical-align: middle; margin-right: 5px; margin-top: -3px;">
+                            Ideias de Rebranding - Exata Contábil
+                        </h4>
+                        <div class="case-techs">
+                            <span><i class="fa-solid fa-palette"></i> CorelDraw</span> 
+                            <span><i class="fa-solid fa-image"></i> Photoshop</span> 
+                            <span><i class="fa-solid fa-sparkles"></i> Nanobana (Gemini)</span>
+                        </div>
+                        <p>Estudo e projeto de reestruturação visual e rebranding da marca Exata Contábil, focado em criar uma nova identidade corporativa moderna e alinhada ao mercado.</p>
+                        <div class="case-links-sm">
+                            <a href="https://exata-nine.vercel.app/" target="_blank"><i class="fa-solid fa-globe"></i> Produto</a>
+                        </div>
                     </div>
                 </div>
 
