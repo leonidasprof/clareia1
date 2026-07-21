@@ -41,7 +41,7 @@
         body {
             font-family: 'Inter', sans-serif;
             margin: 0;
-            overflow: hidden;
+            overflow: hidden; /* Prevent page scrolling, we control slide scroll */
             color: #1e293b;
             background-color: #f1f5f9;
             background-image: 
@@ -50,9 +50,9 @@
                 radial-gradient(at 100% 100%, rgba(217, 70, 239, 0.15) 0px, transparent 50%),
                 radial-gradient(at 0% 100%, rgba(75, 30, 142, 0.15) 0px, transparent 50%);
             background-attachment: fixed;
+            touch-action: pan-y; /* Allows vertical scroll on touch devices */
         }
 
-        /* Gradientes de Texto */
         .text-gradient-primary {
             background: linear-gradient(135deg, #6d28d9 0%, #d946ef 100%);
             -webkit-background-clip: text;
@@ -70,7 +70,7 @@
             perspective: 1000px;
         }
 
-        /* Slide Responsivo */
+        /* Slide Responsive Style */
         .slide {
             width: 95%;
             max-width: 1280px;
@@ -91,7 +91,7 @@
             overflow-x: hidden;
         }
 
-        /* Scrollbar customizada para mobile e desktop */
+        /* Custom Scrollbar */
         .slide::-webkit-scrollbar { width: 6px; }
         .slide::-webkit-scrollbar-track { background: transparent; }
         .slide::-webkit-scrollbar-thumb { background: rgba(109, 40, 217, 0.2); border-radius: 10px; }
@@ -103,7 +103,7 @@
                 height: 85vh;
                 padding: 3.5rem;
                 border-radius: 2.5rem;
-                overflow-y: hidden; /* Remove scroll interno em telas grandes se couber */
+                overflow-y: hidden; 
             }
         }
 
@@ -140,21 +140,24 @@
             z-index: 1;
         }
 
-        /* Controles de Navegação Responsivos */
         .nav-zone {
             position: fixed;
             top: 0;
             bottom: 0;
-            width: 40px;
+            width: 15vw; 
+            min-width: 60px;
+            max-width: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 50;
+            z-index: 1000; 
             cursor: pointer;
             transition: all 0.3s ease;
+            user-select: none; 
+            -webkit-tap-highlight-color: transparent; 
         }
         @media (min-width: 768px) {
-            .nav-zone { width: 8vw; min-width: 80px; }
+            .nav-zone { width: 8vw; }
         }
 
         .nav-btn-modern {
@@ -225,7 +228,6 @@
             transition: opacity 0.3s ease;
         }
 
-        /* Footer Responsivo */
         .slide-footer {
             margin-top: auto;
             padding: 1rem;
@@ -263,7 +265,6 @@
             .logo-img { height: 50px; }
         }
 
-        /* Modal Responsivo */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -336,9 +337,10 @@
             
             <!-- QR Code Topo Esquerdo -->
             <div class="absolute top-6 left-6 md:top-10 md:left-10 flex flex-col items-center z-20">
-                <span class="text-white font-bold text-[10px] md:text-sm uppercase tracking-wider mb-2 drop-shadow-md">
+                <span class="text-white/90 font-semibold text-xs md:text-sm uppercase tracking-wider mb-2 drop-shadow-md">
                     Acesse esse material
                 </span>
+                <!-- Fundo branco sólido e mesmo tamanho da logo central (24/36) -->
                 <div class="bg-white p-2 rounded-xl shadow-2xl border-2 border-white/20">
                     <img src="qr_perguntas_emprego.png" alt="QR Code Material" class="w-24 h-24 md:w-36 md:h-36 object-contain">
                 </div>
@@ -349,7 +351,6 @@
                     <img src="https://raichu-uploads.s3.amazonaws.com/logo_se-liga-nessa-historia_WRTKvZ.png" alt="Se liga na dica" class="w-24 h-24 md:w-36 md:h-36 mb-2 md:mb-4 rounded-full border-4 border-white/30 shadow-glow bg-white/5 backdrop-blur-sm p-3" style="object-fit: contain;">
                 </div>
                 
-                <!-- Tipografia Fluida Responsiva -->
                 <h1 class="text-4xl sm:text-5xl md:text-7xl font-black leading-tight tracking-tight text-white drop-shadow-lg px-2">
                     E aí, você está pronto para <br class="hidden md:block">
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-pink-500 to-purple-400">novas oportunidades?</span>
@@ -369,6 +370,307 @@
             </div>
         </div>
 
+        <div class="slide" id="slide-2">
+            <div class="deco-circle" style="width: 800px; height: 800px; background: radial-gradient(circle, rgba(109,40,217,0.05) 0%, transparent 70%); top: -400px; right: -200px;"></div>
+            <div class="flex-1 flex flex-col content-z">
+                <div class="mb-8">
+                    <span class="bg-brand-purple/10 text-brand-purple px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 inline-block border border-brand-purple/20">Mindset</span>
+                    <h2 class="text-3xl md:text-5xl font-black text-slate-800 tracking-tight">O Jogo por Trás das <span class="text-gradient-primary">Perguntas</span></h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 flex-1 items-center">
+                    <div class="space-y-6">
+                        <p class="text-lg md:text-xl text-slate-600 leading-relaxed font-light">
+                            Entrevistas não são interrogatórios policiais, são <strong class="text-brand-purple font-bold">reuniões de negócios</strong>. Cada pergunta tem um objetivo oculto.
+                        </p>
+                        
+                        <div class="glass-card bg-brand-light/50 border-l-4 border-l-brand-violet p-4 md:p-6">
+                            <h3 class="font-bold text-slate-800 text-lg mb-4 flex items-center">
+                                <div class="w-10 h-10 rounded-full bg-brand-violet/10 flex items-center justify-center text-brand-violet mr-3">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                Nosso Objetivo Hoje
+                            </h3>
+                            <ul class="space-y-3 text-slate-700 text-sm md:text-base">
+                                <li class="flex items-start"><i class="fas fa-arrow-right text-brand-orange mt-1 mr-3"></i> <span>Entender o que <em>realmente</em> significa cada pergunta.</span></li>
+                                <li class="flex items-start"><i class="fas fa-arrow-right text-brand-orange mt-1 mr-3"></i> <span>Criar estruturas de respostas (com ou sem experiência).</span></li>
+                                <li class="flex items-start"><i class="fas fa-arrow-right text-brand-orange mt-1 mr-3"></i> <span>Praticar para não travar na "hora H".</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="relative h-64 md:h-full w-full rounded-3xl overflow-hidden shadow-xl flex items-center justify-center p-6 md:p-10 group mt-4 md:mt-0">
+                        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-brand-purple/90 to-brand-magenta/90 mix-blend-multiply group-hover:opacity-80 transition duration-500"></div>
+                        <div class="relative z-10 text-center text-white">
+                            <i class="fas fa-quote-left text-3xl md:text-4xl text-brand-orange mb-2 md:mb-4 opacity-70"></i>
+                            <h4 class="text-xl md:text-2xl font-bold mb-2 md:mb-4 uppercase tracking-widest text-brand-orange">A Regra de Ouro</h4>
+                            <p class="text-xl md:text-3xl font-light italic leading-snug">
+                                "Nunca minta, mas sempre conte a sua melhor verdade."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-3">
+            <div class="flex-1 flex flex-col content-z">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-brand-violet to-brand-magenta text-white flex items-center justify-center text-xl md:text-2xl font-black shadow-lg">01</div>
+                    <h2 class="text-2xl md:text-4xl font-black text-slate-800">"Me fale sobre você."</h2>
+                </div>
+                
+                <div class="flex-1 flex flex-col gap-6 md:gap-8">
+                    <div class="gradient-border-card flex flex-col md:flex-row items-center p-4 md:p-6 text-center md:text-left">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white flex-shrink-0 flex items-center justify-center md:mr-6 shadow-md border border-slate-100 overflow-hidden p-2 md:p-3 mb-4 md:mb-0">
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/070/182/055/small/pensive-yellow-emoticon-with-hand-on-chin-against-an-isolated-transparent-backdrop-concept-png.png" alt="Pensando" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl md:text-2xl text-slate-800 mb-2">O que <em class="text-brand-purple">realmente</em> significa?</h3>
+                            <p class="text-slate-600 text-base md:text-lg leading-relaxed font-light">
+                                Querem ver se você sabe resumir seu perfil e se sua trajetória se <strong class="text-brand-purple">encaixa no que buscam</strong>. Não conte sua história desde a infância.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 flex-1 pb-4">
+                        <button onclick="openModal('q1-sem')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-orange cursor-pointer p-6">
+                            <i class="fas fa-seedling text-4xl md:text-6xl text-brand-orange mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Sem Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-orange/10 text-brand-orange rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                        <button onclick="openModal('q1-com')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-violet cursor-pointer p-6">
+                            <i class="fas fa-briefcase text-4xl md:text-6xl text-brand-violet mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Com Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-violet/10 text-brand-violet rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-4">
+            <div class="flex-1 flex flex-col content-z">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-brand-violet to-brand-magenta text-white flex items-center justify-center text-xl md:text-2xl font-black shadow-lg">02</div>
+                    <h2 class="text-2xl md:text-4xl font-black text-slate-800">"Por que saiu do último emprego?"</h2>
+                </div>
+                
+                <div class="flex-1 flex flex-col gap-6 md:gap-8">
+                    <div class="gradient-border-card flex flex-col md:flex-row items-center p-4 md:p-6 text-center md:text-left">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white flex-shrink-0 flex items-center justify-center md:mr-6 shadow-md border border-slate-100 overflow-hidden p-2 md:p-3 mb-4 md:mb-0">
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/070/182/055/small/pensive-yellow-emoticon-with-hand-on-chin-against-an-isolated-transparent-backdrop-concept-png.png" alt="Pensando" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl md:text-2xl text-slate-800 mb-2">O que <em class="text-brand-purple">realmente</em> significa?</h3>
+                            <p class="text-slate-600 text-base md:text-lg leading-relaxed font-light">
+                                Avaliam se sua saída foi razoável e se podem confiar que <strong class="text-brand-purple">não repetirá o padrão</strong> de saída repentina. Nunca fale mal do ex-chefe!
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 flex-1 pb-4">
+                        <button onclick="openModal('q2-sem')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-orange cursor-pointer p-6">
+                            <i class="fas fa-seedling text-4xl md:text-6xl text-brand-orange mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Sem Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-orange/10 text-brand-orange rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                        <button onclick="openModal('q2-com')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-violet cursor-pointer p-6">
+                            <i class="fas fa-briefcase text-4xl md:text-6xl text-brand-violet mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Com Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-violet/10 text-brand-violet rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-5">
+            <div class="flex-1 flex flex-col content-z">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-brand-violet to-brand-magenta text-white flex items-center justify-center text-xl md:text-2xl font-black shadow-lg">03</div>
+                    <h2 class="text-2xl md:text-4xl font-black text-slate-800">"Sua maior conquista?"</h2>
+                </div>
+                
+                <div class="flex-1 flex flex-col gap-6 md:gap-8">
+                    <div class="gradient-border-card flex flex-col md:flex-row items-center p-4 md:p-6 text-center md:text-left">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white flex-shrink-0 flex items-center justify-center md:mr-6 shadow-md border border-slate-100 overflow-hidden p-2 md:p-3 mb-4 md:mb-0">
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/070/182/055/small/pensive-yellow-emoticon-with-hand-on-chin-against-an-isolated-transparent-backdrop-concept-png.png" alt="Pensando" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl md:text-2xl text-slate-800 mb-2">O que <em class="text-brand-purple">realmente</em> significa?</h3>
+                            <p class="text-slate-600 text-base md:text-lg leading-relaxed font-light">
+                                Estão avaliando o <strong class="text-brand-purple">impacto real</strong> das suas ações. Se você não quantificar ou explicar o 'como', perde a força.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 flex-1 pb-4">
+                        <button onclick="openModal('q3-sem')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-orange cursor-pointer p-6">
+                            <i class="fas fa-seedling text-4xl md:text-6xl text-brand-orange mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Sem Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-orange/10 text-brand-orange rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                        <button onclick="openModal('q3-com')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-violet cursor-pointer p-6">
+                            <i class="fas fa-briefcase text-4xl md:text-6xl text-brand-violet mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Com Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-violet/10 text-brand-violet rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-6">
+            <div class="flex-1 flex flex-col content-z">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-brand-violet to-brand-magenta text-white flex items-center justify-center text-xl md:text-2xl font-black shadow-lg">04</div>
+                    <h2 class="text-2xl md:text-4xl font-black text-slate-800">"Me conte sobre um erro."</h2>
+                </div>
+                
+                <div class="flex-1 flex flex-col gap-6 md:gap-8">
+                    <div class="gradient-border-card flex flex-col md:flex-row items-center p-4 md:p-6 text-center md:text-left">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-white flex-shrink-0 flex items-center justify-center md:mr-6 shadow-md border border-slate-100 overflow-hidden p-2 md:p-3 mb-4 md:mb-0">
+                            <img src="https://static.vecteezy.com/system/resources/thumbnails/070/182/055/small/pensive-yellow-emoticon-with-hand-on-chin-against-an-isolated-transparent-backdrop-concept-png.png" alt="Pensando" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl md:text-2xl text-slate-800 mb-2">O que <em class="text-brand-purple">realmente</em> significa?</h3>
+                            <p class="text-slate-600 text-base md:text-lg leading-relaxed font-light">
+                                Avaliam a sua capacidade de assumir responsabilidade <strong class="text-brand-purple">sem culpar os outros</strong> e o que você aprendeu com isso.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 flex-1 pb-4">
+                        <button onclick="openModal('q4-sem')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-orange cursor-pointer p-6">
+                            <i class="fas fa-seedling text-4xl md:text-6xl text-brand-orange mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Sem Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-orange/10 text-brand-orange rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                        <button onclick="openModal('q4-com')" class="glass-card flex flex-col items-center justify-center text-center group hover:-translate-y-2 transition-all border-b-4 border-b-brand-violet cursor-pointer p-6">
+                            <i class="fas fa-briefcase text-4xl md:text-6xl text-brand-violet mb-4 group-hover:scale-110 transition-transform"></i>
+                            <h4 class="text-xl md:text-3xl font-black text-slate-800 mb-3">Com Experiência</h4>
+                            <span class="inline-block px-4 py-2 bg-brand-violet/10 text-brand-violet rounded-full text-xs md:text-sm font-bold uppercase tracking-wider">Abrir Script <i class="fas fa-external-link-alt ml-1"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-7">
+            <div class="deco-circle" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(217,70,239,0.08) 0%, transparent 70%); bottom: -200px; left: -100px;"></div>
+            <div class="flex-1 flex flex-col content-z">
+                <div class="text-center mb-6 md:mb-10">
+                    <span class="bg-brand-purple/10 text-brand-purple px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3 inline-block">Fit Cultural</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-slate-800">Alinhamento e <span class="text-gradient-primary">Expectativas</span></h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10 flex-1 pb-6">
+                    <button onclick="openModal('m-motiva')" class="glass-card flex flex-col items-center justify-center p-6 md:p-8 border-t-8 border-t-brand-violet hover:-translate-y-2 transition-all cursor-pointer group">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-brand-violet/10 flex items-center justify-center mb-4 md:mb-6 group-hover:bg-brand-violet group-hover:text-white transition-colors">
+                            <i class="fas fa-heartbeat text-3xl md:text-5xl text-brand-violet group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl md:text-4xl font-bold text-slate-800 mb-3 text-center">"O que te motiva?"</h3>
+                        <span class="inline-block px-4 py-2 md:px-6 md:py-3 bg-slate-100 text-slate-600 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider border border-slate-200">Ideias <i class="fas fa-arrow-right ml-2 text-brand-violet"></i></span>
+                    </button>
+
+                    <button onclick="openModal('m-lider')" class="glass-card flex flex-col items-center justify-center p-6 md:p-8 border-t-8 border-t-brand-orange hover:-translate-y-2 transition-all cursor-pointer group">
+                        <div class="w-16 h-16 md:w-24 md:h-24 rounded-full bg-brand-orange/10 flex items-center justify-center mb-4 md:mb-6 group-hover:bg-brand-orange group-hover:text-white transition-colors">
+                            <i class="fas fa-users text-3xl md:text-5xl text-brand-orange group-hover:text-white transition-colors"></i>
+                        </div>
+                        <h3 class="text-2xl md:text-4xl font-bold text-slate-800 mb-3 text-center">"O que espera do líder?"</h3>
+                        <span class="inline-block px-4 py-2 md:px-6 md:py-3 bg-slate-100 text-slate-600 rounded-full text-xs md:text-sm font-bold uppercase tracking-wider border border-slate-200">Ideias <i class="fas fa-arrow-right ml-2 text-brand-orange"></i></span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-8" style="background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); border: none; color: white;">
+            <div class="absolute right-0 top-0 w-[500px] h-[500px] bg-brand-magenta rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+            <div class="absolute left-0 bottom-0 w-[400px] h-[400px] bg-brand-orange rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
+            
+            <div class="flex-1 flex flex-col content-z">
+                <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-10 flex-1 flex flex-col shadow-2xl relative h-full">
+                    <div class="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-6 mb-6 border-b border-white/10 pb-6 text-center md:text-left">
+                        <div class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-brand-orange to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shrink-0">
+                            <i class="fas fa-user-edit text-3xl md:text-4xl text-white"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-black text-white mb-2">Exercício <span class="text-brand-orange">Individual</span></h2>
+                            <p class="text-base md:text-xl font-light text-slate-300">
+                                Construa seus scripts e me entregue. Até o <strong class="text-white">fim da aula</strong>.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Scroll view on mobile if needed -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 flex-1 overflow-y-auto pr-2">
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-violet transition-colors flex items-center group">
+                            <span class="text-brand-violet font-black text-xl w-8 group-hover:text-white transition-colors">01.</span> <span class="text-sm md:text-lg font-medium text-slate-200">Me fale sobre você.</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-orange transition-colors flex items-center group">
+                            <span class="text-brand-orange font-black text-xl w-8 group-hover:text-white transition-colors">02.</span> <span class="text-sm md:text-lg font-medium text-slate-200">Por que saiu do emprego?</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-violet transition-colors flex items-center group">
+                            <span class="text-brand-violet font-black text-xl w-8 group-hover:text-white transition-colors">03.</span> <span class="text-sm md:text-lg font-medium text-slate-200">Qual foi a sua maior conquista?</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-orange transition-colors flex items-center group">
+                            <span class="text-brand-orange font-black text-xl w-8 group-hover:text-white transition-colors">04.</span> <span class="text-sm md:text-lg font-medium text-slate-200">Me conte sobre um erro.</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-violet transition-colors flex items-center group">
+                            <span class="text-brand-violet font-black text-xl w-8 group-hover:text-white transition-colors">05.</span> <span class="text-sm md:text-lg font-medium text-slate-200">O que te motiva?</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-orange transition-colors flex items-center group">
+                            <span class="text-brand-orange font-black text-xl w-8 group-hover:text-white transition-colors">06.</span> <span class="text-sm md:text-lg font-medium text-slate-200">O que espera do seu líder?</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-violet transition-colors flex items-center group">
+                            <span class="text-brand-violet font-black text-xl w-8 group-hover:text-white transition-colors">07.</span> <span class="text-sm md:text-lg font-medium text-slate-200">Ambiente de trabalho ideal?</span>
+                        </div>
+                        <div class="bg-slate-800/60 p-4 rounded-2xl border border-slate-700 hover:border-brand-orange transition-colors flex items-center group">
+                            <span class="text-brand-orange font-black text-xl w-8 group-hover:text-white transition-colors">08.</span> <span class="text-sm md:text-lg font-medium text-slate-200">Onde se vê em 2 a 3 anos?</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- RODAPÉ CORRIGIDO PARA O SLIDE 8 -->
+            <div class="slide-footer">
+                <img src="https://arquidiocesecuiaba.org.br/wp-content/uploads/2024/11/salesiano-dom-bosco.jpg" alt="Logo Salesiano Dom Bosco" class="logo-img">
+                <span class="font-bold text-slate-800 flex items-center text-sm md:text-lg"><img src="https://static.vecteezy.com/system/resources/previews/018/930/413/non_2x/instagram-logo-instagram-icon-transparent-free-png.png" alt="Instagram" class="w-5 h-5 md:w-6 md:h-6 mr-2 object-contain"> @prof.tenebroso</span>
+            </div>
+        </div>
+
     </div>
 
     <div id="modal-container" class="modal-overlay">
@@ -377,12 +679,12 @@
                 <i class="fas fa-times"></i>
             </div>
             <div id="modal-body">
-                <!-- Conteúdo dinâmico aqui -->
+                <!-- Conteudo injetado aqui -->
             </div>
         </div>
     </div>
 
-    <!-- Navegação adaptada para telas menores (setas laterais) -->
+    <!-- ÁREAS DE CLIQUE MAIORES E PROTEGIDAS COM Z-INDEX SUPERIOR -->
     <div class="nav-zone nav-zone-prev" onclick="prevSlide()" title="Slide Anterior">
         <div class="nav-btn-modern shadow-glass">
             <i class="fas fa-chevron-left"></i>
@@ -400,21 +702,21 @@
         let isAnimating = false;
 
         const modalsData = {
-            'q1-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Foco em formação e soft skills.', text: '"Atualmente estou estudando [Curso] no Salesiano, onde desenvolvi grande interesse por [Área da vaga]. Nos trabalhos em grupo, costumo assumir o papel de organização. Sou muito focado em aprender e busco essa primeira oportunidade para aplicar minha vontade de crescer na prática."' },
-            'q1-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Fórmula: Presente + Passado + Futuro.', text: '"Hoje atuo como [Cargo] onde desenvolvi fortes habilidades em [Habilidade]. Nos últimos 2 anos, consegui [Conquista rápida]. Agora, busco uma oportunidade como esta, onde eu possa usar minha experiência em [X] para ajudar a equipe a [Y]."' },
+            'q1-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Foco em formação e soft skills.', text: '"Atualmente estudo [Curso] no Salesiano, onde desenvolvi grande interesse por [Área da vaga]. Nos trabalhos em grupo, costumo assumir o papel de organização. Sou muito focado e busco essa oportunidade para aplicar minha vontade de crescer."' },
+            'q1-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Presente + Passado + Futuro.', text: '"Hoje atuo como [Cargo] onde desenvolvi fortes habilidades em [Habilidade]. Nos últimos 2 anos, consegui [Conquista rápida]. Agora, busco uma oportunidade onde eu possa usar minha experiência para ajudar a equipe a [Y]."' },
             
-            'q2-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Motivo para começar a trabalhar.', text: '"Como este será meu primeiro emprego, minha motivação principal é colocar em prática o que venho aprendendo na escola e assumir novas responsabilidades, iniciando minha carreira em uma empresa estruturada como a de vocês."' },
-            'q2-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Busca por desafios, não fuga.', text: '"Sou muito grato pelo tempo que passei na [Empresa X], aprendi muito lá. Porém, cheguei em um momento onde busco novos desafios profissionais e mais oportunidades de crescimento na área de [Área da vaga], algo que o momento atual da minha antiga empresa não permitia."' },
+            'q2-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Motivo para começar.', text: '"Como este será meu primeiro emprego, minha motivação principal é colocar em prática o que venho aprendendo na escola e assumir novas responsabilidades em uma empresa estruturada."' },
+            'q2-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Busca por desafios.', text: '"Sou grato pelo tempo que passei na [Empresa X]. Porém, cheguei num momento onde busco novos desafios profissionais e mais oportunidades de crescimento na área, algo que o momento atual lá não permitia."' },
             
-            'q3-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Conquistas acadêmicas ou projetos.', text: '"Minha maior conquista até o momento foi liderar um projeto escolar sobre [Tema] onde tiramos a nota máxima. Eu organizei o cronograma de toda a equipe e garantimos a entrega antes do prazo, o que me ensinou muito sobre gestão de tempo e trabalho em equipe."' },
-            'q3-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Método STAR (Situação, Tarefa, Ação, Resultado).', text: '"No meu trabalho anterior, percebi que o atendimento estava lento. Sugeri a criação de um checklist padrão (Ação). Após implementarmos, reduzimos o tempo de espera dos clientes em 20% (Resultado), o que melhorou muito o feedback recebido."' },
+            'q3-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Projetos acadêmicos.', text: '"Minha maior conquista foi liderar um projeto escolar onde tiramos nota máxima. Organizei o cronograma da equipe e garantimos a entrega antes do prazo, o que me ensinou muito sobre gestão de tempo."' },
+            'q3-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Método STAR.', text: '"No meu trabalho anterior, percebi que o atendimento estava lento. Sugeri a criação de um checklist padrão. Após implementarmos, reduzimos a espera em 20%, o que melhorou o feedback recebido."' },
             
-            'q4-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Erro de estudante + Correção.', text: '"Uma vez, calculei mal o tempo para entregar dois trabalhos importantes e entreguei um incompleto. Assumi o erro. A partir dali, comecei a usar o Google Agenda para mapear tudo. Nunca mais perdi um prazo e aprendi a me organizar melhor."' },
-            'q4-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Erro de processo + Ação corretiva.', text: '"No início na empresa X, passei uma informação errada a um cliente por não ter conferido o sistema. Eu pedi desculpas e resolvi na hora. Aprendi a importância da dupla checagem e criei o hábito de revisar tudo duas vezes desde então."' },
+            'q4-sem': { title: 'Sem Experiência', icon: 'fas fa-seedling', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Erro + Correção.', text: '"Uma vez calculei mal o tempo para entregar dois trabalhos e entreguei um incompleto. Assumi o erro. A partir dali, comecei a usar o Google Agenda para mapear tudo. Nunca mais perdi um prazo."' },
+            'q4-com': { title: 'Com Experiência', icon: 'fas fa-briefcase', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Erro de processo + Ação.', text: '"Passei uma informação errada a um cliente por não conferir o sistema. Pedi desculpas e resolvi na hora. Aprendi a importância da dupla checagem e criei o hábito de revisar tudo duas vezes desde então."' },
             
-            'm-motiva': { title: 'O que te motiva?', icon: 'fas fa-heartbeat', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'Alinhamento com o que a vaga oferece.', text: '<strong class="text-brand-orange text-lg md:text-xl">Sem Experiência:</strong><br>"Aprender coisas novas e ver que o meu esforço gera resultados, seja tirando uma nota boa ou ajudando num evento escolar."<br><br><strong class="text-brand-violet text-lg md:text-xl">Com Experiência:</strong><br>"Bater metas e trabalhar em equipe. Gosto do sentimento de dever cumprido quando entregamos um projeto com qualidade e vemos o impacto final."' },
+            'm-motiva': { title: 'O que te motiva?', icon: 'fas fa-heartbeat', bg: 'bg-brand-violet', color: 'text-brand-violet', subtitle: 'O que te move?', text: '<strong class="text-brand-orange text-lg">Sem Experiência:</strong><br>"Aprender coisas novas e ver que o meu esforço gera resultados."<br><br><strong class="text-brand-violet text-lg">Com Experiência:</strong><br>"Bater metas e trabalhar em equipe. Gosto do sentimento de dever cumprido."' },
             
-            'm-lider': { title: 'O que espera do líder?', icon: 'fas fa-users', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Autonomia e estilo de liderança.', text: '<strong class="text-slate-800 text-lg md:text-xl">Uma resposta equilibrada:</strong><br><br>"Espero um líder que ofereça feedbacks construtivos e direcione os objetivos com clareza, mas que também dê espaço para que eu possa trabalhar com autonomia e mostrar minhas ideias em um ambiente colaborativo e de respeito."' }
+            'm-lider': { title: 'O que espera do líder?', icon: 'fas fa-users', bg: 'bg-brand-orange', color: 'text-brand-orange', subtitle: 'Estilo de liderança.', text: '"Espero um líder que ofereça feedbacks construtivos e direcione os objetivos, mas que também dê espaço para que eu possa trabalhar com autonomia em um ambiente colaborativo."' }
         };
 
         function openModal(id) {
@@ -449,21 +751,22 @@
         document.getElementById('modal-container').addEventListener('click', function(e) {
             if(e.target === this) closeModal();
         });
-        
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') closeModal();
         });
 
         function updateSlides(oldIndex, newIndex, direction) {
             if (isAnimating) return;
-            isAnimating = true;
 
             const oldSlide = document.getElementById(`slide-${oldIndex}`);
             const newSlide = document.getElementById(`slide-${newIndex}`);
 
-            // Reseta scroll do novo slide ao topo
-            newSlide.scrollTop = 0;
+            // TRAVA DE SEGURANÇA: Cancela se houver algum erro no HTML
+            if (!oldSlide || !newSlide) return;
 
+            isAnimating = true;
+
+            newSlide.scrollTop = 0;
             oldSlide.classList.remove('active', 'prev-out', 'next-out');
             
             if (direction === 'next') {
@@ -475,7 +778,7 @@
             }
 
             newSlide.style.display = 'flex';
-            void newSlide.offsetWidth; // Reflow
+            void newSlide.offsetWidth; 
             newSlide.style.transform = '';
 
             setTimeout(() => {
@@ -506,9 +809,9 @@
             }
         }
 
+        // Eventos de Teclado
         document.addEventListener('keydown', (e) => {
             if(document.getElementById('modal-container').classList.contains('active')) return;
-            
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 e.preventDefault(); 
                 nextSlide();
@@ -516,6 +819,26 @@
                 prevSlide();
             }
         });
+
+        // BÔNUS: Suporte a Swipe (Arrastar no celular)
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            if(document.getElementById('modal-container').classList.contains('active')) return;
+            // Verifica se arrastou pelo menos 50px de distância na tela
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) prevSlide();
+        }
     </script>
 </body>
 </html>
