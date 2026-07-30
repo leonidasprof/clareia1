@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrevista SGT Djalma - Semana das Profissões</title>
+    <!-- Tailwind CSS para um design moderno 2026 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fontes do Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            transition: background-color 0.4s ease;
+        }
+        
+        /* Ocultar barra de rolagem mas manter funcionalidade */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        /* Animações suaves para os cartões */
+        .card-enter {
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(20px) scale(0.98); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Modo Palco (Fullscreen) */
+        body.modo-palco {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+        body.modo-palco .esconder-no-palco {
+            display: none !important;
+        }
+        body.modo-palco #card-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+            box-shadow: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        body.modo-palco #pergunta-texto {
+            font-size: 4rem; /* Texto gigante para quem tá no fundo da sala ver */
+            line-height: 1.2;
+            font-weight: 800;
+            color: #fff;
+        }
+        body.modo-palco #capitulo-texto {
+            font-size: 1.5rem;
+            color: #60a5fa; /* blue-400 */
+            margin-bottom: 2rem;
+        }
+
+        /* Cores FAB (Azul Aeronáutica) */
+        .bg-fab { background-color: #0b3d91; }
+        .text-fab { color: #0b3d91; }
+        .border-fab { border-color: #0b3d91; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased h-screen flex flex-col" onload="iniciarApp()">
+
+    <header class="bg-fab text-white shadow-lg esconder-no-palco">
+        <div class="max-w-5xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">🎙️ Semana das Profissões</h1>
+                <p class="text-blue-200 text-sm mt-1 font-medium">Mediador: Você &nbsp;•&nbsp; Convidado: 2º SGT Djalma (EEAR / CINDACTA III)</p>
+            </div>
+            <div class="text-right">
+                <div class="text-xs text-blue-200 uppercase tracking-wider mb-1">Tempo Restante</div>
+                <div id="timer" class="text-2xl font-bold font-mono bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm shadow-inner cursor-pointer" onclick="alternarPausaTimer()">90:00</div>
+            </div>
+        </div>
+        <!-- Barra de Progresso Superior -->
+        <div class="w-full bg-blue-900 h-1.5">
+            <div id="progress-bar" class="bg-blue-400 h-1.5 transition-all duration-500 ease-out" style="width: 0%"></div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex flex-col items-center p-6 overflow-y-auto">
+        <div class="max-w-4xl w-full w-full mx-auto relative">
+            
+            <!-- Indicadores -->
+            <div class="flex justify-between items-end mb-4 esconder-no-palco">
+                <div>
+                    <span id="capitulo-texto" class="text-fab font-bold text-lg uppercase tracking-wide">1. O Chamado</span>
+                    <div id="fase-texto" class="text-gray-500 text-sm font-semibold">Fase: Mundo Comum</div>
+                </div>
+                <div id="contador-texto" class="text-gray-400 font-medium text-sm">Cartão 1 de 30</div>
+            </div>
+
+            <!-- Cartão Principal -->
+            <div id="card-container" class="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-12 card-enter min-h-[400px] flex flex-col justify-center relative overflow-hidden">
+                
+                <!-- Pergunta Surpresa Overlay -->
+                <div id="surpresa-overlay" class="absolute inset-0 bg-red-600 text-white z-20 flex-col justify-center items-center p-8 hidden text-center">
+                    <span class="text-4xl mb-4">🎲</span>
+                    <h2 class="text-2xl font-bold uppercase tracking-widest text-red-200 mb-2">Pergunta Surpresa</h2>
+                    <p id="surpresa-texto" class="text-3xl font-bold leading-tight"></p>
+                    <button onclick="fecharSurpresa()" class="mt-8 bg-white text-red-600 px-6 py-2 rounded-full font-bold hover:scale-105 transition-transform">Voltar para o Roteiro</button>
+                </div>
+
+                <h2 id="pergunta-texto" class="text-3xl md:text-4xl font-extrabold text-gray-800 leading-tight mb-8">
+                    <!-- A pergunta entrará aqui -->
+                </h2>
+
+                <div class="flex flex-col gap-4 mt-auto esconder-no-palco">
+                    <!-- Objetivo Box -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                        <span class="text-blue-800 font-bold text-xs uppercase tracking-wider">🎯 Seu Objetivo com essa pergunta</span>
+                        <p id="objetivo-texto" class="text-blue-900 mt-1 text-sm md:text-base font-medium"></p>
+                    </div>
+
+                    <!-- Ponto de Apoio / Extra Box -->
+                    <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                        <span class="text-amber-800 font-bold text-xs uppercase tracking-wider">💡 Carta na Manga (Se ele travar)</span>
+                        <p id="extra-texto" class="text-amber-900 mt-1 text-sm md:text-base font-medium"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Controle -->
+            <div class="flex flex-wrap justify-between items-center gap-4 mt-8 esconder-no-palco">
+                <button onclick="voltar()" class="flex items-center gap-2 px-6 py-3 bg-white text-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md border border-gray-200 hover:bg-gray-50 transition-all active:scale-95">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Anterior
+                </button>
+                
+                <div class="flex gap-3">
+                    <button onclick="sortearSurpresa()" class="flex items-center gap-2 px-5 py-3 bg-rose-100 text-rose-700 font-bold rounded-xl shadow-sm hover:bg-rose-200 transition-all active:scale-95 border border-rose-200">
+                        🎲 Surpresa
+                    </button>
+                    <button onclick="alternarModoPalco()" class="flex items-center gap-2 px-5 py-3 bg-gray-800 text-white font-bold rounded-xl shadow-sm hover:bg-gray-700 transition-all active:scale-95">
+                        🖥️ Modo Palco
+                    </button>
+                </div>
+
+                <button onclick="proximo()" class="flex items-center gap-2 px-6 py-3 bg-fab text-white font-semibold rounded-xl shadow-lg shadow-blue-900/30 hover:bg-blue-800 transition-all active:scale-95">
+                    Próxima
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+
+            <!-- Área de Notas Rápidas -->
+            <div class="mt-8 bg-white p-5 rounded-2xl shadow-sm border border-gray-200 esconder-no-palco">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="text-sm font-bold text-gray-600 uppercase tracking-wide">📝 Bloco de Notas do Mediador</label>
+                    <span class="text-xs text-gray-400">Salvo automaticamente</span>
+                </div>
+                <textarea id="bloco-notas" class="w-full h-24 bg-gray-50 border border-gray-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors text-sm text-gray-700 resize-none" placeholder="Anote ganchos interessantes que o Djalma falar para puxar depois..."></textarea>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // O Roteiro está organizado pela "Jornada do Herói" + Perfil Gen Z
+        const perguntas = [
+            // ATO 1: O Mundo Comum (Conexão com os jovens)
+            {
+                capitulo: "Ato I: O Mundo Comum", fase: "Juventude e Realidade",
+                pergunta: "Sargento, volte no tempo: Quem era o Djalma aos 16 anos? Você já era o cara focado nos estudos ou deixava tudo pra última hora?",
+                objetivo: "Quebrar o gelo. Mostrar para os alunos que as figuras de autoridade também foram adolescentes 'normais' e imperfeitos.",
+                extra: "Você já sabia o que queria da vida ou bateu aquela crise existencial do Ensino Médio?"
+            },
+            {
+                capitulo: "Ato I: O Mundo Comum", fase: "Juventude e Realidade",
+                pergunta: "Hoje os jovens têm o TikTok roubando a atenção a cada segundo. Na sua época, qual era a sua maior distração? O que tirava seu foco?",
+                objetivo: "Criar empatia com a Geração Z através do tema 'distrações e redes sociais'.",
+                extra: "Jogava videogame? Jogava bola na rua? Ficava no MSN/Orkut?"
+            },
+            // ATO 2: O Chamado para a Aventura
+            {
+                capitulo: "Ato II: O Chamado", fase: "A Decisão",
+                pergunta: "Qual foi o 'estalo'? Aquele momento exato em que você pensou: 'Preciso dar um jeito na minha vida e focar em um concurso'?",
+                objetivo: "Descobrir o motivador principal (A Virada de Chave). Ajudar jovens que estão esperando esse momento.",
+                extra: "Foi alguma dificuldade financeira? Alguém que te inspirou? Medo do futuro?"
+            },
+            {
+                capitulo: "Ato II: O Chamado", fase: "O Concurso da EEAR",
+                pergunta: "Muita gente nem sabe que pode entrar na Força Aérea sem ser piloto. O que exatamente é a EEAR e como um jovem de 16/17 anos faz para entrar?",
+                objetivo: "Explicar os requisitos técnicos de forma didática (Idade, matérias, fases da prova).",
+                extra: "Precisa ser um gênio em matemática? Como foi a sua rotina de estudo?"
+            },
+            {
+                capitulo: "Ato II: O Chamado", fase: "Lidando com o Fracasso",
+                pergunta: "Nessa geração, a frustração bate forte quando não passamos de primeira. Você passou de primeira? Como lidou com o medo de dar errado?",
+                objetivo: "Falar sobre resiliência. Mostrar que reprovar faz parte do processo.",
+                extra: "O que você falaria pra quem fez o Enem ou EEAR agora, reprovou e quer desistir de tudo?"
+            },
+            // ATO 3: A Travessia / Provações
+            {
+                capitulo: "Ato III: A Travessia", fase: "A Formação Militar",
+                pergunta: "Chegou o primeiro dia na EEAR. O cabelo raspou, a farda chegou. Qual foi o maior choque de realidade entre o Djalma civil e o Djalma aluno militar?",
+                objetivo: "Gerar curiosidade e entreter com histórias de perrengue e disciplina.",
+                extra: "É igual Tropa de Elite? A disciplina militar doeu muito no começo?"
+            },
+            {
+                capitulo: "Ato III: A Travessia", fase: "Lidando com a mente",
+                pergunta: "Você ficava longe da família, com regras rígidas. Em algum momento, deitado no alojamento, você chorou ou pensou em pedir pra sair?",
+                objetivo: "Humanizar o militarismo. Trazer a saúde mental e o apoio emocional para a roda.",
+                extra: "Quem foi seu maior porto seguro nessa época de internato?"
+            },
+            // ATO 4: A Especialidade e a Recompensa
+            {
+                capitulo: "Ato IV: A Especialidade", fase: "Profissional",
+                pergunta: "Você se formou em 'Informações Aeronáuticas' (AIS). Traduz para a galera: se você errar no seu trabalho hoje, o que acontece com um avião?",
+                objetivo: "Mostrar a gravidade e o nível de responsabilidade da profissão dele.",
+                extra: "Como você analisa um plano de voo? O piloto depende diretamente de você para decolar?"
+            },
+            {
+                capitulo: "Ato IV: A Especialidade", fase: "Vida Nômade",
+                pergunta: "Você já serviu em 3 cidades diferentes. Mudar tanto assim é a melhor parte ou a pior parte de ser militar? Como ficam os amigos e a família?",
+                objetivo: "Explorar a aventura vs sacrifício da carreira militar.",
+                extra: "Qual cidade te deu a melhor história até hoje?"
+            },
+            // ATO 5: O Mestre de Dois Mundos (O Presente)
+            {
+                capitulo: "Ato V: O Presente", fase: "CINDACTA III",
+                pergunta: "Hoje você está no CINDACTA III em Recife, controlando/analisando os céus do Norte e Nordeste. Como é sua escala de trabalho?",
+                objetivo: "Explicar como funciona a rotina (Turnos, madrugadas, finais de semana) para eles entenderem a prática.",
+                extra: "Você trabalha de madrugada? Como o corpo aguenta?"
+            },
+            {
+                capitulo: "Ato V: O Presente", fase: "Controle e Ansiedade",
+                pergunta: "A nossa geração é conhecida por ser muito ansiosa. Seu trabalho é pura tensão, lidando com vidas no ar. Como você 'desliga' o cérebro quando vai pra casa?",
+                objetivo: "Trazer uma lição prática sobre manejo de stress e separação entre trabalho e vida pessoal.",
+                extra: "Você tem algum hobby que te salva do estresse?"
+            },
+            // ATO 6: O Elixir (Independência e Conselhos)
+            {
+                capitulo: "Ato VI: O Elixir", fase: "Dinheiro e Maturidade",
+                pergunta: "Vamos falar de dinheiro. Lembra do seu primeiro salário na Força Aérea? O que foi a primeira coisa que você comprou e como a independência financeira mudou sua cabeça?",
+                objetivo: "Motivar os jovens através da liberdade financeira. Falar sobre educação financeira básica.",
+                extra: "Fez alguma besteira com o dinheiro no começo?"
+            },
+            {
+                capitulo: "Ato VI: O Elixir", fase: "Visão sobre os Jovens",
+                pergunta: "Hoje a internet vende a ilusão de 'ficar rico rápido e fácil'. Sendo um cara que estudou, ralou e construiu carreira de 9 anos, o que você acha dessa cultura do atalho?",
+                objetivo: "Quebrar a ilusão do dinheiro fácil. Reforçar o valor do processo e do estudo.",
+                extra: "Disciplina realmente vence o talento natural?"
+            },
+            // ATO 7: Bate-Bola e Encerramento
+            {
+                capitulo: "Ato VII: Encerramento", fase: "Mitos e Verdades",
+                pergunta: "Mito ou Verdade: Na EEAR é proibido usar celular, tem trote agressivo e todo mundo precisa ser um atirador de elite.",
+                objetivo: "Fazer uma dinâmica rápida e divertida de encerramento para quebrar preconceitos.",
+                extra: "Deixe ele explicar o que é lenda urbana e o que é real."
+            },
+            {
+                capitulo: "Ato VII: Encerramento", fase: "Bate-Bola Rápido",
+                pergunta: "Para finalizar, um Bate-Bola: Uma palavra que define o sucesso; O maior erro que um jovem pode cometer; Um conselho final para essa plateia.",
+                objetivo: "Fechamento de impacto. Deixar uma frase marcante para os jovens aprendizes levarem para a vida.",
+                extra: "Agradeça, peça palmas e entregue a palavra final para ele."
+            }
+        ];
+
+        let estado = {
+            indiceAtual: 0,
+            tempoSegundos: 90 * 60, // 90 Minutos
+            timerInterval: null,
+            timerRodando: false,
+            modoPalco: false
+        };
+
+        function iniciarApp() {
+            carregarNotas();
+            atualizarInterface();
+            // Iniciar o timer automaticamente pausado. Para iniciar clica nele.
+        }
+
+        function atualizarInterface() {
+            const cardUI = document.getElementById('card-container');
+            const p = perguntas[estado.indiceAtual];
+            
+            // Força reflow para reativar animação
+            cardUI.classList.remove('card-enter');
+            void cardUI.offsetWidth;
+            cardUI.classList.add('card-enter');
+
+            // Atualiza Textos
+            document.getElementById('capitulo-texto').innerText = p.capitulo;
+            document.getElementById('fase-texto').innerText = `Fase da Entrevista: ${p.fase}`;
+            document.getElementById('pergunta-texto').innerText = p.pergunta;
+            document.getElementById('objetivo-texto').innerText = p.objetivo;
+            document.getElementById('extra-texto').innerText = p.extra;
+            
+            // Atualiza Progresso
+            const progressoAtual = ((estado.indiceAtual + 1) / perguntas.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressoAtual}%`;
+            document.getElementById('contador-texto').innerText = `Pergunta ${estado.indiceAtual + 1} de ${perguntas.length}`;
+
+            // Salva posição (opcional, para se atualizar a página não perder a pergunta)
+            localStorage.setItem('entrevista_indice', estado.indiceAtual);
+        }
+
+        function proximo() {
+            if (estado.indiceAtual < perguntas.length - 1) {
+                estado.indiceAtual++;
+                atualizarInterface();
+            }
+        }
+
+        function voltar() {
+            if (estado.indiceAtual > 0) {
+                estado.indiceAtual--;
+                atualizarInterface();
+            }
+        }
+
+        function formatarTempo(segs) {
+            let m = Math.floor(segs / 60);
+            let s = segs % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function alternarPausaTimer() {
+            const timerEl = document.getElementById('timer');
+            if (estado.timerRodando) {
+                clearInterval(estado.timerInterval);
+                estado.timerRodando = false;
+                timerEl.classList.remove('text-green-300');
+                timerEl.classList.add('text-yellow-300');
+            } else {
+                timerEl.classList.remove('text-yellow-300');
+                timerEl.classList.add('text-green-300');
+                estado.timerRodando = true;
+                estado.timerInterval = setInterval(() => {
+                    if(estado.tempoSegundos > 0) {
+                        estado.tempoSegundos--;
+                        timerEl.innerText = formatarTempo(estado.tempoSegundos);
+                        if(estado.tempoSegundos < 300) { // Faltando 5 min
+                            timerEl.classList.add('text-red-400', 'animate-pulse');
+                        }
+                    } else {
+                        clearInterval(estado.timerInterval);
+                    }
+                }, 1000);
+            }
+        }
+
+        function alternarModoPalco() {
+            estado.modoPalco = !estado.modoPalco;
+            const body = document.body;
+            if (estado.modoPalco) {
+                body.classList.add('modo-palco');
+                // Sair do modo palco ao dar double click em qualquer lugar
+                body.addEventListener('dblclick', sairModoPalco);
+            } else {
+                body.classList.remove('modo-palco');
+                body.removeEventListener('dblclick', sairModoPalco);
+            }
+        }
+
+        function sairModoPalco() {
+            if(estado.modoPalco) alternarModoPalco();
+        }
+
+        function sortearSurpresa() {
+            const caixaSurpresa = document.getElementById('surpresa-overlay');
+            const textoSurpresa = document.getElementById('surpresa-texto');
+            
+            // Perguntas surpresas fora do roteiro padrão voltadas pro lado descontraído
+            const surpresas = [
+                "Qual a comida do refeitório (rancho) da EEAR que você mais sentia falta de casa?",
+                "Sargento, mostra pra gente qual é a voz que você usa no rádio para falar com o piloto em inglês!",
+                "Qual foi a desculpa mais criativa que você já ouviu de alguém que chegou atrasado no quartel?",
+                "Se você não tivesse passado na Aeronáutica, o que você estaria fazendo hoje?",
+                "Fale a verdade: Quem pilotava melhor no filme Top Gun: Maverick ou Rooster?"
+            ];
+
+            const s = surpresas[Math.floor(Math.random() * surpresas.length)];
+            textoSurpresa.innerText = s;
+            caixaSurpresa.classList.remove('hidden');
+            caixaSurpresa.classList.add('flex');
+        }
+
+        function fecharSurpresa() {
+            const caixaSurpresa = document.getElementById('surpresa-overlay');
+            caixaSurpresa.classList.add('hidden');
+            caixaSurpresa.classList.remove('flex');
+        }
+
+        const textarea = document.getElementById('bloco-notas');
+        textarea.addEventListener('input', () => {
+            localStorage.setItem('entrevista_notas', textarea.value);
+        });
+
+        function carregarNotas() {
+            const notas = localStorage.getItem('entrevista_notas');
+            if (notas) textarea.value = notas;
+            
+            // Tenta recuperar índice anterior caso tenha fechado sem querer
+            const idx = localStorage.getItem('entrevista_indice');
+            if(idx !== null && idx < perguntas.length) {
+                estado.indiceAtual = parseInt(idx);
+            }
+        }
+
+        // Suporte a teclado para passar cartões (Setas)
+        document.addEventListener('keydown', (e) => {
+            // Evita mudar cartão se estiver digitando no bloco de notas
+            if (document.activeElement.tagName === 'TEXTAREA') return;
+
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                proximo();
+            } else if (e.key === 'ArrowLeft') {
+                voltar();
+            } else if (e.key === 'Escape') {
+                sairModoPalco();
+            }
+        });
+
+    </script>
+</body>
+</html>
