@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merda - Folha de Pagamento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animações suaves para as transições de estado das células */
+        .cell-transition {
+            transition: all 0.3s ease;
+        }
+        .hide-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .hide-scroll::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen p-4 md:p-8 font-sans text-slate-800">
+
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Cabeçalho da Aula -->
+        <header class="bg-white rounded-xl shadow-sm p-6 mb-6 border-l-4 border-blue-600 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-900 mb-2">Matemática Aplicada: Conceitos Básicos na Prática</h1>
+                <p class="text-slate-600 text-lg">
+                    Turma de Administração - Estudo de Caso: <strong>Fechamento de Folha de Pagamento</strong>
+                </p>
+            </div>
+            <img src="https://images.seeklogo.com/logo-png/34/1/colegio-salesiano-dom-bosco-salvador-logo-png_seeklogo-344437.png" alt="Logo Colégio Salesiano Dom Bosco" class="h-24 md:h-32 object-contain">
+        </header>
+
+        <!-- Regras de Negócio (Instruções para os alunos) -->
+        <section class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                📋 Regras da Folha (O que precisamos calcular?)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <strong class="text-blue-700 block mb-1">1. Salário Proporcional</strong>
+                    (Salário Base ÷ 30 dias) × Dias Trabalhados
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <strong class="text-blue-700 block mb-1">2. Bônus de Produtividade</strong>
+                    5% sobre o Salário Proporcional
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <strong class="text-blue-700 block mb-1">3. Salário Bruto</strong>
+                    Sal. Proporcional + Bônus + Adicional Noturno
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <strong class="text-red-600 block mb-1">4. Desconto INSS</strong>
+                    8% sobre o Salário Bruto
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <strong class="text-red-600 block mb-1">5. Vale Transporte (VT)</strong>
+                    6% sobre o Salário Base original
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                    <strong class="text-red-600 block mb-1">6. Total de Descontos & Líquido</strong>
+                    Desc: INSS + VT <br> 
+                    <strong class="text-green-600">Líquido: Salário Bruto - Descontos</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Planilha Interativa -->
+        <main class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+            <div class="p-4 bg-slate-800 text-white flex justify-between items-center">
+                <h2 class="text-lg font-semibold flex items-center gap-2">
+                    📊 Planilha de Cálculos
+                </h2>
+                <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">
+                    Clique nas células amarelas para ver a fórmula.
+                </span>
+            </div>
+            
+            <div class="overflow-x-auto hide-scroll">
+                <table class="w-full text-sm text-left whitespace-nowrap">
+                    <thead class="text-xs text-slate-600 uppercase bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="px-4 py-3">Colaborador</th>
+                            <th class="px-4 py-3">Salário Base</th>
+                            <th class="px-4 py-3 text-center">Dias Trab.</th>
+                            <th class="px-4 py-3 bg-blue-50/50">Sal. Proporcional</th>
+                            <th class="px-4 py-3 bg-blue-50/50">Bônus (5%)</th>
+                            <th class="px-4 py-3">Adic. Noturno</th>
+                            <th class="px-4 py-3 bg-slate-100 font-bold">Salário Bruto</th>
+                            <th class="px-4 py-3 bg-red-50/50">INSS (8%)</th>
+                            <th class="px-4 py-3 bg-red-50/50">VT (6%)</th>
+                            <th class="px-4 py-3 bg-red-100/50 font-bold">Total Descontos</th>
+                            <th class="px-4 py-3 bg-green-50 text-green-800 font-bold text-base">Salário Líquido</th>
+                        </tr>
+                    </thead>
+                    <tbody id="payroll-body" class="divide-y divide-slate-200">
+                        <!-- O conteúdo será gerado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- Controles -->
+        <div class="flex justify-center mb-12">
+            <button id="btn-reveal" onclick="revealAll()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2 text-lg">
+                ✅ Revelar Todos os Resultados
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Dados dos funcionários (Pode ser alterado para criar novas aulas)
+        const employees = [
+            { id: 1, name: "Ana Silva", role: "Assistente", baseSalary: 1500, daysWorked: 30, nightBonus: 0 },
+            { id: 2, name: "Carlos Souza", role: "Auxiliar", baseSalary: 2100, daysWorked: 15, nightBonus: 150 },
+            { id: 3, name: "Beatriz Lima", role: "Analista", baseSalary: 3000, daysWorked: 20, nightBonus: 0 }
+        ];
+
+        // Estado global para controlar se tudo foi revelado
+        let isAllRevealed = false;
+        // Estado das células clicadas individualmente
+        let clickedCells = {}; 
+
+        // Função utilitária para formatar moeda
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        };
+
+        // Função para calcular todos os dados de um funcionário
+        const calculatePayroll = (emp) => {
+            const proportional = (emp.baseSalary / 30) * emp.daysWorked;
+            const bonus = proportional * 0.05;
+            const gross = proportional + bonus + emp.nightBonus;
+            
+            const inss = gross * 0.08;
+            const vt = emp.baseSalary * 0.06;
+            const totalDiscounts = inss + vt;
+            
+            const net = gross - totalDiscounts;
+
+            // Retornamos os valores calculados e as strings das fórmulas matemáticas para exibição
+            return {
+                proportional: {
+                    value: proportional,
+                    formula: `(${formatCurrency(emp.baseSalary)} ÷ 30) × ${emp.daysWorked}`
+                },
+                bonus: {
+                    value: bonus,
+                    formula: `${formatCurrency(proportional)} × 0,05`
+                },
+                gross: {
+                    value: gross,
+                    formula: `${formatCurrency(proportional)} + ${formatCurrency(bonus)} + ${formatCurrency(emp.nightBonus)}`
+                },
+                inss: {
+                    value: inss,
+                    formula: `${formatCurrency(gross)} × 0,08`
+                },
+                vt: {
+                    value: vt,
+                    formula: `${formatCurrency(emp.baseSalary)} × 0,06`
+                },
+                totalDiscounts: {
+                    value: totalDiscounts,
+                    formula: `${formatCurrency(inss)} + ${formatCurrency(vt)}`
+                },
+                net: {
+                    value: net,
+                    formula: `${formatCurrency(gross)} - ${formatCurrency(totalDiscounts)}`
+                }
+            };
+        };
+
+        // Função para renderizar a tabela
+        const renderTable = () => {
+            const tbody = document.getElementById('payroll-body');
+            tbody.innerHTML = '';
+
+            employees.forEach((emp, index) => {
+                const calc = calculatePayroll(emp);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors";
+
+                // Colunas fixas
+                let html = `
+                    <td class="px-4 py-4">
+                        <div class="font-semibold text-slate-800">${emp.name}</div>
+                        <div class="text-xs text-slate-500">${emp.role}</div>
+                    </td>
+                    <td class="px-4 py-4 text-slate-700">${formatCurrency(emp.baseSalary)}</td>
+                    <td class="px-4 py-4 text-center font-medium">${emp.daysWorked}</td>
+                `;
+
+                // Colunas interativas (Calculadas)
+                const interactiveColumns = [
+                    { id: 'proportional', data: calc.proportional, type: 'normal' },
+                    { id: 'bonus', data: calc.bonus, type: 'normal' },
+                    { id: 'nightBonus', staticValue: formatCurrency(emp.nightBonus) }, // Fixa
+                    { id: 'gross', data: calc.gross, type: 'highlight' },
+                    { id: 'inss', data: calc.inss, type: 'discount' },
+                    { id: 'vt', data: calc.vt, type: 'discount' },
+                    { id: 'totalDiscounts', data: calc.totalDiscounts, type: 'discount-highlight' },
+                    { id: 'net', data: calc.net, type: 'net' }
+                ];
+
+                interactiveColumns.forEach(col => {
+                    if (col.staticValue !== undefined) {
+                        html += `<td class="px-4 py-4 text-slate-700">${col.staticValue}</td>`;
+                    } else {
+                        const cellKey = `emp${index}-${col.id}`;
+                        const isClicked = clickedCells[cellKey];
+                        
+                        // Determinar o conteúdo baseado no estado (0: Escondido, 1: Fórmula, 2: Resultado Total)
+                        let content = '';
+                        let bgClass = 'bg-yellow-200 hover:bg-yellow-300 cursor-pointer text-yellow-800'; // Default hidden
+                        let textClass = 'text-center font-bold text-lg';
+
+                        if (isAllRevealed) {
+                            // Estado 2: Mostrar Resultado e Fórmula
+                            bgClass = col.type.includes('discount') ? 'bg-red-100' : 'bg-green-100';
+                            if (col.type === 'net') bgClass = 'bg-green-200 border-l-2 border-green-400';
+                            
+                            content = `
+                                <div class="font-bold text-slate-900">${formatCurrency(col.data.value)}</div>
+                                <div class="text-xs text-slate-600 mt-1">${col.data.formula}</div>
+                            `;
+                            textClass = 'text-left';
+                        } else if (isClicked) {
+                            // Estado 1: Mostrar apenas a fórmula matemática
+                            bgClass = 'bg-yellow-100 cursor-pointer border border-yellow-300';
+                            content = `<span class="text-sm font-mono text-slate-700">${col.data.formula}</span>`;
+                            textClass = 'text-center';
+                        } else {
+                            // Estado 0: Interrogação
+                            content = '?';
+                        }
+
+                        html += `
+                            <td class="px-4 py-4 cell-transition ${bgClass}" 
+                                onclick="handleCellClick('${cellKey}')">
+                                <div class="${textClass}">${content}</div>
+                            </td>
+                        `;
+                    }
+                });
+
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+        };
+
+        // Manipulador de clique na célula individual
+        const handleCellClick = (cellKey) => {
+            if (isAllRevealed) return; // Se já revelou tudo, ignorar cliques
+            
+            // Marca a célula como clicada (para mostrar a fórmula) e re-renderiza
+            clickedCells[cellKey] = !clickedCells[cellKey]; // Toggle
+            renderTable();
+        };
+
+        // Manipulador do Botão Final (Agora funciona como Liga/Desliga)
+        const revealAll = () => {
+            isAllRevealed = !isAllRevealed;
+            const btn = document.getElementById('btn-reveal');
+            
+            if (isAllRevealed) {
+                // Estado Revelado
+                btn.innerHTML = '⏪ Ocultar Resultados (Voltar)';
+                btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                btn.classList.add('bg-orange-500', 'hover:bg-orange-600');
+            } else {
+                // Estado Inicial (Escondido)
+                clickedCells = {}; // Reseta as células clicadas individualmente para voltar as interrogações
+                btn.innerHTML = '✅ Revelar Todos os Resultados';
+                btn.classList.remove('bg-orange-500', 'hover:bg-orange-600');
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+            }
+            
+            renderTable();
+        };
+
+        // Inicializar a tabela ao carregar a página
+        window.onload = () => {
+            renderTable();
+        };
+    </script>
+</body>
+</html>
