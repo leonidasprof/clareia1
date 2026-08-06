@@ -8,12 +8,12 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Playfair Display (Elegância/Títulos) e Poppins (Modernidade/Textos) -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Feather Icons (Mantidos apenas para inputs e interface, removidos dos procedimentos) -->
+    <!-- Feather Icons -->
     <script src="https://unpkg.com/feather-icons"></script>
 
     <script>
@@ -26,12 +26,12 @@
                     },
                     colors: {
                         brand: {
-                            orange: '#f2a23a', // Laranja da Logo
-                            green: '#b8bb58',  // Verde Oliva da Logo
-                            dark: '#4d4038',   // Texto Escuro
-                            muted: '#85766c',  // Texto Secundário
-                            bg: '#fffdf9',     // Fundo creme claro
-                            surface: '#ffffff' // Fundo dos cartões
+                            orange: '#f2a23a',
+                            green: '#b8bb58',
+                            dark: '#4d4038',
+                            muted: '#85766c',
+                            bg: '#fffdf9',
+                            surface: '#ffffff'
                         }
                     },
                     boxShadow: {
@@ -60,19 +60,16 @@
 
     <style>
         body {
-            background-color: #f7f3ed; /* Fundo cinza/bege fora do app no PC */
+            background-color: #f7f3ed;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Oculta scrollbar horizontal das categorias */
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Animações de clique */
         .btn-press { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-press:active { transform: scale(0.95); }
         
-        /* Estilo dos inputs */
         .input-modern {
             background-color: #fcfaf8;
             border: 1.5px solid #eae1d8;
@@ -80,28 +77,45 @@
         }
         .input-modern:focus {
             background-color: #ffffff;
-            border-color: theme('colors.brand.orange');
+            border-color: #f2a23a;
             box-shadow: 0 0 0 4px rgba(242, 162, 58, 0.1);
             outline: none;
         }
 
-        /* Mix Blend Mode para remover fundo branco da logo */
         .logo-blend {
             mix-blend-mode: multiply;
         }
 
-        /* Modais */
         .modal-overlay { animation: fadeIn 0.3s ease-out forwards; }
         .modal-content { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .float-animation {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        .pulse-shadow {
+            animation: pulseShadow 2s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulseShadow {
+            0% { box-shadow: 0 0 0 0 rgba(242, 162, 58, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(242, 162, 58, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(242, 162, 58, 0); }
+        }
     </style>
 </head>
 
 <body class="text-brand-dark antialiased flex justify-center min-h-screen md:p-6">
 
-    <!-- WRAPPER PRINCIPAL: Agora rola naturalmente. Sem overflow-hidden limitante. -->
     <main class="w-full max-w-md bg-brand-bg md:rounded-[2.5rem] md:shadow-2xl relative min-h-screen flex flex-col pb-12">
         
-        <!-- Fundo Orgânico do Topo (Inspirado na Ideia 2) -->
+        <!-- Fundo Orgânico do Topo -->
         <div class="absolute top-0 left-0 w-full h-[320px] overflow-hidden md:rounded-t-[2.5rem] z-0 pointer-events-none">
             <svg viewBox="0 0 400 400" class="absolute -top-10 -left-10 w-[150%] h-[150%] opacity-40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill="#f2a23a" d="M38.1,-60.6C51,-52.3,64,-45.5,73.1,-34.5C82.2,-23.5,87.4,-8.2,85.2,6C83,20.2,73.5,33.3,62.3,43.4C51.1,53.5,38.3,60.6,24.4,66C10.5,71.4,-4.5,75.1,-20.1,73.2C-35.7,71.3,-51.9,63.8,-63.3,51.8C-74.7,39.8,-81.3,23.3,-82.9,7.1C-84.5,-9.1,-81.1,-25,-71.9,-36.5C-62.7,-48,-47.7,-55.1,-33.7,-63.1C-19.7,-71.1,-6.7,-80,4.2,-86.3C15.1,-92.6,25.2,-68.9,38.1,-60.6Z" transform="translate(150 150) scale(1.2)" />
@@ -110,32 +124,26 @@
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-brand-bg"></div>
         </div>
 
-        <!-- CABEÇALHO -->
         <header class="relative z-10 pt-12 pb-6 px-6 flex flex-col items-center text-center animate-slide-up">
             <div class="w-36 h-36 mb-4 flex items-center justify-center relative group">
-                <!-- Imagem da logo com blend mode para remover fundo branco -->
                 <img src="studio_ana.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="Logo Studio Ana Alcântara" class="w-full h-full object-contain logo-blend drop-shadow-lg relative z-10">
-                <!-- Fallback caso a imagem falhe -->
                 <div class="hidden relative z-10 w-full h-full rounded-full bg-white text-brand-orange font-serif text-4xl items-center justify-center shadow-md">SA</div>
             </div>
             <h1 class="font-serif text-3xl font-bold text-brand-dark mb-1 tracking-tight">Agendamento</h1>
             <p class="text-sm text-brand-muted font-medium">Seu bem-estar, nossa prioridade.</p>
         </header>
 
-        <!-- CONTEÚDO PRINCIPAL (Formulário) -->
         <div class="relative z-20 px-6 flex-1 flex flex-col animate-slide-up" style="animation-delay: 0.1s;">
             <form id="agendamento-form" class="flex flex-col">
                 
-                <!-- Categorias / Procedimentos (Imagens Reais) -->
+                <!-- Galeria de Procedimentos em Destaque (Com efeitos CSS avanzados) -->
                 <div class="mb-8 -mx-6">
-                    <h2 class="font-serif text-xl font-semibold text-brand-dark mb-4 px-6">Escolha o Tratamento</h2>
-                    <div class="flex overflow-x-auto hide-scroll gap-4 pb-4 px-6" id="categories-container">
-                        <!-- Gerado via JS -->
+                    <div class="flex overflow-x-auto hide-scroll gap-4 pb-4 px-6 pt-2" id="procedures-gallery">
+                        <!-- Gerado dinamicamente via JS com as 4 imagens solicitadas -->
                     </div>
-                    <input type="hidden" id="procedimento" required>
                 </div>
                 
-                <!-- Dados Pessoais -->
+                <!-- Dados Pessoais & Procedimento (Texto Livre) -->
                 <div class="bg-brand-surface p-6 rounded-[2rem] shadow-card mb-6 border border-white space-y-5">
                     <div class="relative group">
                         <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">Seu Nome</label>
@@ -145,6 +153,7 @@
                                    class="w-full pl-12 pr-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark placeholder-gray-400">
                         </div>
                     </div>
+                    
                     <div class="relative group">
                         <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">WhatsApp</label>
                         <div class="relative">
@@ -153,9 +162,17 @@
                                    class="w-full pl-12 pr-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark placeholder-gray-400">
                         </div>
                     </div>
+
+                    <div class="relative group">
+                        <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">O que você deseja fazer? (Procedimento)</label>
+                        <div class="relative">
+                            <i data-feather="sparkles" class="w-5 h-5 text-brand-orange absolute left-4 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="procedimento" required placeholder="Ex: Botox, Drenagem, Limpeza..." 
+                                   class="w-full pl-12 pr-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark placeholder-gray-400">
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Data e Hora -->
                 <div class="bg-brand-surface p-6 rounded-[2rem] shadow-card mb-6 border border-white space-y-5">
                     <div class="relative group">
                         <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">Data da Consulta</label>
@@ -187,7 +204,6 @@
                     <i data-feather="arrow-right" class="w-5 h-5"></i>
                 </button>
 
-                <!-- Meus Agendamentos -->
                 <div class="mt-12 pt-8 border-t border-gray-200/60">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="font-serif text-xl font-semibold text-brand-dark">Meus Agendamentos</h2>
@@ -234,17 +250,15 @@
         feather.replace();
 
         const WHATSAPP_NUMBER = "5581998907367";
-        const HORARIOS = ["08:00","09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"];
+        const HORARIOS = ["08:00","09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00"];
         const FERIADOS = ["01-01","04-21","05-01","09-07","10-12","11-02","11-15","11-20","12-25"];
         
-        // Procedimentos com Imagens Reais (Unsplash) para visual premium
+        // Imagens locais meramente ilustrativas conforme solicitado
         const PROCEDIMENTOS = [
-            { id: 'fisioterapia', nome: 'Fisioterapia', img: 'https://images.unsplash.com/photo-1576014131795-d440191a8e8b?auto=format&fit=crop&w=150&q=80' },
-            { id: 'limpeza', nome: 'Limpeza de Pele', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=150&q=80' },
-            { id: 'botox', nome: 'Botox', img: 'https://images.unsplash.com/photo-1620756236301-7053eb238051?auto=format&fit=crop&w=150&q=80' },
-            { id: 'preenchimento', nome: 'Preenchimento', img: 'https://images.unsplash.com/photo-1619551139417-640108db2823?auto=format&fit=crop&w=150&q=80' },
-            { id: 'ultraformer', nome: 'Ultraformer', img: 'https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&w=150&q=80' },
-            { id: 'outro', nome: 'Outros', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=150&q=80' }
+            { id: 'drenagem', nome: 'Drenagem', img: 'drenagem.jpg' },
+            { id: 'botox', nome: 'Botox', img: 'botox.jpg' },
+            { id: 'pdo', nome: 'Fios PDO', img: 'PDO.jpg' },
+            { id: 'limpeza', nome: 'Limpeza de Pele', img: 'limpeza_pele.jpg' }
         ];
 
         let selecionadoHora = "";
@@ -255,7 +269,7 @@
             timesGrid: document.getElementById("times-grid"),
             form: document.getElementById("agendamento-form"),
             procedimento: document.getElementById("procedimento"),
-            catContainer: document.getElementById("categories-container"),
+            procGallery: document.getElementById("procedures-gallery"),
             lista: document.getElementById("lista-agendamentos"),
             btnLimpar: document.getElementById("btn-limpar"),
             telefone: document.getElementById("telefone")
@@ -310,43 +324,23 @@
             const d = new Date(), off = d.getTimezoneOffset();
             return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
         };
+        
+        // Agora valida apenas os feriados fixos. Dias da semana (domingo/sabado) são validados no renderHorarios
         const ehFeriado = (data) => {
-            const d = new Date(data + "T12:00:00");
-            return d.getDay() === 0 || FERIADOS.includes(data.slice(5));
+            return FERIADOS.includes(data.slice(5));
         };
+        
         const formatarDataBR = (data) => data.split("-").reverse().join("/");
 
-        function renderCategorias() {
-            DOM.catContainer.innerHTML = PROCEDIMENTOS.map(p => `
-                <div class="flex-shrink-0 flex flex-col items-center gap-2 cursor-pointer group" onclick="selecionarCategoria('${p.nome}', this)">
-                    <div class="cat-img-wrapper w-20 h-20 rounded-full p-[3px] border-2 border-transparent transition-all duration-300 shadow-sm relative">
+        function renderGaleriaProcedimentos() {
+            DOM.procGallery.innerHTML = PROCEDIMENTOS.map((p, index) => `
+                <div class="flex flex-col items-center justify-start flex-shrink-0 w-24 gap-3 pointer-events-none float-animation" style="animation-delay: ${index * 0.2}s">
+                    <div class="w-[76px] h-[76px] rounded-full pulse-shadow border-2 border-brand-orange/30 overflow-hidden bg-brand-surface p-0.5">
                         <img src="${p.img}" alt="${p.nome}" class="w-full h-full object-cover rounded-full">
-                        <div class="cat-overlay absolute inset-0 bg-brand-orange/0 rounded-full transition-colors duration-300"></div>
-                        <div class="cat-check absolute bottom-0 right-0 bg-brand-orange text-white rounded-full p-1 opacity-0 transform scale-50 transition-all duration-300 z-10 shadow-md">
-                            <i data-feather="check" class="w-3 h-3"></i>
-                        </div>
                     </div>
-                    <span class="text-xs font-semibold text-brand-muted text-center max-w-[80px] leading-tight transition-colors">${p.nome}</span>
+                    <span class="text-brand-dark font-sans font-medium text-xs text-center leading-tight px-1">${p.nome}</span>
                 </div>
             `).join('');
-            
-            // Adiciona estilos dinâmicos para o item ativo
-            const style = document.createElement('style');
-            style.innerHTML = `
-                .group.active .cat-img-wrapper { border-color: theme('colors.brand.orange'); box-shadow: 0 4px 15px rgba(242, 162, 58, 0.3); }
-                .group.active .cat-overlay { background-color: rgba(242, 162, 58, 0.2); }
-                .group.active .cat-check { opacity: 1; transform: scale(1); }
-                .group.active span { color: theme('colors.brand.orange'); }
-            `;
-            document.head.appendChild(style);
-            feather.replace();
-        }
-
-        function selecionarCategoria(nome, elemento) {
-            DOM.procedimento.value = nome;
-            const groups = document.querySelectorAll('#categories-container .group');
-            groups.forEach(el => el.classList.remove('active'));
-            elemento.classList.add('active');
         }
 
         function renderHorarios() {
@@ -362,15 +356,36 @@
                 DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-red-500 font-medium text-center py-5 bg-red-50 rounded-2xl'>Escolha uma data futura</p>";
                 return;
             }
+
+            const dataObj = new Date(data + "T12:00:00");
+            const diaSemana = dataObj.getDay(); // 0 = Domingo, 6 = Sábado
+
+            // Bloqueio total aos Domingos
+            if (diaSemana === 0) {
+                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-brand-orange font-medium text-center py-5 bg-orange-50 rounded-2xl'>Fechado (Domingos)</p>";
+                return;
+            }
+            // Bloqueio em Feriados
             if (ehFeriado(data)) {
-                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-brand-orange font-medium text-center py-5 bg-orange-50 rounded-2xl'>Fechado (Domingo/Feriado)</p>";
+                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-brand-orange font-medium text-center py-5 bg-orange-50 rounded-2xl'>Fechado (Feriado)</p>";
                 return;
             }
             
             const agora = new Date();
             const ocupados = obterAgendamentos().filter(x => x.data === data).map(x => x.hora);
             
-            HORARIOS.forEach(h => {
+            let horariosDoDia = HORARIOS;
+            let avisoSabado = "";
+
+            // Regra do Sábado (Até as 13h) e Alerta Visual
+            if (diaSemana === 6) {
+                horariosDoDia = HORARIOS.filter(h => parseInt(h.split(':')[0]) <= 13);
+                avisoSabado = "<p class='col-span-3 text-[11px] text-brand-orange font-semibold text-center mb-1 bg-orange-50/70 py-2.5 px-2 rounded-xl border border-brand-orange/20 uppercase tracking-wide flex items-center justify-center gap-1.5'><i data-feather=\"info\" class=\"w-3.5 h-3.5\"></i> Importante: Aos sábados funcionamos até as 13h.</p>";
+            }
+
+            DOM.timesGrid.innerHTML = avisoSabado;
+            
+            horariosDoDia.forEach(h => {
                 const btn = document.createElement("button");
                 btn.type = "button";
                 btn.textContent = h;
@@ -404,8 +419,10 @@
             });
 
             if (!DOM.timesGrid.querySelector("button:not(:disabled)")) {
-                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-white font-medium text-center py-5 bg-brand-orange rounded-2xl shadow-md'>Sem horários hoje</p>";
+                DOM.timesGrid.innerHTML += "<p class='col-span-3 text-sm text-white font-medium text-center py-5 bg-brand-orange rounded-2xl shadow-md mt-2'>Sem horários disponíveis para esta data</p>";
             }
+            
+            feather.replace(); // Recarrega os ícones de notificação, se houver
         }
 
         function renderListaAgendamentos() {
@@ -467,11 +484,11 @@
             
             const nome = document.getElementById("nome").value.trim();
             const telefone = DOM.telefone.value.trim();
-            const procedimento = DOM.procedimento.value;
+            const procedimento = DOM.procedimento.value.trim();
             const data = DOM.data.value;
             
-            if (!procedimento) return mostrarAlerta("Faltou algo", "Selecione o <b>Tratamento</b> desejado no topo da tela.");
-            if (!ehFeriado && !DOM.data.value) return mostrarAlerta("Ops!", "Selecione uma data válida.");
+            if (!procedimento) return mostrarAlerta("Faltou algo", "Por favor, digite o <b>procedimento</b> desejado.");
+            if (!data) return mostrarAlerta("Ops!", "Selecione uma data válida.");
             if (!selecionadoHora) return mostrarAlerta("Quase lá!", "Você esqueceu de selecionar o <b>Horário</b> disponível.");
             
             const novoAgendamento = { 
@@ -488,8 +505,8 @@
             a.push(novoAgendamento);
             salvarAgendamentos(a);
 
-            const msg = `Olá, Studio Ana Alcântara! ✨%0A%0A*NOVO AGENDAMENTO*%0A👤 *Nome:* ${encodeURIComponent(nome)}%0A📱 *WhatsApp:* ${encodeURIComponent(telefone)}%0A💆 *Procedimento:* ${encodeURIComponent(procedimento)}%0A📅 *Data:* ${encodeURIComponent(formatarDataBR(data))}%0A🕐 *Horário:* ${encodeURIComponent(selecionadoHora)}%0A📝 *Obs:* ${encodeURIComponent(novoAgendamento.observacoes || "Nenhuma")}`;
-            const linkWhatsapp = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+            const msg = `Olá, Studio Ana Alcântara! ✨\n\n*NOVO AGENDAMENTO*\n\n*Nome:* _${nome}_\n*WhatsApp:* _${telefone}_\n*Procedimento:* _${procedimento}_\n*Data:* _${formatarDataBR(data)}_\n*Horário:* _${selecionadoHora}_\n\n*Observações:* _${novoAgendamento.observacoes || "Nenhuma observação"}_`;
+            const linkWhatsapp = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
             
             mostrarAlerta(
                 "Agendado com Sucesso! ✨", 
@@ -499,9 +516,6 @@
                     window.open(linkWhatsapp, "_blank");
                     DOM.form.reset();
                     selecionadoHora = "";
-                    DOM.procedimento.value = "";
-                    const groups = document.querySelectorAll('#categories-container .group');
-                    groups.forEach(el => el.classList.remove('active'));
                     renderHorarios();
                     renderListaAgendamentos();
                 }
@@ -519,7 +533,7 @@
         };
 
         // Initialize UI
-        renderCategorias();
+        renderGaleriaProcedimentos();
         renderHorarios();
         renderListaAgendamentos();
     </script>
