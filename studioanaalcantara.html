@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Studio Ana Alcântara — Agendamento</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display (Elegância/Títulos) e Poppins (Modernidade/Textos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons (Mantidos apenas para inputs e interface, removidos dos procedimentos) -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            orange: '#f2a23a', // Laranja da Logo
+                            green: '#b8bb58',  // Verde Oliva da Logo
+                            dark: '#4d4038',   // Texto Escuro
+                            muted: '#85766c',  // Texto Secundário
+                            bg: '#fffdf9',     // Fundo creme claro
+                            surface: '#ffffff' // Fundo dos cartões
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 30px rgba(77, 64, 56, 0.05)',
+                        'card': '0 4px 20px rgba(242, 162, 58, 0.08)',
+                        'btn': '0 10px 25px rgba(242, 162, 58, 0.3)'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #f7f3ed; /* Fundo cinza/bege fora do app no PC */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Oculta scrollbar horizontal das categorias */
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animações de clique */
+        .btn-press { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-press:active { transform: scale(0.95); }
+        
+        /* Estilo dos inputs */
+        .input-modern {
+            background-color: #fcfaf8;
+            border: 1.5px solid #eae1d8;
+            transition: all 0.3s ease;
+        }
+        .input-modern:focus {
+            background-color: #ffffff;
+            border-color: theme('colors.brand.orange');
+            box-shadow: 0 0 0 4px rgba(242, 162, 58, 0.1);
+            outline: none;
+        }
+
+        /* Mix Blend Mode para remover fundo branco da logo */
+        .logo-blend {
+            mix-blend-mode: multiply;
+        }
+
+        /* Modais */
+        .modal-overlay { animation: fadeIn 0.3s ease-out forwards; }
+        .modal-content { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+
+<body class="text-brand-dark antialiased flex justify-center min-h-screen md:p-6">
+
+    <!-- WRAPPER PRINCIPAL: Agora rola naturalmente. Sem overflow-hidden limitante. -->
+    <main class="w-full max-w-md bg-brand-bg md:rounded-[2.5rem] md:shadow-2xl relative min-h-screen flex flex-col pb-12">
+        
+        <!-- Fundo Orgânico do Topo (Inspirado na Ideia 2) -->
+        <div class="absolute top-0 left-0 w-full h-[320px] overflow-hidden md:rounded-t-[2.5rem] z-0 pointer-events-none">
+            <svg viewBox="0 0 400 400" class="absolute -top-10 -left-10 w-[150%] h-[150%] opacity-40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#f2a23a" d="M38.1,-60.6C51,-52.3,64,-45.5,73.1,-34.5C82.2,-23.5,87.4,-8.2,85.2,6C83,20.2,73.5,33.3,62.3,43.4C51.1,53.5,38.3,60.6,24.4,66C10.5,71.4,-4.5,75.1,-20.1,73.2C-35.7,71.3,-51.9,63.8,-63.3,51.8C-74.7,39.8,-81.3,23.3,-82.9,7.1C-84.5,-9.1,-81.1,-25,-71.9,-36.5C-62.7,-48,-47.7,-55.1,-33.7,-63.1C-19.7,-71.1,-6.7,-80,4.2,-86.3C15.1,-92.6,25.2,-68.9,38.1,-60.6Z" transform="translate(150 150) scale(1.2)" />
+                <path fill="#b8bb58" d="M45.7,-76.3C58.9,-69.3,69.1,-55.3,77.5,-40.5C85.9,-25.7,92.5,-10.1,89.5,4.1C86.5,18.3,73.9,31.1,62.1,42.7C50.3,54.3,39.3,64.7,25.7,71.6C12.1,78.5,-4.1,81.9,-20.2,79.5C-36.3,77.1,-52.3,68.9,-63.4,56.6C-74.5,44.3,-80.7,27.9,-81.2,11.5C-81.7,-4.9,-76.5,-21.3,-67.2,-34.4C-57.9,-47.5,-44.5,-57.3,-30.7,-64.1C-16.9,-70.9,-2.7,-74.7,11,-77.8C24.7,-80.9,32.5,-83.3,45.7,-76.3Z" transform="translate(280 280) scale(0.9)" />
+            </svg>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-brand-bg"></div>
+        </div>
+
+        <!-- CABEÇALHO -->
+        <header class="relative z-10 pt-12 pb-6 px-6 flex flex-col items-center text-center animate-slide-up">
+            <div class="w-36 h-36 mb-4 flex items-center justify-center relative group">
+                <!-- Imagem da logo com blend mode para remover fundo branco -->
+                <img src="studio_ana.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" alt="Logo Studio Ana Alcântara" class="w-full h-full object-contain logo-blend drop-shadow-lg relative z-10">
+                <!-- Fallback caso a imagem falhe -->
+                <div class="hidden relative z-10 w-full h-full rounded-full bg-white text-brand-orange font-serif text-4xl items-center justify-center shadow-md">SA</div>
+            </div>
+            <h1 class="font-serif text-3xl font-bold text-brand-dark mb-1 tracking-tight">Agendamento</h1>
+            <p class="text-sm text-brand-muted font-medium">Seu bem-estar, nossa prioridade.</p>
+        </header>
+
+        <!-- CONTEÚDO PRINCIPAL (Formulário) -->
+        <div class="relative z-20 px-6 flex-1 flex flex-col animate-slide-up" style="animation-delay: 0.1s;">
+            <form id="agendamento-form" class="flex flex-col">
+                
+                <!-- Categorias / Procedimentos (Imagens Reais) -->
+                <div class="mb-8 -mx-6">
+                    <h2 class="font-serif text-xl font-semibold text-brand-dark mb-4 px-6">Escolha o Tratamento</h2>
+                    <div class="flex overflow-x-auto hide-scroll gap-4 pb-4 px-6" id="categories-container">
+                        <!-- Gerado via JS -->
+                    </div>
+                    <input type="hidden" id="procedimento" required>
+                </div>
+                
+                <!-- Dados Pessoais -->
+                <div class="bg-brand-surface p-6 rounded-[2rem] shadow-card mb-6 border border-white space-y-5">
+                    <div class="relative group">
+                        <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">Seu Nome</label>
+                        <div class="relative">
+                            <i data-feather="user" class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="nome" required placeholder="Ex: Maria Silva" 
+                                   class="w-full pl-12 pr-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark placeholder-gray-400">
+                        </div>
+                    </div>
+                    <div class="relative group">
+                        <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">WhatsApp</label>
+                        <div class="relative">
+                            <i data-feather="smartphone" class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                            <input type="tel" id="telefone" required placeholder="(81) 90000-0000" maxlength="15"
+                                   class="w-full pl-12 pr-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark placeholder-gray-400">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data e Hora -->
+                <div class="bg-brand-surface p-6 rounded-[2rem] shadow-card mb-6 border border-white space-y-5">
+                    <div class="relative group">
+                        <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">Data da Consulta</label>
+                        <div class="relative">
+                            <i data-feather="calendar" class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2 z-10 pointer-events-none"></i>
+                            <input type="date" id="data" required 
+                                   class="w-full pl-12 pr-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark relative">
+                        </div>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-3 ml-1">Horários Disponíveis</label>
+                        <div class="grid grid-cols-3 gap-3" id="times-grid">
+                            <p class="col-span-3 text-sm text-brand-muted text-center py-6 bg-brand-bg rounded-2xl border border-dashed border-gray-200">Selecione uma data acima</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observações -->
+                <div class="bg-brand-surface p-6 rounded-[2rem] shadow-card mb-8 border border-white">
+                    <label class="block text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2 ml-1">Observações (Opcional)</label>
+                    <textarea id="observacoes" rows="2" placeholder="Algo que precisamos saber antes do atendimento?" 
+                              class="w-full px-5 py-4 rounded-2xl input-modern text-sm font-medium text-brand-dark resize-none"></textarea>
+                </div>
+
+                <!-- Botão de Confirmação -->
+                <button type="submit" class="w-full bg-brand-orange text-white font-semibold py-4 rounded-full shadow-btn btn-press flex items-center justify-center gap-2 text-lg sticky bottom-6 z-30">
+                    Confirmar Agendamento
+                    <i data-feather="arrow-right" class="w-5 h-5"></i>
+                </button>
+
+                <!-- Meus Agendamentos -->
+                <div class="mt-12 pt-8 border-t border-gray-200/60">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="font-serif text-xl font-semibold text-brand-dark">Meus Agendamentos</h2>
+                        <button type="button" id="btn-limpar" class="text-xs font-bold uppercase tracking-wider text-red-400 hover:text-red-600 hidden transition-colors p-2">Limpar Histórico</button>
+                    </div>
+                    <div id="lista-agendamentos" class="space-y-4">
+                        <!-- Injetado via JS -->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal de Alerta / Sucesso -->
+    <div id="modal-alert" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm modal-overlay" onclick="fecharModal('modal-alert')"></div>
+        <div class="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 flex flex-col items-center text-center modal-content">
+            <div id="modal-icon-bg" class="w-20 h-20 rounded-full flex items-center justify-center mb-6 shadow-inner">
+                <i id="modal-icon" data-feather="info" class="w-10 h-10"></i>
+            </div>
+            <h3 id="modal-title" class="font-serif text-2xl font-bold text-brand-dark mb-3">Atenção</h3>
+            <p id="modal-message" class="text-brand-muted text-sm mb-8 leading-relaxed"></p>
+            <button id="modal-btn" onclick="fecharModal('modal-alert')" class="w-full bg-brand-dark text-white font-semibold py-4 rounded-full btn-press text-lg">Entendi</button>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação (Excluir) -->
+    <div id="modal-confirm" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-dark/40 backdrop-blur-sm modal-overlay" onclick="fecharModal('modal-confirm', false)"></div>
+        <div class="relative bg-white rounded-[2rem] shadow-2xl w-full max-w-sm p-8 flex flex-col items-center text-center modal-content">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-red-50 text-red-500 shadow-inner">
+                <i data-feather="trash-2" class="w-10 h-10"></i>
+            </div>
+            <h3 class="font-serif text-2xl font-bold text-brand-dark mb-3">Cancelar?</h3>
+            <p id="confirm-message" class="text-brand-muted text-sm mb-8 leading-relaxed"></p>
+            <div class="flex gap-3 w-full">
+                <button onclick="fecharModal('modal-confirm', false)" class="flex-1 bg-gray-100 text-brand-dark font-semibold py-4 rounded-full btn-press">Voltar</button>
+                <button onclick="fecharModal('modal-confirm', true)" class="flex-1 bg-red-500 text-white font-semibold py-4 rounded-full btn-press shadow-lg">Sim, cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        const WHATSAPP_NUMBER = "5581998907367";
+        const HORARIOS = ["08:00","09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"];
+        const FERIADOS = ["01-01","04-21","05-01","09-07","10-12","11-02","11-15","11-20","12-25"];
+        
+        // Procedimentos com Imagens Reais (Unsplash) para visual premium
+        const PROCEDIMENTOS = [
+            { id: 'fisioterapia', nome: 'Fisioterapia', img: 'https://images.unsplash.com/photo-1576014131795-d440191a8e8b?auto=format&fit=crop&w=150&q=80' },
+            { id: 'limpeza', nome: 'Limpeza de Pele', img: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=150&q=80' },
+            { id: 'botox', nome: 'Botox', img: 'https://images.unsplash.com/photo-1620756236301-7053eb238051?auto=format&fit=crop&w=150&q=80' },
+            { id: 'preenchimento', nome: 'Preenchimento', img: 'https://images.unsplash.com/photo-1619551139417-640108db2823?auto=format&fit=crop&w=150&q=80' },
+            { id: 'ultraformer', nome: 'Ultraformer', img: 'https://images.unsplash.com/photo-1599305090598-fe179d501227?auto=format&fit=crop&w=150&q=80' },
+            { id: 'outro', nome: 'Outros', img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=150&q=80' }
+        ];
+
+        let selecionadoHora = "";
+        let callbackConfirmacao = null;
+
+        const DOM = {
+            data: document.getElementById("data"),
+            timesGrid: document.getElementById("times-grid"),
+            form: document.getElementById("agendamento-form"),
+            procedimento: document.getElementById("procedimento"),
+            catContainer: document.getElementById("categories-container"),
+            lista: document.getElementById("lista-agendamentos"),
+            btnLimpar: document.getElementById("btn-limpar"),
+            telefone: document.getElementById("telefone")
+        };
+
+        // Máscara de Telefone
+        DOM.telefone.addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+
+        function mostrarAlerta(titulo, msg, tipo = 'info', acaoExtra = null) {
+            document.getElementById('modal-title').innerText = titulo;
+            document.getElementById('modal-message').innerHTML = msg;
+            
+            const bg = document.getElementById('modal-icon-bg');
+            const btn = document.getElementById('modal-btn');
+            
+            if(tipo === 'sucesso') {
+                bg.className = 'w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-[#b8bb58]/20 text-[#b8bb58] shadow-inner';
+                bg.innerHTML = '<i data-feather="check" class="w-10 h-10"></i>';
+                btn.className = 'w-full bg-[#b8bb58] text-white font-semibold py-4 rounded-full btn-press text-lg shadow-lg';
+            } else {
+                bg.className = 'w-20 h-20 rounded-full flex items-center justify-center mb-6 bg-red-50 text-red-500 shadow-inner';
+                bg.innerHTML = '<i data-feather="alert-circle" class="w-10 h-10"></i>';
+                btn.className = 'w-full bg-brand-orange text-white font-semibold py-4 rounded-full btn-press text-lg shadow-lg';
+            }
+            feather.replace();
+            document.getElementById('modal-alert').classList.remove('hidden');
+
+            btn.onclick = () => {
+                fecharModal('modal-alert');
+                if(acaoExtra) acaoExtra();
+            };
+        }
+
+        function mostrarConfirmacao(msg, callback) {
+            document.getElementById('confirm-message').innerText = msg;
+            callbackConfirmacao = callback;
+            document.getElementById('modal-confirm').classList.remove('hidden');
+        }
+
+        function fecharModal(id, resultado = null) {
+            document.getElementById(id).classList.add('hidden');
+            if (resultado !== null && callbackConfirmacao) callbackConfirmacao(resultado);
+        }
+
+        const obterAgendamentos = () => JSON.parse(localStorage.getItem("studio_agendamentos") || "[]");
+        const salvarAgendamentos = (data) => localStorage.setItem("studio_agendamentos", JSON.stringify(data));
+        
+        const hojeLocal = () => {
+            const d = new Date(), off = d.getTimezoneOffset();
+            return new Date(d.getTime() - off * 60000).toISOString().slice(0, 10);
+        };
+        const ehFeriado = (data) => {
+            const d = new Date(data + "T12:00:00");
+            return d.getDay() === 0 || FERIADOS.includes(data.slice(5));
+        };
+        const formatarDataBR = (data) => data.split("-").reverse().join("/");
+
+        function renderCategorias() {
+            DOM.catContainer.innerHTML = PROCEDIMENTOS.map(p => `
+                <div class="flex-shrink-0 flex flex-col items-center gap-2 cursor-pointer group" onclick="selecionarCategoria('${p.nome}', this)">
+                    <div class="cat-img-wrapper w-20 h-20 rounded-full p-[3px] border-2 border-transparent transition-all duration-300 shadow-sm relative">
+                        <img src="${p.img}" alt="${p.nome}" class="w-full h-full object-cover rounded-full">
+                        <div class="cat-overlay absolute inset-0 bg-brand-orange/0 rounded-full transition-colors duration-300"></div>
+                        <div class="cat-check absolute bottom-0 right-0 bg-brand-orange text-white rounded-full p-1 opacity-0 transform scale-50 transition-all duration-300 z-10 shadow-md">
+                            <i data-feather="check" class="w-3 h-3"></i>
+                        </div>
+                    </div>
+                    <span class="text-xs font-semibold text-brand-muted text-center max-w-[80px] leading-tight transition-colors">${p.nome}</span>
+                </div>
+            `).join('');
+            
+            // Adiciona estilos dinâmicos para o item ativo
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .group.active .cat-img-wrapper { border-color: theme('colors.brand.orange'); box-shadow: 0 4px 15px rgba(242, 162, 58, 0.3); }
+                .group.active .cat-overlay { background-color: rgba(242, 162, 58, 0.2); }
+                .group.active .cat-check { opacity: 1; transform: scale(1); }
+                .group.active span { color: theme('colors.brand.orange'); }
+            `;
+            document.head.appendChild(style);
+            feather.replace();
+        }
+
+        function selecionarCategoria(nome, elemento) {
+            DOM.procedimento.value = nome;
+            const groups = document.querySelectorAll('#categories-container .group');
+            groups.forEach(el => el.classList.remove('active'));
+            elemento.classList.add('active');
+        }
+
+        function renderHorarios() {
+            selecionadoHora = "";
+            DOM.timesGrid.innerHTML = "";
+            const data = DOM.data.value;
+            
+            if (!data) {
+                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-brand-muted text-center py-6 bg-brand-bg rounded-2xl border border-dashed border-gray-200'>Selecione uma data acima</p>";
+                return;
+            }
+            if (data < hojeLocal()) {
+                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-red-500 font-medium text-center py-5 bg-red-50 rounded-2xl'>Escolha uma data futura</p>";
+                return;
+            }
+            if (ehFeriado(data)) {
+                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-brand-orange font-medium text-center py-5 bg-orange-50 rounded-2xl'>Fechado (Domingo/Feriado)</p>";
+                return;
+            }
+            
+            const agora = new Date();
+            const ocupados = obterAgendamentos().filter(x => x.data === data).map(x => x.hora);
+            
+            HORARIOS.forEach(h => {
+                const btn = document.createElement("button");
+                btn.type = "button";
+                btn.textContent = h;
+                
+                const passou = data === hojeLocal() && (() => {
+                    const [hh, mm] = h.split(":").map(Number);
+                    return hh * 60 + mm <= agora.getHours() * 60 + agora.getMinutes();
+                })();
+                
+                const ocupado = ocupados.includes(h);
+                
+                if (ocupado || passou) {
+                    btn.className = "py-3 rounded-2xl text-sm font-semibold bg-gray-50 text-gray-400 line-through cursor-not-allowed border border-gray-100 opacity-60";
+                    btn.disabled = true;
+                } else {
+                    btn.className = "time-slot py-3 rounded-2xl text-sm font-semibold bg-white text-brand-dark border border-gray-200 hover:border-brand-orange hover:text-brand-orange cursor-pointer btn-press shadow-sm transition-all";
+                    btn.onclick = () => {
+                        selecionadoHora = h;
+                        document.querySelectorAll(".time-slot").forEach(x => {
+                            x.style.backgroundColor = "white";
+                            x.style.color = "theme('colors.brand.dark')";
+                            x.style.borderColor = "theme('colors.gray.200')";
+                        });
+                        btn.style.backgroundColor = "theme('colors.brand.green')";
+                        btn.style.color = "white";
+                        btn.style.borderColor = "theme('colors.brand.green')";
+                        btn.style.boxShadow = "0 4px 15px rgba(184, 187, 88, 0.4)";
+                    };
+                }
+                DOM.timesGrid.appendChild(btn);
+            });
+
+            if (!DOM.timesGrid.querySelector("button:not(:disabled)")) {
+                DOM.timesGrid.innerHTML = "<p class='col-span-3 text-sm text-white font-medium text-center py-5 bg-brand-orange rounded-2xl shadow-md'>Sem horários hoje</p>";
+            }
+        }
+
+        function renderListaAgendamentos() {
+            const agendamentos = obterAgendamentos();
+            
+            if (!agendamentos.length) {
+                DOM.lista.innerHTML = `
+                    <div class="text-center py-10 flex flex-col items-center bg-brand-surface rounded-[2rem] border border-dashed border-gray-200 shadow-sm">
+                        <div class="w-14 h-14 bg-brand-bg rounded-full flex items-center justify-center text-brand-muted mb-3">
+                            <i data-feather="calendar" class="w-6 h-6"></i>
+                        </div>
+                        <p class="text-sm text-brand-muted font-medium">Você não possui agendamentos.</p>
+                    </div>`;
+                DOM.btnLimpar.classList.add('hidden');
+                feather.replace();
+                return;
+            }
+            
+            DOM.btnLimpar.classList.remove('hidden');
+            
+            DOM.lista.innerHTML = agendamentos.sort((x, y) => (x.data + x.hora).localeCompare(y.data + y.hora)).map((x, i) => `
+                <div class="bg-brand-surface rounded-[1.5rem] p-5 shadow-card relative overflow-hidden group border border-white">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-brand-orange rounded-l-full"></div>
+                    <div class="flex justify-between items-start mb-2 pl-3">
+                        <span class="inline-block bg-brand-bg text-brand-orange px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide">${x.procedimento}</span>
+                        <button onclick="cancelarAgendamento(${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors btn-press">
+                            <i data-feather="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <div class="pl-3">
+                        <p class="font-serif font-bold text-brand-dark text-lg">${x.nome}</p>
+                        <div class="mt-3 flex flex-wrap gap-3 text-xs text-brand-muted font-medium">
+                            <span class="flex items-center gap-1.5 bg-brand-bg px-2.5 py-1.5 rounded-lg"><i data-feather="calendar" class="w-3.5 h-3.5 text-brand-orange"></i> ${formatarDataBR(x.data)}</span>
+                            <span class="flex items-center gap-1.5 bg-brand-bg px-2.5 py-1.5 rounded-lg"><i data-feather="clock" class="w-3.5 h-3.5 text-brand-green"></i> ${x.hora}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join("");
+            feather.replace();
+        }
+
+        function cancelarAgendamento(index) {
+            mostrarConfirmacao("Tem certeza que deseja remover este agendamento do seu histórico?", (confirmado) => {
+                if (confirmado) {
+                    let a = obterAgendamentos();
+                    a.splice(index, 1);
+                    salvarAgendamentos(a);
+                    renderHorarios();
+                    renderListaAgendamentos();
+                }
+            });
+        }
+
+        DOM.data.min = hojeLocal();
+        DOM.data.addEventListener("change", renderHorarios);
+
+        DOM.form.addEventListener("submit", e => {
+            e.preventDefault();
+            
+            const nome = document.getElementById("nome").value.trim();
+            const telefone = DOM.telefone.value.trim();
+            const procedimento = DOM.procedimento.value;
+            const data = DOM.data.value;
+            
+            if (!procedimento) return mostrarAlerta("Faltou algo", "Selecione o <b>Tratamento</b> desejado no topo da tela.");
+            if (!ehFeriado && !DOM.data.value) return mostrarAlerta("Ops!", "Selecione uma data válida.");
+            if (!selecionadoHora) return mostrarAlerta("Quase lá!", "Você esqueceu de selecionar o <b>Horário</b> disponível.");
+            
+            const novoAgendamento = { 
+                nome, telefone, procedimento, data, 
+                hora: selecionadoHora, 
+                observacoes: document.getElementById("observacoes").value.trim() 
+            };
+            
+            const a = obterAgendamentos();
+            if (a.some(x => x.data === data && x.hora === selecionadoHora)) {
+                return mostrarAlerta("Horário Indisponível", "Alguém acabou de reservar este horário. Escolha outro.");
+            }
+            
+            a.push(novoAgendamento);
+            salvarAgendamentos(a);
+
+            const msg = `Olá, Studio Ana Alcântara! ✨%0A%0A*NOVO AGENDAMENTO*%0A👤 *Nome:* ${encodeURIComponent(nome)}%0A📱 *WhatsApp:* ${encodeURIComponent(telefone)}%0A💆 *Procedimento:* ${encodeURIComponent(procedimento)}%0A📅 *Data:* ${encodeURIComponent(formatarDataBR(data))}%0A🕐 *Horário:* ${encodeURIComponent(selecionadoHora)}%0A📝 *Obs:* ${encodeURIComponent(novoAgendamento.observacoes || "Nenhuma")}`;
+            const linkWhatsapp = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+            
+            mostrarAlerta(
+                "Agendado com Sucesso! ✨", 
+                "Seu horário foi salvo. Você será direcionado ao <b>WhatsApp</b> para confirmar com a nossa equipe.", 
+                "sucesso",
+                () => {
+                    window.open(linkWhatsapp, "_blank");
+                    DOM.form.reset();
+                    selecionadoHora = "";
+                    DOM.procedimento.value = "";
+                    const groups = document.querySelectorAll('#categories-container .group');
+                    groups.forEach(el => el.classList.remove('active'));
+                    renderHorarios();
+                    renderListaAgendamentos();
+                }
+            );
+        });
+
+        DOM.btnLimpar.onclick = () => {
+            mostrarConfirmacao("Apagar todo o histórico de agendamentos salvos neste celular?", (confirmado) => {
+                if (confirmado) {
+                    localStorage.removeItem("studio_agendamentos");
+                    renderHorarios();
+                    renderListaAgendamentos();
+                }
+            });
+        };
+
+        // Initialize UI
+        renderCategorias();
+        renderHorarios();
+        renderListaAgendamentos();
+    </script>
+</body>
+</html>
