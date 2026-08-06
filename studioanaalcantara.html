@@ -255,10 +255,10 @@
         
         // Imagens locais meramente ilustrativas conforme solicitado
         const PROCEDIMENTOS = [
-            { id: 'drenagem', nome: 'Drenagem', img: 'drenagem.jpg' },
-            { id: 'botox', nome: 'Botox', img: 'botox.jpg' },
-            { id: 'pdo', nome: 'Fios PDO', img: 'PDO.jpg' },
-            { id: 'limpeza', nome: 'Limpeza de Pele', img: 'limpeza_pele.jpg' }
+            { id: 'drenagem', nome: 'Drenagem', img: 'drenagem.png' },
+            { id: 'botox', nome: 'Botox', img: 'botox.png' },
+            { id: 'pdo', nome: 'Fios PDO', img: 'PDO.png' },
+            { id: 'limpeza', nome: 'Limpeza de Pele', img: 'limpeza_pele.png' }
         ];
 
         let selecionadoHora = "";
@@ -372,7 +372,8 @@
             }
             
             const agora = new Date();
-            const ocupados = obterAgendamentos().filter(x => x.data === data).map(x => x.hora);
+            // Ignora os agendamentos que foram cancelados para liberar a vaga
+            const ocupados = obterAgendamentos().filter(x => x.data === data && x.status !== 'cancelado').map(x => x.hora);
             
             let horariosDoDia = HORARIOS;
             let avisoSabado = "";
@@ -443,35 +444,48 @@
             
             DOM.btnLimpar.classList.remove('hidden');
             
-            DOM.lista.innerHTML = agendamentos.sort((x, y) => (x.data + x.hora).localeCompare(y.data + y.hora)).map((x, i) => `
-                <div class="bg-brand-surface rounded-[1.5rem] p-5 shadow-card relative overflow-hidden group border border-white">
-                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-brand-orange rounded-l-full"></div>
+            DOM.lista.innerHTML = agendamentos.sort((x, y) => (x.data + x.hora).localeCompare(y.data + y.hora)).map((x, i) => {
+                const isCancelado = x.status === 'cancelado';
+                return `
+                <div class="bg-brand-surface rounded-[1.5rem] p-5 shadow-card relative overflow-hidden group border border-white ${isCancelado ? 'opacity-60 grayscale' : ''}">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 ${isCancelado ? 'bg-gray-400' : 'bg-brand-orange'} rounded-l-full"></div>
                     <div class="flex justify-between items-start mb-2 pl-3">
-                        <span class="inline-block bg-brand-bg text-brand-orange px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide">${x.procedimento}</span>
-                        <button onclick="cancelarAgendamento(${i})" class="w-8 h-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-colors btn-press">
-                            <i data-feather="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        <span class="inline-block bg-brand-bg ${isCancelado ? 'text-gray-500' : 'text-brand-orange'} px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide">${x.procedimento}</span>
+                        ${isCancelado 
+                            ? `<span class="text-xs font-bold text-red-500 bg-red-50 px-2.5 py-1 rounded-lg">CANCELADO</span>`
+                            : `<button type="button" onclick="cancelarAgendamento(${i})" class="text-xs font-bold text-red-400 hover:text-red-600 border border-red-200 hover:bg-red-50 px-3 py-1.5 rounded-xl transition-all btn-press">Cancelar</button>`
+                        }
                     </div>
                     <div class="pl-3">
-                        <p class="font-serif font-bold text-brand-dark text-lg">${x.nome}</p>
-                        <div class="mt-3 flex flex-wrap gap-3 text-xs text-brand-muted font-medium">
-                            <span class="flex items-center gap-1.5 bg-brand-bg px-2.5 py-1.5 rounded-lg"><i data-feather="calendar" class="w-3.5 h-3.5 text-brand-orange"></i> ${formatarDataBR(x.data)}</span>
-                            <span class="flex items-center gap-1.5 bg-brand-bg px-2.5 py-1.5 rounded-lg"><i data-feather="clock" class="w-3.5 h-3.5 text-brand-green"></i> ${x.hora}</span>
+                        <p class="font-serif font-bold ${isCancelado ? 'text-gray-500' : 'text-brand-dark'} text-lg">${x.nome}</p>
+                        <div class="mt-3 flex flex-wrap gap-3 text-xs ${isCancelado ? 'text-gray-400' : 'text-brand-muted'} font-medium">
+                            <span class="flex items-center gap-1.5 bg-brand-bg px-2.5 py-1.5 rounded-lg"><i data-feather="calendar" class="w-3.5 h-3.5 ${isCancelado ? 'text-gray-400' : 'text-brand-orange'}"></i> ${formatarDataBR(x.data)}</span>
+                            <span class="flex items-center gap-1.5 bg-brand-bg px-2.5 py-1.5 rounded-lg"><i data-feather="clock" class="w-3.5 h-3.5 ${isCancelado ? 'text-gray-400' : 'text-brand-green'}"></i> ${x.hora}</span>
                         </div>
                     </div>
                 </div>
-            `).join("");
+            `}).join("");
             feather.replace();
         }
 
         function cancelarAgendamento(index) {
-            mostrarConfirmacao("Tem certeza que deseja remover este agendamento do seu histórico?", (confirmado) => {
+            mostrarConfirmacao("Tem certeza que deseja cancelar este agendamento? Avisaremos o estúdio via WhatsApp.", (confirmado) => {
                 if (confirmado) {
                     let a = obterAgendamentos();
-                    a.splice(index, 1);
+                    const agendamento = a[index];
+                    
+                    // Muda o status para cancelado em vez de remover do array
+                    a[index].status = 'cancelado';
                     salvarAgendamentos(a);
+                    
+                    // Prepara a mensagem de cancelamento para o WhatsApp
+                    const msgCancelamento = `Olá, Studio Ana Alcântara.\n\n*CANCELAMENTO DE AGENDAMENTO*\n\n*Nome:* _${agendamento.nome}_\n*Procedimento:* _${agendamento.procedimento}_\n*Data:* _${formatarDataBR(agendamento.data)}_\n*Horário:* _${agendamento.hora}_\n\nGostaria de cancelar este horário, por favor.`;
+                    const linkWhatsapp = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msgCancelamento)}`;
+                    
+                    // Atualiza a tela primeiro, depois abre o WhatsApp
                     renderHorarios();
                     renderListaAgendamentos();
+                    window.open(linkWhatsapp, "_blank");
                 }
             });
         }
@@ -494,11 +508,13 @@
             const novoAgendamento = { 
                 nome, telefone, procedimento, data, 
                 hora: selecionadoHora, 
-                observacoes: document.getElementById("observacoes").value.trim() 
+                observacoes: document.getElementById("observacoes").value.trim(),
+                status: 'ativo'
             };
             
             const a = obterAgendamentos();
-            if (a.some(x => x.data === data && x.hora === selecionadoHora)) {
+            // Permite agendar se o horário que estava ocupado foi cancelado
+            if (a.some(x => x.data === data && x.hora === selecionadoHora && x.status !== 'cancelado')) {
                 return mostrarAlerta("Horário Indisponível", "Alguém acabou de reservar este horário. Escolha outro.");
             }
             
