@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matemática no Dia a Dia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd, #ffffff);
+            height: 100vh;
+            overflow-y: auto;
+            color: #333;
+        }
+
+        header {
+            height: 90px;
+            background: #002b5b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .top-info {
+            width: 50%;
+            max-width: 300px;
+            text-align: right;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .progress {
+            height: 20px;
+            background: #ddd;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-top: 8px;
+            border: 2px solid #001a38;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #00c853;
+            transition: 0.5s ease-in-out;
+        }
+
+        .screen {
+            display: none;
+            min-height: calc(100vh - 90px);
+            padding: 30px 15px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .active {
+            display: flex;
+        }
+
+        .card {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            border: 6px solid black;
+            border-radius: 30px;
+            box-shadow: 12px 12px 0px black;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #d32f2f;
+            text-align: center;
+        }
+
+        .characters {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            font-size: 4rem;
+        }
+
+        .character-box {
+            text-align: center;
+        }
+
+        .character-box h3 {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-family: 'Bangers', cursive;
+            letter-spacing: 1px;
+        }
+
+        /* Elementos do Topo da Questão */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .topic-badge {
+            background: #ffeb3b;
+            color: #000;
+            border: 3px solid black;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 3px 3px 0px black;
+        }
+
+        .btn-cola {
+            background: #ff9800;
+            color: white;
+            border: 3px solid black;
+            border-radius: 10px;
+            padding: 5px 15px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px black;
+            transition: 0.2s;
+        }
+
+        .btn-cola:hover {
+            transform: translateY(-2px);
+            background: #f57c00;
+        }
+
+        .cola-box {
+            display: none;
+            background: #fff9c4;
+            border: 3px dashed #f57f17;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #d84315;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .speech {
+            background: #e3f2fd;
+            padding: 20px;
+            border: 4px solid black;
+            border-radius: 20px;
+            font-size: 1.4rem;
+            margin: 10px 0 25px 0;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .speech::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 40px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent black transparent;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .answers {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media(min-width: 600px) {
+            .answers { grid-template-columns: 1fr 1fr; }
+        }
+
+        .answers button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: 4px solid black;
+            border-radius: 15px;
+            background: #1976d2;
+            color: white;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px black;
+            transition: all 0.2s;
+            font-family: 'Comic Neue', sans-serif;
+        }
+
+        .answers button:not(:disabled):hover {
+            transform: translateY(-3px);
+            box-shadow: 6px 6px 0px black;
+            background: #1565c0;
+        }
+
+        /* Estilos para quando a questão for respondida */
+        .answers button.correct {
+            background: #00c853 !important;
+            box-shadow: 2px 2px 0px black !important;
+            transform: translateY(2px);
+        }
+        
+        .answers button.wrong {
+            background: #d32f2f !important;
+            opacity: 0.7;
+        }
+
+        .answers button:disabled {
+            cursor: default;
+        }
+
+        /* Feedback Integrado */
+        .feedback-inline {
+            display: none;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 3px dashed #ccc;
+            animation: slideDown 0.4s;
+        }
+
+        .pow {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 10px;
+            animation: pulse 0.6s infinite;
+        }
+        .acertou { color: #00c853; }
+        .errou { color: #d32f2f; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1) rotate(2deg); }
+            100% { transform: scale(1); }
+        }
+
+        .explanation-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            border-left: 5px solid #1976d2;
+        }
+
+        /* Navegação */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .btn-nav {
+            flex: 1;
+            background: #424242;
+            color: white;
+            border: 3px solid black;
+            border-radius: 10px;
+            padding: 12px;
+            font-family: 'Bangers', cursive;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 4px 4px 0px black;
+            transition: 0.2s;
+        }
+
+        .btn-nav:not(:disabled):hover {
+            transform: translateY(-2px);
+            background: #212121;
+        }
+
+        .btn-nav:disabled {
+            background: #9e9e9e;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+
+        .btn-nav-primary {
+            background: #d32f2f;
+        }
+        .btn-nav-primary:not(:disabled):hover {
+            background: #b71c1c;
+        }
+
+        /* Resultados */
+        .result {
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .result-rank {
+            font-size: 2.5rem;
+            font-family: 'Bangers', cursive;
+            color: #ff9800;
+            margin: 20px 0;
+            text-shadow: 2px 2px 0px black;
+        }
+
+        .summary-list {
+            text-align: left;
+            margin-top: 20px;
+            background: #e8f5e9;
+            padding: 20px;
+            border: 3px solid black;
+            border-radius: 15px;
+            font-size: 1.1rem;
+        }
+
+        .summary-list ul {
+            list-style-type: none;
+        }
+
+        .summary-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .summary-list li::before {
+            content: '✔️';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .main-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto 0 auto;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 4px solid black;
+            border-radius: 15px;
+            background: #ff9800;
+            color: white;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px black;
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">🏫 Escola Dom Bosco</div>
+        <div class="top-info">
+            <div>⭐ <span id="score">0</span> pontos</div>
+            <div>Missão <span id="mission">1</span>/<span id="totalMissions">6</span></div>
+            <div class="progress">
+                <div class="progress-bar" id="bar"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- TELA INICIAL -->
+    <section id="start" class="screen active">
+        <div class="card">
+            <h1>Matemática no Dia a Dia</h1>
+            <div class="characters">
+                <div class="character-box">
+                    👨‍🔧
+                    <h3>Sr. Thiago</h3>
+                </div>
+                <div class="character-box">
+                    👩‍🏫
+                    <h3>Sra. Cris</h3>
+                </div>
+            </div>
+            <p style="font-size:1.4rem; text-align: center; font-weight: bold;">
+                Ajude a equipe a organizar as tarefas e o estoque. Aprenda matemática aplicada ao seu trabalho de forma fácil!
+            </p>
+            <button class="main-btn" onclick="startGame()">🚀 Iniciar Missão</button>
+        </div>
+    </section>
+
+    <!-- TELA DE JOGO UNIFICADA -->
+    <section id="game" class="screen">
+        <div class="card">
+            
+            <div class="action-bar">
+                <div class="topic-badge" id="topic-badge">Assunto</div>
+                <button class="btn-cola" onclick="toggleCola()">💡 Ver Fila (Fórmula)</button>
+            </div>
+
+            <!-- Fila / Cola escondida -->
+            <div class="cola-box" id="cola-box"></div>
+
+            <div class="speech" id="speech"></div>
+            
+            <h2 class="question-text" id="question"></h2>
+            
+            <div class="answers" id="answers"></div>
+
+            <!-- Feedback que aparece após responder -->
+            <div class="feedback-inline" id="feedback-inline">
+                <div id="pow" class="pow"></div>
+                <div class="explanation-box">
+                    <strong style="color: #1976d2;">Como Resolver:</strong> <span id="explicacao"></span>
+                </div>
+                <div class="explanation-box" style="border-left-color: #ff9800;">
+                    <strong style="color: #f57c00;">Uso no Dia a Dia:</strong> <span id="aplicacao"></span>
+                </div>
+            </div>
+
+            <!-- Botões de Navegação -->
+            <div class="nav-bar">
+                <button class="btn-nav" id="btn-prev" onclick="prevQuestion()">⬅️ Voltar</button>
+                <button class="btn-nav btn-nav-primary" id="btn-next" onclick="nextQuestion()">Avançar ➡️</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- TELA DE RESULTADO / CONCLUSÃO -->
+    <section id="result" class="screen">
+        <div class="card">
+            <h1>Missão Cumprida!</h1>
+            <div class="result">
+                <p>Você fez <strong id="finalScore"></strong> pontos de <span id="maxScore"></span>.</p>
+                <div class="result-rank" id="ranking"></div>
+                
+                <div class="summary-list">
+                    <h3 style="margin-bottom: 15px; font-family: 'Bangers', cursive; font-size: 1.8rem; text-align: center;">O que você dominou hoje:</h3>
+                    <ul id="summary-items">
+                        <!-- Gerado dinamicamente -->
+                    </ul>
+                </div>
+                
+                <button class="main-btn" style="background: #1976d2; margin-top: 20px;" onclick="startExercises()">📝 Responder Exercícios</button>
+                <button class="main-btn" style="margin-top: 10px;" onclick="location.reload()">🔄 Jogar Novamente</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- TELA DE GABARITO (NOVA) -->
+    <section id="gabarito" class="screen">
+        <div class="card" style="max-height: 90vh; overflow-y: auto;">
+            <h1>Gabarito Final</h1>
+            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 20px;">Confira as respostas e explicações dos exercícios:</p>
+            <div class="summary-list" id="gabarito-list" style="background: white; border: none; padding: 0;">
+                <!-- Gerado dinamicamente -->
+            </div>
+            <button class="main-btn" style="margin-top: 20px;" onclick="location.reload()">🔄 Finalizar e Voltar ao Início</button>
+        </div>
+    </section>
+
+    <script>
+        const questions = [
+            {
+                assunto: "Média (Estatística)",
+                formula: "Soma de todos os valores ÷ Quantidade de dias.",
+                fala: "Na semana, gastamos 2, 4, 3, 5 e 6 litros de desinfetante.",
+                pergunta: "Qual é a média de litros gastos por dia?",
+                alternativas: ["3 litros", "4 litros", "5 litros", "6 litros"],
+                correta: 1, // 4 litros
+                exp: "Somamos tudo (2+4+3+5+6 = 20) e dividimos pelos 5 dias (20 ÷ 5 = 4).",
+                ap: "A Média ajuda a prever quanto de produto precisamos comprar por semana para não faltar."
+            },
+            {
+                assunto: "Moda (Estatística)",
+                formula: "É só observar qual é o valor/item que MAIS SE REPETE na lista (não precisa de conta!).",
+                fala: "Tamanhos de uniformes solicitados hoje: M, G, M, P, M, G.",
+                pergunta: "Qual é a Moda dos tamanhos solicitados?",
+                alternativas: ["Tamanho P", "Tamanho M", "Tamanho G", "Nenhuma"],
+                correta: 1, // M
+                exp: "A Moda é o item que mais aparece na lista. O 'M' apareceu 3 vezes.",
+                ap: "A Moda identifica o comportamento mais comum, ajudando a saber qual tamanho de uniforme ou luva devemos estocar mais."
+            },
+            {
+                assunto: "Mediana (Estatística)",
+                formula: "1º Coloque os valores em ordem (do menor pro maior). 2º A resposta é o valor que ficar bem no meio!",
+                fala: "Os tempos de limpeza de 5 salas foram: 10, 25, 12, 15 e 30 minutos.",
+                pergunta: "Qual é a Mediana do tempo de limpeza?",
+                alternativas: ["12 min", "15 min", "25 min", "30 min"],
+                correta: 1, // 15 min
+                exp: "Ordenando: 10, 12, 15, 25, 30. O número que está exatamente no meio da fila é o 15.",
+                ap: "A Mediana mostra o valor central, tirando a influência de salas que demoram muito ou muito pouco tempo."
+            },
+            {
+                assunto: "Permutação",
+                formula: "Multiplique as opções disponíveis, diminuindo 1 por 1. Exemplo para 3 lugares: 3 × 2 × 1.",
+                fala: "Temos 3 áreas para limpar antes de abrir: Refeitório, Recepção e Banheiro.",
+                pergunta: "De quantas ordens diferentes podemos fazer essa rota?",
+                alternativas: ["3 rotas", "6 rotas", "9 rotas", "12 rotas"],
+                correta: 1, // 6 rotas
+                exp: "Temos 3 escolhas pra 1ª sala, sobram 2 pra segunda e 1 pra última. (3 × 2 × 1 = 6).",
+                ap: "A Permutação ajuda a ver todas as rotas possíveis para organizar cronogramas e descobrir o caminho mais rápido."
+            },
+            {
+                assunto: "Arranjo (A ordem importa!)",
+                formula: "Multiplique as opções disponíveis apenas para as vagas. Ex: 4 opções para a 1ª vaga × 3 opções para a 2ª vaga.",
+                fala: "Temos 4 funcionários. Precisamos escolher 1 para Supervisor e 1 para Assistente.",
+                pergunta: "Quantas duplas diferentes podemos formar (sabendo que os cargos são diferentes)?",
+                alternativas: ["6 duplas", "8 duplas", "12 duplas", "16 duplas"],
+                correta: 2, // 12
+                exp: "Temos 4 opções para o Supervisor. Depois, sobram 3 opções para Assistente. 4 × 3 = 12.",
+                ap: "O Arranjo é usado quando as posições são diferentes para montar hierarquias e escalas de liderança."
+            },
+            {
+                assunto: "Combinação (Ordem não importa!)",
+                formula: "Faça a conta de Arranjo e divida por 2 (se forem 2 vagas) para retirar os kits repetidos.",
+                fala: "Temos 5 produtos de limpeza pesada, mas no carrinho de mão só cabem 2 por vez.",
+                pergunta: "Quantas misturas (kits) de produtos diferentes podemos levar?",
+                alternativas: ["10 misturas", "15 misturas", "20 misturas", "25 misturas"],
+                correta: 0, // 10
+                exp: "Arranjo seria 5×4 = 20. Mas levar (Cloro + Sabão) é o mesmo kit que (Sabão + Cloro). Então dividimos por 2. (20 ÷ 2 = 10).",
+                ap: "A Combinação serve para montar kits e carrinhos quando a ordem dos produtos não faz diferença."
+            }
+        ];
+
+        const exerciseQuestions = [
+            {
+                assunto: "Média (Estatística)",
+                formula: "Soma de todos os valores ÷ Quantidade de itens.",
+                fala: "Consumo de papel toalha nos banheiros: seg(10), ter(12), qua(8), qui(15) e sex(5).",
+                pergunta: "Qual foi a média de rolos gastos por dia nessa semana?",
+                alternativas: ["8 rolos", "10 rolos", "12 rolos", "15 rolos"],
+                correta: 1, // 10
+                exp: "Soma tudo (10+12+8+15+5 = 50). Divide pelos 5 dias (50 ÷ 5 = 10).",
+                ap: "Ajuda a prever o estoque semanal de papel."
+            },
+            {
+                assunto: "Média (Estatística)",
+                formula: "Soma de todos os valores ÷ Quantidade de itens.",
+                fala: "Para lavar o pátio, usamos cloro: 3L (1ª sem), 5L (2ª sem), 4L (3ª sem) e 4L (4ª sem).",
+                pergunta: "Qual a média de litros usados por semana no mês?",
+                alternativas: ["3 litros", "4 litros", "5 litros", "6 litros"],
+                correta: 1, // 4
+                exp: "Soma tudo (3+5+4+4 = 16). Divide pelas 4 semanas (16 ÷ 4 = 4).",
+                ap: "Fundamental para o planejamento de compras mensais."
+            },
+            {
+                assunto: "Moda (Estatística)",
+                formula: "É só observar qual é o valor/item que MAIS SE REPETE na lista.",
+                fala: "Anota aí os pedidos de luvas: M, M, G, P, M, G, M.",
+                pergunta: "Qual é a moda dos tamanhos pedidos?",
+                alternativas: ["Tamanho P", "Tamanho M", "Tamanho G", "Nenhum"],
+                correta: 1, // M
+                exp: "A Moda é o item que mais se repete. O 'M' apareceu 4 vezes.",
+                ap: "Saber a moda evita que falte o material mais usado (o tamanho M)."
+            },
+            {
+                assunto: "Moda (Estatística)",
+                formula: "É o valor mais frequente (o que mais aparece).",
+                fala: "Sabores de café mais pedidos: Tradicional, Extraforte, Tradicional, Descafeinado, Tradicional.",
+                pergunta: "Qual é a moda dos pedidos de café?",
+                alternativas: ["Tradicional", "Extraforte", "Descafeinado", "Nenhum"],
+                correta: 0, // Tradicional
+                exp: "É o sabor que mais apareceu na lista (3 vezes).",
+                ap: "Identifica a preferência geral do setor."
+            },
+            {
+                assunto: "Mediana (Estatística)",
+                formula: "1º Coloque em ordem (do menor pro maior). 2º Escolha o do meio!",
+                fala: "Tempo limpando 5 salas: 15, 10, 20, 12 e 30 minutos.",
+                pergunta: "Qual é a mediana do tempo de limpeza?",
+                alternativas: ["10 min", "12 min", "15 min", "20 min"],
+                correta: 2, // 15
+                exp: "Primeiro ordena: 10, 12, 15, 20, 30. O número que está exatamente no meio é o 15.",
+                ap: "Ajuda a ter um tempo de referência justo por sala."
+            },
+            {
+                assunto: "Permutação",
+                formula: "Multiplique as opções, diminuindo 1 por 1.",
+                fala: "Tenho um molho com 4 chaves para abrir 4 portões diferentes (A, B, C e D).",
+                pergunta: "De quantas ordens diferentes posso fazer a rota de abertura?",
+                alternativas: ["12 rotas", "16 rotas", "20 rotas", "24 rotas"],
+                correta: 3, // 24
+                exp: "4 opções pro 1º portão × 3 pro 2º × 2 pro 3º × 1 pro último (4 × 3 × 2 × 1 = 24).",
+                ap: "Entender todas as opções ajuda a achar o trajeto mais ágil."
+            },
+            {
+                assunto: "Arranjo (Ordem Importa)",
+                formula: "Multiplique as opções disponíveis pelas vagas. A ordem muda tudo!",
+                fala: "Temos 5 funcionários e 2 vagas: Líder de Turno e Auxiliar de Chaves.",
+                pergunta: "Quantas duplas diferentes podemos formar?",
+                alternativas: ["10 duplas", "15 duplas", "20 duplas", "25 duplas"],
+                correta: 2, // 20
+                exp: "5 opções para Líder × 4 opções para Auxiliar. 5 × 4 = 20. (Ser líder é diferente de ser auxiliar).",
+                ap: "Essencial para montar escalas de liderança."
+            },
+            {
+                assunto: "Arranjo (Ordem Importa)",
+                formula: "Multiplique as opções pelas vagas.",
+                fala: "Tenho 4 funcionários livres e 2 tarefas BEM diferentes (Limpar Janelas e Varrer Pátio).",
+                pergunta: "De quantas formas posso distribuir essas tarefas?",
+                alternativas: ["6 formas", "8 formas", "12 formas", "16 formas"],
+                correta: 2, // 12
+                exp: "4 opções de pessoas para a Janela × 3 opções para o Pátio. 4 × 3 = 12.",
+                ap: "Ajuda na distribuição diária de tarefas específicas."
+            },
+            {
+                assunto: "Combinação (Ordem Não Importa)",
+                formula: "Faça a conta de Arranjo e divida por 2.",
+                fala: "Temos 4 aromas de desinfetante. Quero misturar 2 no mesmo balde.",
+                pergunta: "Quantas misturas diferentes podemos fazer?",
+                alternativas: ["4 misturas", "6 misturas", "8 misturas", "12 misturas"],
+                correta: 1, // 6
+                exp: "Arranjo seria 4 × 3 = 12. Mas (Lavanda+Pinho) é a mesma mistura que (Pinho+Lavanda). Dividimos por 2: 12 ÷ 2 = 6.",
+                ap: "Ajuda a saber a variedade de produtos disponíveis."
+            },
+            {
+                assunto: "Combinação (Ordem Não Importa)",
+                formula: "Faça a conta de Arranjo e divida por 2.",
+                fala: "Temos 6 pessoas para carregar um armário pesado. Precisamos de 2.",
+                pergunta: "Quantas duplas de transporte (com a mesma função) podemos formar?",
+                alternativas: ["10 duplas", "15 duplas", "20 duplas", "30 duplas"],
+                correta: 1, // 15
+                exp: "6 × 5 = 30. Mas a dupla João e Maria é igual a Maria e João. Dividimos por 2: 30 ÷ 2 = 15.",
+                ap: "Perfeito para escolher as equipes de apoio geral."
+            }
+        ];
+
+        let current = 0;
+        let score = 0;
+        let isExerciseMode = false;
+        
+        // Array ativo (começa com o tutorial/jogo)
+        let activeQuestions = questions;
+        
+        // Array para guardar as respostas do usuário e manter o estado ao "Voltar" e "Avançar"
+        let userAnswers = new Array(activeQuestions.length).fill(null);
+
+        document.getElementById('totalMissions').innerText = activeQuestions.length;
+        document.getElementById('maxScore').innerText = activeQuestions.length * 10;
+
+        function startGame() {
+            document.getElementById('start').classList.remove('active');
+            document.getElementById('game').classList.add('active');
+            renderQuestion();
+        }
+
+        function startExercises() {
+            // Ativa o modo de exercícios
+            isExerciseMode = true;
+            activeQuestions = exerciseQuestions;
+            current = 0;
+            score = 0;
+            userAnswers = new Array(activeQuestions.length).fill(null);
+            
+            document.getElementById('totalMissions').innerText = activeQuestions.length;
+            document.getElementById('score').innerText = "0";
+            
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('game').classList.add('active');
+            
+            renderQuestion();
+        }
+
+        // Função para mostrar ou esconder a "Fila"
+        function toggleCola() {
+            const colaBox = document.getElementById('cola-box');
+            if (colaBox.style.display === 'block') {
+                colaBox.style.display = 'none';
+            } else {
+                colaBox.style.display = 'block';
+            }
+        }
+
+        function renderQuestion() {
+            let q = activeQuestions[current];
+
+            document.getElementById('mission').innerText = current + 1;
+            document.getElementById('topic-badge').innerText = q.assunto + (isExerciseMode ? " (Exercício)" : "");
+            
+            // Injeta a fórmula na div escondida
+            document.getElementById('cola-box').innerHTML = `<strong>DICA:</strong> ${q.formula}`;
+            document.getElementById('cola-box').style.display = 'none'; // Sempre esconde ao carregar nova questão
+
+            let charIcon = current % 2 === 0 ? "👨‍🔧 Sr. Thiago:" : "👩‍🏫 Sra. Cris:";
+            document.getElementById('speech').innerHTML = `${charIcon} "${q.fala}"`;
+            document.getElementById('question').innerText = q.pergunta;
+
+            // Gera os botões de resposta
+            let html = "";
+            let answered = userAnswers[current] !== null;
+            
+            q.alternativas.forEach((alt, index) => {
+                let btnClass = "";
+                let disabledAttr = answered ? "disabled" : "";
+                
+                // Se já respondeu, pinta os botões
+                if (answered) {
+                    if (index === q.correta) {
+                        btnClass = "correct"; // Sempre mostra qual era a correta em verde
+                    } else if (index === userAnswers[current].chosen) {
+                        btnClass = "wrong"; // Pinta de vermelho a que ele errou
+                    }
+                }
+
+                html += `<button class="${btnClass}" ${disabledAttr} onclick="answer(${index})">${alt}</button>`;
+            });
+
+            document.getElementById('answers').innerHTML = html;
+
+            // Renderiza o feedback se a questão já foi respondida
+            let feedbackEl = document.getElementById('feedback-inline');
+            if (answered) {
+                feedbackEl.style.display = 'block';
+                let acertou = userAnswers[current].isCorrect;
+                
+                let powEl = document.getElementById('pow');
+                powEl.innerHTML = acertou ? "💥 ACERTOU!" : "⚠️ QUASE LÁ!";
+                powEl.className = acertou ? "pow acertou" : "pow errou";
+                
+                document.getElementById('explicacao').innerText = q.exp;
+                document.getElementById('aplicacao').innerText = q.ap;
+            } else {
+                feedbackEl.style.display = 'none';
+            }
+
+            // Controle dos botões de navegação
+            document.getElementById('btn-prev').disabled = current === 0;
+            
+            let btnNext = document.getElementById('btn-next');
+            if (current === activeQuestions.length - 1) {
+                btnNext.innerText = isExerciseMode ? "Ver Gabarito 📝" : "Finalizar 🏁";
+                btnNext.disabled = !answered; 
+            } else {
+                btnNext.innerText = "Avançar ➡️";
+                btnNext.disabled = false; // Permite avançar livremente
+            }
+
+            // Atualiza barra de progresso baseada em quantas já foram respondidas
+            let answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('bar').style.width = (answeredCount / activeQuestions.length) * 100 + "%";
+        }
+
+        function answer(index) {
+            // Previne responder duas vezes
+            if (userAnswers[current] !== null) return; 
+
+            let q = activeQuestions[current];
+            let isCorrect = (index === q.correta);
+
+            if (isCorrect) score += 10;
+            // Atualiza pontuação visualmente
+            document.getElementById('score').innerText = score;
+
+            // Salva a resposta no histórico
+            userAnswers[current] = { chosen: index, isCorrect: isCorrect };
+            
+            // Esconde a fila automaticamente ao responder
+            document.getElementById('cola-box').style.display = 'none';
+
+            // Atualiza a tela para mostrar cores e feedback
+            renderQuestion();
+            
+            // Rola a tela para baixo para garantir que o usuário veja a explicação em telas pequenas
+            setTimeout(() => {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }, 100);
+        }
+
+        function prevQuestion() {
+            if (current > 0) {
+                current--;
+                renderQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (current === activeQuestions.length - 1) {
+                if (isExerciseMode) {
+                    showGabarito();
+                } else {
+                    showResult();
+                }
+            } else {
+                current++;
+                renderQuestion();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('game').classList.remove('active');
+            document.getElementById('result').classList.add('active');
+            document.getElementById('finalScore').innerText = score;
+
+            let rank = "";
+            let pontuacaoMaxima = activeQuestions.length * 10;
+
+            if (score <= pontuacaoMaxima * 0.4) {
+                rank = "🥉 Aprendiz de Serviços";
+            } else if (score <= pontuacaoMaxima * 0.8) {
+                rank = "🥈 Encarregado Eficiente";
+            } else {
+                rank = "🏆 Mestre da Organização!";
+            }
+
+            document.getElementById('ranking').innerText = rank;
+
+            let summaryHtml = "";
+            activeQuestions.forEach(q => {
+                let termoPrincipal = q.assunto.split(' ')[0]; 
+                summaryHtml += `<li><strong>${termoPrincipal}:</strong> ${q.ap}</li>`;
+            });
+            
+            document.getElementById('summary-items').innerHTML = summaryHtml;
+        }
+
+        function showGabarito() {
+            document.getElementById('game').classList.remove('active');
+            document.getElementById('gabarito').classList.add('active');
+
+            let gabaritoHtml = "";
+            activeQuestions.forEach((q, index) => {
+                let userAns = userAnswers[index];
+                let isCorrect = userAns && userAns.isCorrect;
+                let icone = isCorrect ? "✅" : "❌";
+                
+                gabaritoHtml += `
+                    <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px dashed #ccc;">
+                        <p style="font-size: 1.2rem; margin-bottom: 5px;"><strong>${index + 1}. ${q.pergunta}</strong></p>
+                        <p style="color: ${isCorrect ? '#00c853' : '#d32f2f'}; font-weight: bold; margin-bottom: 5px;">
+                            ${icone} Sua resposta: ${userAns ? q.alternativas[userAns.chosen] : 'Não respondida'}
+                        </p>
+                        <p style="color: #1976d2; margin-bottom: 5px;"><strong>Correta:</strong> ${q.alternativas[q.correta]}</p>
+                        <p style="background: #fff9c4; padding: 10px; border-radius: 8px;"><strong>Explicação:</strong> ${q.exp}</p>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('gabarito-list').innerHTML = gabaritoHtml;
+        }
+    </script>
+</body>
+</html>
