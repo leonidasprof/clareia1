@@ -98,7 +98,6 @@
             padding: 10px 0;
         }
 
-        /* Ajuste na navegação para alinhar a logo bem à esquerda */
         .nav-container {
             max-width: 100%;
             margin: 0 auto;
@@ -466,6 +465,19 @@
             font-size: 13px;
         }
         .contact-info ul li { margin-bottom: 6px; display: flex; align-items: center; gap: 8px;}
+        
+        /* Links interativos nos contatos */
+        .contact-info ul li a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.3s ease;
+        }
+        .contact-info ul li a:hover {
+            color: var(--neon-cyan);
+        }
 
         /* Destaque Visual para o bloco de Hard Skills */
         .hard-skills-brackets {
@@ -772,8 +784,8 @@
 
         .case-card-ed {
             background: var(--bg-card);
-            border: 6px solid var(--neon-cyan); /* Borda espessa ciano como no design */
-            border-radius: 40px; /* Cantos super arredondados */
+            border: 6px solid var(--neon-cyan); 
+            border-radius: 40px; 
             display: flex;
             flex-direction: column;
             transition: transform 0.3s, box-shadow 0.3s;
@@ -788,7 +800,7 @@
         .case-img-wrapper {
             display: block;
             width: 100%;
-            border-bottom: 2px solid var(--bg-main); /* Linha divisória sutil da imagem */
+            border-bottom: 2px solid var(--bg-main); 
             overflow: hidden;
         }
 
@@ -805,7 +817,6 @@
             transform: scale(1.05);
         }
 
-        /* Novo container interno para manter o espaçamento do texto */
         .case-content {
             padding: 30px;
             display: flex;
@@ -839,9 +850,9 @@
         .case-techs span {
             font-size: 13px;
             padding: 6px 12px;
-            background: rgba(0, 191, 255, 0.1); /* Fundo sutil esverdeado/ciano */
+            background: rgba(0, 191, 255, 0.1); 
             color: var(--text-heading);
-            border-radius: 8px; /* Cantos arredondados quadrados */
+            border-radius: 8px; 
             font-weight: 600;
             display: inline-flex;
             align-items: center;
@@ -851,7 +862,7 @@
             display: flex;
             gap: 15px;
             margin-top: 15px;
-            border-top: 1px solid rgba(144, 224, 239, 0.15); /* Linha divisória para os botões */
+            border-top: 1px solid rgba(144, 224, 239, 0.15); 
             padding-top: 25px;
         }
 
@@ -861,7 +872,7 @@
             color: var(--text-heading);
             border: 1px solid rgba(144, 224, 239, 0.3);
             padding: 8px 20px;
-            border-radius: 50px; /* Formato de Pílula arredondada do design */
+            border-radius: 50px; 
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
@@ -1084,15 +1095,17 @@
                     <!-- Caixa de Contatos -->
                     <div class="contact-box">
                         <div class="qr-placeholder">
-                            <!-- Imagem do QR Code substituída com fundo branco no CSS para destaque -->
+                            <!-- Imagem do QR Code com fundo branco -->
                             <img src="https://clareia1.vercel.app/qr_curriculo.png" alt="QR Code Currículo">
                         </div>
                         <div class="contact-info">
                             <h4>Let's Work Together :</h4>
                             <ul>
-                                <li><i class="fa-regular fa-envelope"></i> inscrofat@gmail.com</li>
-                                <li><i class="fa-brands fa-whatsapp"></i> +55 81 99624-3714</li>
-                                <li><i class="fa-brands fa-linkedin"></i> in/leonidasprof</li>
+                                <li><a href="mailto:inscrofat@gmail.com"><i class="fa-regular fa-envelope"></i> inscrofat@gmail.com</a></li>
+                                <li><a href="https://wa.me/5581996243714" target="_blank"><i class="fa-brands fa-whatsapp"></i> +55 81 99624-3714</a></li>
+                                <li><a href="https://www.linkedin.com/in/leonidasprof/" target="_blank"><i class="fa-brands fa-linkedin"></i> in/leonidasprof</a></li>
+                                <!-- Link novo Instagram Adicionado com a URL Fornecida -->
+                                <li><a href="https://www.linkedin.com/in/leonidasprof/" target="_blank"><i class="fa-brands fa-instagram"></i> @leonidasprof</a></li>
                             </ul>
                         </div>
                     </div>
@@ -1103,6 +1116,46 @@
                             <h4><i class="fa-solid fa-camera-retro"></i> Memories</h4>
                         </div>
                         <div class="memory-grid">
+                            
+                            <!-- NOVAS FOTOS ADICIONADAS CONFORME O SOLICITADO -->
+                            <!-- Nova Foto 1 - CESAR Embaixador -->
+                            <div class="memory-pin-wrapper">
+                                <div class="pin"></div>
+                                <img src="https://clareia1.vercel.app/leo_embaixador.png" class="memory-img" alt="Memory - Embaixador CESAR">
+                                <img src="https://www.cesar.school/wp-content/themes/alfama/assets/img/logo_cesar.png" class="memory-logo" alt="Logo CESAR">
+                            </div>
+                            <!-- Nova Foto 2 - Embaixadores -->
+                            <div class="memory-pin-wrapper">
+                                <div class="pin pin-cyan"></div>
+                                <img src="https://clareia1.vercel.app/embaixadores.png" class="memory-img" alt="Memory - Embaixadores">
+                                <img src="https://www.cesar.school/wp-content/themes/alfama/assets/img/logo_cesar.png" class="memory-logo" alt="Logo CESAR">
+                            </div>
+                            <!-- Nova Foto 3 - Melq Fer -->
+                            <div class="memory-pin-wrapper">
+                                <div class="pin"></div>
+                                <img src="https://clareia1.vercel.app/melq_fer.png" class="memory-img" alt="Memory - Melq Fer">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYB-vkVVdj6WBJLTkIL1dDlEo8t2ev-JM80wkiyDXy15C3iS8UpmowJm-l&s=10" class="memory-logo" alt="Logo Dom Bosco">
+                            </div>
+                            <!-- Nova Foto 4 - Salesiano Dom Bosco -->
+                            <div class="memory-pin-wrapper">
+                                <div class="pin pin-cyan"></div>
+                                <img src="https://clareia1.vercel.app/salesiano_dombosco.png" class="memory-img" alt="Memory - Salesiano Dom Bosco">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYB-vkVVdj6WBJLTkIL1dDlEo8t2ev-JM80wkiyDXy15C3iS8UpmowJm-l&s=10" class="memory-logo" alt="Logo Dom Bosco">
+                            </div>
+                            <!-- Nova Foto 5 - Prof Melq -->
+                            <div class="memory-pin-wrapper">
+                                <div class="pin"></div>
+                                <img src="https://clareia1.vercel.app/prof_melq.png" class="memory-img" alt="Memory - Prof Melq">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYB-vkVVdj6WBJLTkIL1dDlEo8t2ev-JM80wkiyDXy15C3iS8UpmowJm-l&s=10" class="memory-logo" alt="Logo Dom Bosco">
+                            </div>
+                            <!-- Nova Foto 6 - Prof Ed -->
+                            <div class="memory-pin-wrapper">
+                                <div class="pin pin-cyan"></div>
+                                <img src="https://clareia1.vercel.app/prof_ed.png" class="memory-img" alt="Memory - Prof Ed">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYB-vkVVdj6WBJLTkIL1dDlEo8t2ev-JM80wkiyDXy15C3iS8UpmowJm-l&s=10" class="memory-logo" alt="Logo Dom Bosco">
+                            </div>
+
+                            <!-- FOTOS ANTIGAS MANTIDAS (Para não perder o layout rico do mural) -->
                             <!-- Foto 1 - SESI -->
                             <div class="memory-pin-wrapper">
                                 <div class="pin"></div>
@@ -1209,7 +1262,26 @@
                                 <div class="resume-date">Atual<span>2026</span></div>
                                 <div class="resume-details">
                                     <h5>Escola Dom Bosco (Salesiano)</h5>
-                                    <p>Instrutor de Tecnologia e Administração</p>
+                                    <!-- Atualizado: Instrutor de Tecnologia -> Tutor Tech -->
+                                    <p>Tutor Tech, Gestão e Design Instrucional</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Nova Experiência Adicionada: Líder de Squad CESAR -->
+                            <div class="resume-item">
+                                <div class="resume-date">Atual<span>2026</span></div>
+                                <div class="resume-details">
+                                    <h5>CESAR School</h5>
+                                    <p>Líder de Squad / Comitê Geral — Núcleo Open Source</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Nova Experiência Adicionada: Embaixador CESAR -->
+                            <div class="resume-item">
+                                <div class="resume-date">Atual<span>2026</span></div>
+                                <div class="resume-details">
+                                    <h5>CESAR School</h5>
+                                    <p>Embaixador da Comunidade de Carreiras</p>
                                 </div>
                             </div>
 
