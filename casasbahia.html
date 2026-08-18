@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operação Dominó - Mission Control</title>
+    
+    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: 'Chakra Petch' para visual tech/futurista e 'Inter' para legibilidade -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variáveis CSS e configurações base */
+        :root {
+            --color-bg: #0a0e17; /* Grafite bem escuro */
+            --color-panel: #111827;
+            --color-accent-tech: #00f0ff; /* Ciano/Azul tech */
+            --color-accent-alert: #ff2a2a; /* Vermelho alerta */
+            --color-accent-warn: #ffb800; /* Laranja/Amarelo */
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Evita rolagem na TV */
+            /* Padrão de fundo sutil tipo "grid" de radar */
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        h1, h2, h3, .tech-font, .timer-display {
+            font-family: 'Chakra Petch', sans-serif;
+        }
+
+        /* Efeito de scanline (tela CRT de segurança) */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.1) 50%,
+                rgba(0,0,0,0.1)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.3;
+        }
+
+        /* Glow effects */
+        .glow-border {
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1) inset, 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+        }
+
+        /* Animações */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 42, 42, 0.7); background-color: rgba(255, 42, 42, 0.1); }
+            50% { box-shadow: 0 0 0 30px rgba(255, 42, 42, 0); background-color: rgba(255, 42, 42, 0.3); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 42, 42, 0); background-color: rgba(255, 42, 42, 0.1); }
+        }
+
+        .alert-state {
+            animation: pulse-red 1.5s infinite;
+            border-color: var(--color-accent-alert) !important;
+            color: var(--color-accent-alert) !important;
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        /* Scrollbar customizada caso necessário internamente */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.6); }
+
+        /* Estilização do Menu Lateral */
+        .nav-item {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .nav-item.active {
+            border-left-color: var(--color-accent-tech);
+            background-color: rgba(0, 240, 255, 0.1);
+            color: var(--color-accent-tech);
+            text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+        }
+        .nav-item:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col relative text-slate-200">
+
+    <div class="scanlines"></div>
+
+    <!-- HEADER FIXO -->
+    <header class="h-20 bg-slate-900 border-b border-[rgba(0,240,255,0.3)] flex items-center justify-between px-8 z-10 relative shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center border border-[rgba(0,240,255,0.5)] glow-text">
+                <i class="fa-solid fa-satellite-dish text-2xl text-[var(--color-accent-tech)]"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold tracking-wider text-[var(--color-accent-tech)] glow-text uppercase">Operação Dominó</h1>
+                <p class="text-xs text-slate-400 tracking-widest uppercase">Sistema de Análise de Crise Corporativa v1.0</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4 text-right">
+            <div>
+                <h2 class="text-xl font-bold text-slate-100">Prof. Leônidas Leandro</h2>
+                <p class="text-sm text-[var(--color-accent-warn)] font-mono">@prof.tenebroso</p>
+            </div>
+            <div class="w-12 h-12 rounded-lg bg-slate-800 border border-slate-600 overflow-hidden flex items-center justify-center">
+                <img src="Leonidas.jpg" alt="Foto Prof. Leônidas" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/94a3b8?text=LL';">
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="flex flex-1 overflow-hidden relative z-10">
+        
+        <!-- SIDEBAR (Navegação) -->
+        <aside class="w-80 bg-slate-900/80 border-r border-slate-800 flex flex-col py-6 backdrop-blur-sm">
+            <div class="px-6 mb-4">
+                <h3 class="text-slate-500 uppercase tracking-widest text-sm font-bold mb-2">Progresso da Missão</h3>
+                <div class="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-[var(--color-accent-tech)] w-0 transition-all duration-500 shadow-[0_0_10px_var(--color-accent-tech)]"></div>
+                </div>
+            </div>
+            
+            <nav id="nav-menu" class="flex-1 overflow-y-auto mt-4 mb-2">
+                <!-- Itens gerados via JS -->
+            </nav>
+
+            <!-- PAINEL DO TIMER (Integrado na Sidebar para não atrapalhar o conteúdo) -->
+            <div id="timer-widget" class="hidden flex-col items-center px-6 mb-6 z-30 w-full shrink-0">
+                <div id="timer-box" class="glow-border w-full bg-slate-900/90 rounded-lg p-4 flex flex-col items-center transition-all duration-300 shadow-xl">
+                    <div class="text-[var(--color-accent-tech)] text-xs font-bold tracking-widest uppercase mb-1 flex items-center gap-2">
+                        <i id="timer-icon" class="fa-regular fa-clock"></i> <span id="timer-label">Tempo Restante</span>
+                    </div>
+                    <div id="timer-display" class="timer-display text-5xl font-bold text-white tracking-wider my-2">
+                        00:00
+                    </div>
+                    <div class="flex gap-2 mt-2 w-full">
+                        <button id="btn-toggle-timer" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 px-3 rounded border border-slate-600 transition-colors tech-font uppercase text-xs font-bold flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-play"></i> Iniciar
+                        </button>
+                        <button id="btn-reset-timer" class="bg-slate-800 hover:bg-slate-700 text-slate-400 py-2 px-3 rounded border border-slate-600 transition-colors" title="Reiniciar Tempo">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-6 mt-auto">
+                <div class="text-xs text-slate-600 font-mono text-center">
+                    <i class="fa-solid fa-shield-halved mr-1"></i> Conexão Segura
+                </div>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE CONTEÚDO (Centro) -->
+        <main class="flex-1 flex flex-col relative overflow-hidden bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800/20 via-slate-900/50 to-slate-950">
+            
+            <!-- CONTAINER ROLÁVEL (SCROLL PARA CONTEÚDO LONGO) -->
+            <div class="flex-1 overflow-y-auto overflow-x-hidden w-full h-full p-6 md:p-8 z-10">
+                <!-- CONTAINER DINÂMICO DE FASES -->
+                <div id="phase-container" class="flex flex-col min-h-full justify-start md:justify-center max-w-5xl mx-auto w-full transition-opacity duration-300 pb-12">
+                    <!-- O conteúdo será injetado aqui via JS -->
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ALERTA DE TEMPO ESGOTADO (Overlay) -->
+    <div id="timeout-overlay" class="fixed inset-0 bg-red-900/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center">
+        <i class="fa-solid fa-triangle-exclamation text-8xl text-red-500 mb-6 animate-bounce"></i>
+        <h1 class="text-7xl font-bold text-white tech-font tracking-widest uppercase text-shadow-lg mb-4">Tempo Esgotado</h1>
+        <p class="text-2xl text-red-200 mb-8">O conselho exige respostas imediatas!</p>
+        <button id="btn-close-timeout" class="px-8 py-4 bg-slate-900 border-2 border-red-500 text-red-500 font-bold rounded-lg text-xl hover:bg-red-950 transition-colors tech-font uppercase">
+            Retornar ao Painel
+        </button>
+    </div>
+
+    <script>
+        // --- DADOS DAS FASES ---
+        const phases = [
+            {
+                id: 0,
+                title: "Briefing",
+                shortTitle: "Briefing Inicial",
+                icon: "fa-solid fa-crosshairs",
+                timeInSeconds: 0, // Sem tempo
+                content: `
+                    <div class="text-center mb-8 fade-enter">
+                        <div class="inline-block p-4 rounded-full bg-[rgba(0,240,255,0.1)] border border-[rgba(0,240,255,0.3)] mb-4 md:mb-6">
+                            <i class="fa-solid fa-folder-open text-5xl text-[var(--color-accent-tech)]"></i>
+                        </div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white mb-3 tech-font uppercase tracking-wide glow-text">O Raio-X de uma Crise</h1>
+                        <h2 class="text-xl md:text-2xl text-[var(--color-accent-warn)] font-light">Caso: Grupo Casas Bahia</h2>
+                    </div>
+                    
+                    <div class="bg-slate-800/60 p-6 md:p-8 rounded-xl border border-slate-700 shadow-2xl backdrop-blur-sm fade-enter" style="transition-delay: 0.1s">
+                        <p class="text-lg md:text-xl leading-relaxed text-slate-300 mb-4 md:mb-6">
+                            <strong class="text-white">Situação Atual:</strong> O Grupo Casas Bahia entrou com pedido de recuperação extrajudicial. Bilhões em dívidas renegociadas.
+                        </p>
+                        <p class="text-lg md:text-xl leading-relaxed text-slate-300 mb-6 md:mb-8">
+                            <strong class="text-white">Seu Papel:</strong> Vocês são a Força-Tarefa de Consultores de Risco.
+                        </p>
+                        <div class="border-l-4 border-[var(--color-accent-alert)] pl-4 md:pl-6 py-2 bg-red-900/10 mb-6 md:mb-8">
+                            <p class="text-lg md:text-xl text-red-200 font-medium">
+                                <i class="fa-solid fa-bullseye mr-2"></i> A MISSÃO PRINCIPAL:<br>
+                                Entender a origem da crise e mitigar o <span class="text-white font-bold underline decoration-red-500 decoration-4 underline-offset-4">"Efeito Dominó"</span> no mercado.
+                            </p>
+                        </div>
+                        <div class="flex justify-center mt-8 md:mt-10">
+                            <button onclick="app.goToPhase(1)" class="px-8 py-4 bg-[var(--color-accent-tech)] hover:bg-cyan-400 text-slate-900 font-bold rounded text-xl transition-all shadow-[0_0_20px_rgba(0,240,255,0.4)] hover:shadow-[0_0_30px_rgba(0,240,255,0.6)] tech-font uppercase flex items-center gap-3">
+                                Iniciar Operação <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 1,
+                title: "Investigação e Coleta",
+                shortTitle: "Fase 1: Investigação",
+                icon: "fa-solid fa-magnifying-glass-chart",
+                timeInSeconds: 15 * 60, // 15 minutos
+                content: `
+                    <div class="fade-enter">
+                        <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded bg-slate-800 border border-[var(--color-accent-tech)] flex items-center justify-center">
+                                <span class="text-2xl text-[var(--color-accent-tech)] font-bold tech-font">01</span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wide">Investigação e Coleta</h2>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                            <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 glow-border">
+                                <h3 class="text-xl font-bold text-[var(--color-accent-warn)] mb-4 flex items-center gap-3">
+                                    <i class="fa-solid fa-clipboard-list"></i> Objetivos
+                                </h3>
+                                <ul class="space-y-3 text-lg text-slate-300">
+                                    <li class="flex gap-3"><i class="fa-solid fa-check text-[var(--color-accent-tech)] mt-1"></i> Descobrir o motivo central da crise financeira.</li>
+                                    <li class="flex gap-3"><i class="fa-solid fa-check text-[var(--color-accent-tech)] mt-1"></i> Compreender o conceito prático de "Recuperação Extrajudicial".</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-slate-900 p-6 rounded-xl border border-blue-500/30 relative overflow-hidden">
+                                <div class="absolute top-0 right-0 bg-blue-500/20 text-blue-300 px-3 py-1 rounded-bl-lg text-xs font-bold uppercase tracking-wider">Desafio Tech</div>
+                                <h3 class="text-xl font-bold text-blue-400 mb-4 mt-2 flex items-center gap-3">
+                                    <i class="fa-solid fa-microchip"></i> Engenharia de Prompt (IA)
+                                </h3>
+                                <p class="text-lg text-slate-300 mb-4">Utilizem seus smartphones com ChatGPT, Gemini ou Claude.</p>
+                                <div class="bg-black/50 p-4 md:p-5 rounded border border-slate-700 font-mono text-base md:text-lg text-emerald-400">
+                                    <span class="text-slate-500 select-none">>_ Prompt sugerido:</span><br>
+                                    "Atue como um professor de economia. Traduza o caso da recuperação extrajudicial das Casas Bahia para uma linguagem simples e direta, como se estivesse explicando para um jovem de 18 anos."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 2,
+                title: "Mapeamento do Ecossistema",
+                shortTitle: "Fase 2: Mapeamento",
+                icon: "fa-solid fa-network-wired",
+                timeInSeconds: 25 * 60, // 25 minutos
+                content: `
+                    <div class="fade-enter">
+                        <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded bg-slate-800 border border-[var(--color-accent-tech)] flex items-center justify-center">
+                                <span class="text-2xl text-[var(--color-accent-tech)] font-bold tech-font">02</span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wide">Mapeamento Visual</h2>
+                        </div>
+
+                        <div class="bg-slate-800/40 p-5 md:p-6 rounded-xl border border-slate-700 mb-6 md:mb-8 text-lg text-slate-300">
+                            <p><i class="fa-solid fa-pen-nib text-[var(--color-accent-warn)] mr-2"></i> <strong>Ação Material:</strong> Utilizem papel, post-its ou quadros para desenhar o "Efeito Dominó" que esta crise causa no mercado.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+                            <!-- Micro -->
+                            <div class="bg-slate-900/80 p-5 rounded-xl border-t-4 border-t-emerald-500 shadow-lg">
+                                <div class="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                    <i class="fa-solid fa-users text-xl text-emerald-400"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">Visão Micro</h3>
+                                <p class="text-sm text-slate-400">Impacto direto no dia a dia.</p>
+                                <ul class="mt-3 md:mt-4 space-y-2 text-sm text-slate-300">
+                                    <li>• Funcionários (Risco de demissão)</li>
+                                    <li>• Clientes (Garantia estendida, carnês pendentes)</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- B2B -->
+                            <div class="bg-slate-900/80 p-5 rounded-xl border-t-4 border-t-amber-500 shadow-lg">
+                                <div class="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                    <i class="fa-solid fa-industry text-xl text-amber-400"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">Visão B2B</h3>
+                                <p class="text-sm text-slate-400">Impacto na Cadeia de Suprimentos.</p>
+                                <ul class="mt-3 md:mt-4 space-y-2 text-sm text-slate-300">
+                                    <li>• Fábricas de móveis/eletro (Contas a receber)</li>
+                                    <li>• Logística e transportadoras</li>
+                                    <li>• Jovem Aprendiz / Terceirizados</li>
+                                </ul>
+                            </div>
+
+                            <!-- Macro -->
+                            <div class="bg-slate-900/80 p-5 rounded-xl border-t-4 border-t-purple-500 shadow-lg">
+                                <div class="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center mb-3 md:mb-4">
+                                    <i class="fa-solid fa-chart-line text-xl text-purple-400"></i>
+                                </div>
+                                <h3 class="text-lg font-bold text-white mb-2">Visão Macro</h3>
+                                <p class="text-sm text-slate-400">Ambiente Econômico.</p>
+                                <ul class="mt-3 md:mt-4 space-y-2 text-sm text-slate-300">
+                                    <li>• Influência da Taxa Selic (Juros altos)</li>
+                                    <li>• Restrição de crédito no mercado</li>
+                                    <li>• Confiança do investidor (Bolsa)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 3,
+                title: "Plano de Ação: Ideação Ágil",
+                shortTitle: "Fase 3: Plano de Ação",
+                icon: "fa-solid fa-bolt",
+                timeInSeconds: 20 * 60, // 20 minutos
+                content: `
+                    <div class="fade-enter">
+                        <div class="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+                            <div class="w-12 h-12 md:w-14 md:h-14 rounded bg-slate-800 border border-[var(--color-accent-tech)] flex items-center justify-center">
+                                <span class="text-2xl text-[var(--color-accent-tech)] font-bold tech-font">03</span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white uppercase tracking-wide">Plano de Contingência</h2>
+                        </div>
+
+                        <div class="bg-red-900/20 p-6 md:p-8 rounded-xl border border-red-500/30 mb-6 md:mb-8 relative mt-4">
+                            <div class="absolute -top-4 left-6 bg-red-600 text-white px-3 md:px-4 py-1 rounded text-xs md:text-sm font-bold uppercase tracking-wider shadow-lg">Cenário Crítico</div>
+                            <p class="text-lg md:text-xl text-slate-200 leading-relaxed mt-2">
+                                Vocês agora formam a <strong>Diretoria de uma Fábrica de Móveis</strong>. <br>
+                                <span class="text-red-400 font-bold">40% do faturamento</span> da sua fábrica dependia das vendas para a Casas Bahia. O pagamento dos próximos lotes está congelado.
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                            <div class="bg-slate-800/50 p-5 md:p-6 rounded-xl border border-slate-700 glow-border">
+                                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-list-check text-[var(--color-accent-tech)]"></i> Mini-Backlog Visual</h3>
+                                <p class="text-sm md:text-base text-slate-400 mb-5">Criem e documentem <strong class="text-white">3 ações imediatas</strong> para salvar o caixa da sua fábrica nos próximos 30 dias.</p>
+                                <div class="space-y-3">
+                                    <div class="bg-slate-900 p-3 md:p-4 rounded border border-slate-700 flex items-center gap-3 md:gap-4"><div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 font-bold text-sm">1</div> <div class="flex-1 border-b border-dashed border-slate-600"></div></div>
+                                    <div class="bg-slate-900 p-3 md:p-4 rounded border border-slate-700 flex items-center gap-3 md:gap-4"><div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 font-bold text-sm">2</div> <div class="flex-1 border-b border-dashed border-slate-600"></div></div>
+                                    <div class="bg-slate-900 p-3 md:p-4 rounded border border-slate-700 flex items-center gap-3 md:gap-4"><div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500 font-bold text-sm">3</div> <div class="flex-1 border-b border-dashed border-slate-600"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-900 p-5 md:p-6 rounded-xl border border-blue-500/30">
+                                <h3 class="text-lg font-bold text-blue-400 mb-4 flex items-center gap-2"><i class="fa-solid fa-robot"></i> Ferramenta: Validação IA</h3>
+                                <p class="text-sm md:text-base text-slate-300 mb-4">Utilizem a IA como um <strong class="text-white">"Conselheiro Sênior"</strong> para estressar as ideias de vocês.</p>
+                                <div class="bg-black/50 p-4 rounded border border-slate-700 font-mono text-xs md:text-sm text-emerald-400">
+                                    <span class="text-slate-500">>_ Exemplo de Prompt:</span><br>
+                                    "Somos uma fábrica que perdeu 40% da receita. Pensamos em adotar a ação X e a ação Y. Atue como um consultor financeiro implacável e aponte as falhas ou riscos dessas decisões."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                title: "Pitch para o Conselho",
+                shortTitle: "Fase 4: Pitch Final",
+                icon: "fa-solid fa-person-chalkboard",
+                timeInSeconds: 20 * 60, // 20 minutos (tempo total estimado, mas regrado a 3min por grupo na vida real)
+                content: `
+                    <div class="fade-enter text-center">
+                        <div class="inline-block p-4 md:p-6 rounded-full bg-slate-800 border-4 border-[var(--color-accent-tech)] mb-6 md:mb-8 shadow-[0_0_30px_rgba(0,240,255,0.3)]">
+                            <i class="fa-solid fa-gavel text-5xl md:text-6xl text-[var(--color-accent-tech)]"></i>
+                        </div>
+                        
+                        <h2 class="text-3xl md:text-4xl font-bold text-white uppercase tracking-wide mb-6">Conselho de Administração</h2>
+                        
+                        <div class="max-w-3xl mx-auto bg-slate-800/80 p-6 md:p-8 rounded-2xl border border-slate-700 shadow-2xl backdrop-blur-md">
+                            <h3 class="text-2xl text-[var(--color-accent-warn)] font-bold mb-5 md:mb-6">Apresentação dos Grupos</h3>
+                            
+                            <div class="space-y-4 md:space-y-6 text-lg md:text-xl text-slate-300 text-left">
+                                <div class="flex items-start gap-3 md:gap-4">
+                                    <i class="fa-solid fa-map mt-1 text-[var(--color-accent-tech)]"></i>
+                                    <p><strong>Parte 1:</strong> Apresentação do Mapa Mental do "Efeito Dominó".</p>
+                                </div>
+                                <div class="flex items-start gap-3 md:gap-4">
+                                    <i class="fa-solid fa-lightbulb mt-1 text-[var(--color-accent-tech)]"></i>
+                                    <p><strong>Parte 2:</strong> Defesa das 3 ações de contingência criadas.</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 md:mt-10 p-5 md:p-6 bg-red-900/20 border border-red-500/50 rounded-xl inline-block">
+                                <p class="text-xl md:text-2xl text-red-200 font-bold uppercase tracking-widest">
+                                    <i class="fa-solid fa-stopwatch mr-2"></i> Regra Rigorosa: 3 Minutos por Grupo
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // --- STREAMING_CHUNK:Inicializando variáveis de estado e controladores da aplicação... ---
+        const app = {
+            currentPhaseId: 0,
+            timerInterval: null,
+            timeRemaining: 0,
+            isTimerRunning: false,
+
+            // Elementos DOM
+            els: {
+                navMenu: document.getElementById('nav-menu'),
+                phaseContainer: document.getElementById('phase-container'),
+                timerWidget: document.getElementById('timer-widget'),
+                timerDisplay: document.getElementById('timer-display'),
+                btnToggleTimer: document.getElementById('btn-toggle-timer'),
+                btnResetTimer: document.getElementById('btn-reset-timer'),
+                progressBar: document.getElementById('progress-bar'),
+                timerBox: document.getElementById('timer-box'),
+                timeoutOverlay: document.getElementById('timeout-overlay'),
+                btnCloseTimeout: document.getElementById('btn-close-timeout')
+            },
+
+            init() {
+                this.renderNav();
+                this.loadPhase(0);
+                this.setupEventListeners();
+            },
+
+            // --- STREAMING_CHUNK:Criando lógica de renderização de navegação e conteúdo... ---
+            renderNav() {
+                this.els.navMenu.innerHTML = '';
+                phases.forEach(phase => {
+                    const btn = document.createElement('button');
+                    btn.className = `nav-item w-full text-left px-6 py-4 flex items-center gap-4 border-b border-slate-800/50 ${phase.id === this.currentPhaseId ? 'active' : ''}`;
+                    btn.onclick = () => this.goToPhase(phase.id);
+                    
+                    btn.innerHTML = `
+                        <div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-sm shadow-inner group-hover:bg-slate-700 transition-colors">
+                            <i class="${phase.icon}"></i>
+                        </div>
+                        <span class="font-medium tracking-wide text-sm">${phase.shortTitle}</span>
+                    `;
+                    this.els.navMenu.appendChild(btn);
+                });
+            },
+
+            updateProgress() {
+                const percentage = ((this.currentPhaseId) / (phases.length - 1)) * 100;
+                this.els.progressBar.style.width = `${percentage}%`;
+            },
+
+            goToPhase(id) {
+                if (id === this.currentPhaseId) return;
+                
+                // Animação de saída
+                this.els.phaseContainer.style.opacity = '0';
+                
+                setTimeout(() => {
+                    this.loadPhase(id);
+                    // Animação de entrada via CSS class está no template
+                    this.els.phaseContainer.style.opacity = '1';
+                }, 300);
+            },
+
+            loadPhase(id) {
+                const phase = phases.find(p => p.id === id);
+                if (!phase) return;
+
+                this.currentPhaseId = id;
+                
+                // Atualizar UI
+                this.els.phaseContainer.innerHTML = phase.content;
+                this.renderNav(); // Atualiza a classe active
+                this.updateProgress();
+
+                // Disparar animações de entrada
+                const animatedElements = this.els.phaseContainer.querySelectorAll('.fade-enter');
+                animatedElements.forEach(el => {
+                    // Força um reflow para reiniciar a animação se necessário
+                    void el.offsetWidth;
+                    el.classList.add('fade-enter-active');
+                });
+
+                // --- STREAMING_CHUNK:Configurando a lógica de gerenciamento do cronômetro da fase... ---
+                // Gerenciamento de Timer
+                this.stopTimer();
+                this.resetTimerUI();
+
+                if (phase.timeInSeconds > 0) {
+                    this.timeRemaining = phase.timeInSeconds;
+                    this.updateTimerDisplay();
+                    this.els.timerWidget.classList.remove('hidden');
+                    this.els.timerWidget.classList.add('flex');
+                } else {
+                    this.els.timerWidget.classList.add('hidden');
+                    this.els.timerWidget.classList.remove('flex');
+                }
+            },
+
+            // --- STREAMING_CHUNK:Implementando as funções de controle de tempo e formatação... ---
+            toggleTimer() {
+                if (this.isTimerRunning) {
+                    this.pauseTimer();
+                } else {
+                    this.startTimer();
+                }
+            },
+
+            startTimer() {
+                if (this.timeRemaining <= 0) return;
+                
+                this.isTimerRunning = true;
+                this.updateTimerBtnUI();
+                
+                this.timerInterval = setInterval(() => {
+                    this.timeRemaining--;
+                    this.updateTimerDisplay();
+                    
+                    // Alerta visual nos últimos 60 segundos
+                    if (this.timeRemaining <= 60 && this.timeRemaining > 0) {
+                        this.els.timerBox.classList.add('glow-border', 'border-red-500');
+                        this.els.timerBox.style.boxShadow = '0 0 15px rgba(255, 42, 42, 0.3) inset, 0 0 10px rgba(255, 42, 42, 0.3)';
+                    }
+
+                    if (this.timeRemaining <= 0) {
+                        this.timerComplete();
+                    }
+                }, 1000);
+            },
+
+            pauseTimer() {
+                this.isTimerRunning = false;
+                clearInterval(this.timerInterval);
+                this.updateTimerBtnUI();
+            },
+
+            stopTimer() {
+                this.isTimerRunning = false;
+                clearInterval(this.timerInterval);
+            },
+
+            resetTimer() {
+                this.stopTimer();
+                const currentPhase = phases.find(p => p.id === this.currentPhaseId);
+                this.timeRemaining = currentPhase ? currentPhase.timeInSeconds : 0;
+                this.resetTimerUI();
+                this.updateTimerDisplay();
+                this.updateTimerBtnUI();
+            },
+
+            updateTimerDisplay() {
+                const minutes = Math.floor(this.timeRemaining / 60);
+                const seconds = this.timeRemaining % 60;
+                this.els.timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            },
+
+            updateTimerBtnUI() {
+                if (this.isTimerRunning) {
+                    this.els.btnToggleTimer.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+                    this.els.btnToggleTimer.classList.remove('bg-slate-800');
+                    this.els.btnToggleTimer.classList.add('bg-amber-600', 'hover:bg-amber-700', 'border-amber-500');
+                } else {
+                    this.els.btnToggleTimer.innerHTML = '<i class="fa-solid fa-play"></i> Iniciar';
+                    this.els.btnToggleTimer.classList.remove('bg-amber-600', 'hover:bg-amber-700', 'border-amber-500');
+                    this.els.btnToggleTimer.classList.add('bg-slate-800', 'hover:bg-slate-700');
+                }
+            },
+
+            resetTimerUI() {
+                this.els.timerBox.classList.remove('alert-state', 'border-red-500');
+                this.els.timerBox.style.boxShadow = '';
+                this.els.timerDisplay.classList.remove('text-red-500');
+                this.els.timerDisplay.classList.add('text-white');
+            },
+
+            // --- STREAMING_CHUNK:Adicionando os efeitos visuais e tratamentos de conclusão de tempo... ---
+            timerComplete() {
+                this.stopTimer();
+                this.updateTimerBtnUI();
+                
+                // Efeitos visuais na caixa do timer
+                this.els.timerBox.classList.add('alert-state');
+                this.els.timerDisplay.classList.remove('text-white');
+                this.els.timerDisplay.classList.add('text-red-500');
+                
+                // Mostrar overlay tela cheia
+                this.els.timeoutOverlay.classList.remove('hidden');
+                this.els.timeoutOverlay.classList.add('flex');
+                
+                // Tocar um som seria o ideal, mas vamos focar no visual como requisitado
+            },
+
+            closeTimeout() {
+                this.els.timeoutOverlay.classList.add('hidden');
+                this.els.timeoutOverlay.classList.remove('flex');
+            },
+
+            setupEventListeners() {
+                this.els.btnToggleTimer.addEventListener('click', () => this.toggleTimer());
+                this.els.btnResetTimer.addEventListener('click', () => this.resetTimer());
+                this.els.btnCloseTimeout.addEventListener('click', () => this.closeTimeout());
+                
+                // Atalho de teclado (Espaço) para iniciar/pausar, útil para o professor na TV com teclado sem fio
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && this.timeRemaining > 0 && this.els.timeoutOverlay.classList.contains('hidden')) {
+                        e.preventDefault(); // Evita scroll
+                        this.toggleTimer();
+                    }
+                });
+            }
+        };
+
+        // --- STREAMING_CHUNK:Iniciando a aplicação após o carregamento do DOM... ---
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+    </script>
+</body>
+</html>
