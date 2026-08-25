@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missão Inovação - Thinking Outside the Box</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            primary: '#2563eb', // Blue
+                            secondary: '#ea580c', // Orange
+                            accent: '#9333ea', // Purple
+                        },
+                        light: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f9fafb;
+            color: #1f2937;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(234, 88, 12, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f3f4f6; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .mission-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .mission-card:hover {
+            border-color: rgba(37, 99, 235, 0.3);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Print Styles */
+        @media print {
+            body { background: white; color: black; }
+            header { position: static; box-shadow: none; border-bottom: 2px solid black; }
+            .mission-card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; margin-bottom: 20px; }
+            #intro { page-break-after: avoid; }
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <header class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-row justify-between items-center min-h-[5rem] py-3 md:py-0">
+                
+                <!-- School & Class Info -->
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-brand-secondary text-xl hidden sm:block"></i>
+                        <h1 class="text-sm md:text-base font-bold tracking-wider text-gray-900">Escola Salesiano Dom Bosco</h1>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs md:text-sm text-gray-600 mt-1">
+                        <span class="bg-gray-100 px-2 py-0.5 rounded text-brand-primary font-mono font-semibold">ADMN</span>
+                        <span class="font-medium">Prof. Leônidas</span>
+                    </div>
+                </div>
+
+                <!-- School Logo -->
+                <div class="flex-shrink-0 ml-4">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2SymX06gQFv1fBo40DzEB1moDMAykqwuwRCEDSHZsdUKtZ6e6NFDuwgaD&s=10" 
+                         alt="Logo Escola Salesiano Dom Bosco" 
+                         class="h-10 sm:h-12 w-auto object-contain rounded-md"
+                         onerror="this.src='https://placehold.co/100x50/ffffff/2563eb?text=Logo'">
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-48 md:pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+        
+        <section id="intro" class="text-center mb-12 relative">
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-brand-primary text-sm font-mono mb-4 border border-blue-200 font-semibold">
+                <i class="fa-solid fa-flag-checkered mr-2"></i>DESAFIO_01
+            </span>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+                Thinking <span class="text-brand-secondary">Outside the Box</span><br>
+                <span class="text-xl md:text-2xl font-medium text-gray-600">A Nova Fronteira da Inovação</span>
+            </h2>
+            <p class="text-gray-700 text-lg max-w-3xl mx-auto leading-relaxed">
+                No mundo dos negócios, o óbvio já foi criado. A sua maior vantagem competitiva não é memorizar fórmulas, mas sim a sua <span class="text-brand-secondary font-bold">imaginação</span> e o <span class="text-brand-primary font-bold">pensamento crítico</span>. O desafio de hoje é criar algo incrivelmente difícil de vender, que não existe, e usar as habilidades da sua equipe para convencer o mundo de que eles precisam disso.
+            </p>
+        </section>
+
+        <!-- Instructions Box -->
+        <section class="bg-blue-50 border-l-4 border-brand-primary p-6 rounded-r-xl mb-12 shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-brand-primary"></i> Instruções de Entrega
+            </h3>
+            <p class="text-gray-700 mb-4">
+                Leia atentamente as missões abaixo e discuta com sua equipe. Vocês não devem preencher nada nesta tela. Elaborem as respostas em um documento à parte e exportem o arquivo final em formato <strong>PDF</strong>.
+            </p>
+            <div class="bg-white p-4 rounded border border-gray-200 mb-4">
+                <h4 class="font-bold text-gray-800 mb-2">Obrigatoriamente, o PDF deve conter o seguinte cabeçalho:</h4>
+                <ul class="list-disc list-inside text-gray-600 space-y-1 font-mono text-sm">
+                    <li>Escola: Escola Salesiano Dom Bosco</li>
+                    <li>Disciplina: Administração</li>
+                    <li>Conteúdo da Aula: Thinking Outside the Box</li>
+                    <li>Nome da Equipe: [Inserir o nome criativo da equipe]</li>
+                    <li>Integrantes: [Nome completo de todos]</li>
+                </ul>
+            </div>
+            <p class="text-gray-800 font-medium">
+                📩 Envie o PDF finalizado para o e-mail: <a href="mailto:leonidassouza@escoladombosco.org.br" class="text-brand-primary hover:underline font-bold">leonidassouza@escoladombosco.org.br</a>
+            </p>
+        </section>
+
+        <div class="space-y-8">
+            
+            <!-- Missão 1 -->
+            <section class="mission-card rounded-2xl p-6 md:p-8 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-brand-accent/5 rounded-bl-full -z-10"></div>
+                
+                <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-brand-accent shadow-sm">
+                        <i class="fa-solid fa-lightbulb text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Missão 1: A Ideação do Absurdo</h3>
+                        <p class="text-gray-500 text-sm font-mono font-medium">Tempo sugerido para discussão: 15 min</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-gray-700">
+                    <p>Em equipe, definam o conceito central da ideia absurda de vocês. No documento final, apresentem os seguintes pontos:</p>
+                    <ul class="list-none space-y-3 pl-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>Nome do Produto:</strong> Sejam criativos na nomenclatura. (Ex: Guarda-chuva de tijolo orgânico).</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>Funcionalidade:</strong> O que ele faz? Descrevam detalhadamente a funcionalidade bizarra e aparentemente inútil do produto.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>O Obstáculo:</strong> Por que ele é tão difícil de vender? Expliquem as barreiras óbvias (peso absurdo, cheiro ruim, leis da física, falta de lógica, etc).</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Missão 2 -->
+            <section class="mission-card rounded-2xl p-6 md:p-8 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-brand-secondary/5 rounded-bl-full -z-10"></div>
+                
+                <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-brand-secondary shadow-sm">
+                        <i class="fa-solid fa-robot text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Missão 2: Materializando o Impossível</h3>
+                        <p class="text-gray-500 text-sm font-mono font-medium">Tempo sugerido para discussão: 15 min</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-gray-700">
+                    <p>Agora é hora de dar uma "cara" ao produto e um discurso inicial. No relatório, incluam:</p>
+                    <ul class="list-none space-y-3 pl-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>O Prompt Perfeito:</strong> Escrevam exatamente qual comando (prompt) vocês usariam em uma Inteligência Artificial geradora de imagens para criar o visual deste produto.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>Slogan do Produto:</strong> Uma frase de impacto que "venda" a ideia, por mais contraditória que seja. (Ex: "Pesado como pedra, inútil como sempre.").</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>Protótipo Visual (Opcional, mas recomendado):</strong> Se possível, utilizem uma IA gratuita para gerar a imagem real do produto usando o prompt criado e anexem a imagem no PDF de vocês.</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Missão 3 -->
+            <section class="mission-card rounded-2xl p-6 md:p-8 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-green-500/5 rounded-bl-full -z-10"></div>
+                
+                <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-600 shadow-sm">
+                        <i class="fa-solid fa-tag text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Missão 3: O Preço do Inovador</h3>
+                        <p class="text-gray-500 text-sm font-mono font-medium">Tempo sugerido para discussão: 10 min</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-gray-700">
+                    <p>Qual o valor de algo que ninguém pediu? Vocês definem. Relatem no documento:</p>
+                    <ul class="list-none space-y-3 pl-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>Preço de Venda (R$):</strong> Definam o valor financeiro do produto.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                            <div><strong>Justificativa de Valor:</strong> Expliquem a estratégia por trás desse preço. É focado em exclusividade? Tem um público alvo insano e milionário? Custa muito caro para não ser produzido? Convençam o professor de que o preço faz sentido (mesmo não fazendo).</div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Missão 4 -->
+            <section class="mission-card rounded-2xl p-6 md:p-8 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-brand-primary/5 rounded-bl-full -z-10"></div>
+                
+                <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-brand-primary shadow-sm">
+                        <i class="fa-solid fa-filter text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900">Missão 4: Desenhando a Jornada de Vendas</h3>
+                        <p class="text-gray-500 text-sm font-mono font-medium">Tempo sugerido para discussão: 20 min</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4 text-gray-700">
+                    <p>O desafio final. Estruturem a estratégia de marketing em formato de funil no relatório da equipe:</p>
+                    
+                    <div class="ml-4 pl-4 border-l-2 border-gray-200 space-y-6 mt-4">
+                        <div>
+                            <h4 class="font-bold text-brand-primary flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-magnet text-sm"></i> Atração (Topo do Funil)
+                            </h4>
+                            <p class="text-sm">Como vocês vão chamar a atenção de pessoas que nem sabem que precisam disso? Que tipo de conteúdo ou campanha chamaria a atenção (ex: viral no TikTok, polêmica no Twitter)?</p>
+                        </div>
+                        
+                        <div>
+                            <h4 class="font-bold text-brand-accent flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-heart text-sm"></i> Interesse/Desejo (Meio do Funil)
+                            </h4>
+                            <p class="text-sm">Como transformar essa atenção e curiosidade no desejo profundo de possuir essa bizarrice? Que argumentos vão usar para reter o público?</p>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-brand-secondary flex items-center gap-2 mb-1">
+                                <i class="fa-solid fa-check-circle text-sm"></i> Conversão (Fundo do Funil)
+                            </h4>
+                            <p class="text-sm">Qual a oferta irresistível final? Qual é o Call-to-Action (chamada para ação) para fazer a pessoa clicar em "Comprar" agora mesmo?</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center mt-12">
+        <p class="mb-2">Escola Salesiano Dom Bosco - Disciplina de Administração</p>
+        <p class="text-sm">Lembre-se: O impossível é apenas uma questão de perspectiva.</p>
+    </footer>
+</body>
+</html>
