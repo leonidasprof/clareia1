@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise e Visualização de Dados</title>
+    <!-- Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Variáveis de cores baseadas nas imagens de referência */
+        :root {
+            --bg-purple: #B222FF; /* Cor de fundo roxa vibrante */
+            --box-black: #0D0D0D; /* Fundo preto da caixa */
+            --box-gray: #EAEAEA;  /* Fundo cinza claro da área de questões */
+            --text-yellow: #FFF133; /* Amarelo das estrelas e interrogação */
+            --text-white: #FFFFFF;
+            --text-black: #000000;
+            --btn-bg: #F4F4F4;
+            --btn-hover: #D0D0D0;
+            --btn-border: #000000;
+            --correct-bg: #86efac; /* Verde claro para acerto */
+            --wrong-bg: #fca5a5;   /* Vermelho claro para erro */
+        }
+
+        body {
+            background-color: var(--bg-purple);
+            background-image: radial-gradient(circle at 10% 20%, rgba(0,0,0,0.05) 0%, transparent 20%), 
+                              radial-gradient(circle at 90% 80%, rgba(0,0,0,0.05) 0%, transparent 20%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Estilização da caixa principal do Quiz inspirada no "quiz.png" */
+        .quiz-container {
+            background-color: var(--box-black);
+            border-radius: 16px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid var(--box-black);
+        }
+
+        .quiz-header {
+            background-color: var(--box-black);
+            color: var(--text-white);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        .quiz-header .question-number {
+            font-family: 'Arial Black', Impact, sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .quiz-header .decorations {
+            color: var(--text-yellow);
+            font-family: monospace;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .quiz-body {
+            background-color: var(--box-gray);
+            padding: 30px 20px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* Elementos decorativos (Interrogação e Estrelas simplificadas via CSS/Unicode) */
+        .decoration-question-mark {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 5rem;
+            color: var(--text-yellow);
+            font-family: 'Arial Black', sans-serif;
+            text-shadow: 3px 3px 0 var(--text-black), -1px -1px 0 var(--text-black), 1px -1px 0 var(--text-black), -1px 1px 0 var(--text-black), 1px 1px 0 var(--text-black);
+            transform: rotate(15deg);
+            z-index: 10;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-black);
+            margin-bottom: 25px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Botões das alternativas com estilo inspirado na imagem */
+        .option-btn {
+            background-color: var(--btn-bg);
+            border: 2px solid var(--btn-border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-black);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Ícone simulando o tick/cross da imagem */
+        .option-btn::before {
+            content: '○';
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 1.2rem;
+            font-weight: normal;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--btn-hover);
+            transform: translateX(5px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        /* Estados de resposta */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: #166534;
+        }
+        .option-btn.correct::before {
+            content: '✓';
+            color: #166534;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg);
+            border-color: #991b1b;
+        }
+        .option-btn.wrong::before {
+            content: '✕';
+            color: #991b1b;
+        }
+
+        /* Feedback da justificativa */
+        #feedback-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 2px dashed var(--box-black);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Tela de Resultados com fundo inspirado no laranja.jpg */
+        #result-screen {
+            display: none;
+            background: linear-gradient(135deg, #FFB347 0%, #FF7B00 100%);
+            /* Uma textura simples para imitar os pontinhos se possível com CSS */
+            background-image: radial-gradient(rgba(255,255,255,0.2) 2px, transparent 2px);
+            background-size: 15px 15px;
+            padding: 40px 20px;
+            border-radius: 0 0 12px 12px;
+            text-align: center;
+            color: var(--text-white);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .score-display {
+            font-size: 4rem;
+            font-family: 'Arial Black', sans-serif;
+            margin-bottom: 30px;
+            color: var(--text-yellow);
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .action-btn {
+            background-color: var(--box-black);
+            color: var(--text-yellow);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+            margin: 5px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: flex-start; /* Alinhando os itens à esquerda */
+            gap: 20px; /* Espaçamento entre acertos e erros */
+            align-items: center;
+            background-color: var(--box-black);
+            padding: 10px 20px;
+            border-bottom: 2px solid var(--box-gray);
+            font-size: 0.9rem;
+            color: var(--text-white);
+            font-weight: bold;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-correct {
+            color: #86efac;
+        }
+
+        .stat-wrong {
+            color: #fca5a5;
+        }
+        
+        /* Controles gerais */
+        .controls {
+            margin-top: 20px;
+            text-align: right;
+            display: none;
+        }
+
+        /* Responsividade para Celulares */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px 10px;
+                justify-content: flex-start;
+            }
+            .quiz-header {
+                padding: 15px;
+                font-size: 1.5rem;
+            }
+            .decoration-question-mark {
+                font-size: 3.5rem;
+                top: -5px;
+                right: 5px;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .option-btn {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+            }
+            .action-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            .score-display {
+                font-size: 3rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="w-full max-w-[600px] z-0 mb-5 flex flex-row justify-between items-center px-2 gap-3">
+        <h1 class="text-[1.2rem] sm:text-2xl md:text-3xl font-black uppercase tracking-tighter text-black flex-1" style="font-family: 'Arial Black', sans-serif; text-shadow: 2px 2px 0px rgba(255,255,255,0.5);">
+            <span class="block text-left">Análise e Visualização</span>
+            <span class="flex items-center justify-start gap-1 sm:gap-2 mt-1">
+                <!-- Ícone de Gráfico representando Dados -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-7 sm:w-7 md:h-9 md:w-9 text-black flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(2px 2px 0px rgba(255,255,255,0.5));">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                de Dados
+            </span>
+        </h1>
+
+        <!-- Logo da Faculdade em Retângulo Arredondado -->
+        <div class="bg-white rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,0.3)] border-2 border-black overflow-hidden flex flex-shrink-0 transition-transform hover:scale-105">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRce9bE9X0Uc8wPX4e34SWUYnNTktqe0hCR1xUJvVEL_JCmaofsAj56CS1p&s=10" alt="Logo Instituição" class="h-12 sm:h-14 md:h-16 object-cover" onerror="this.src='https://placehold.co/100x50/FFFFFF/000000?text=Logo'">
+        </div>
+    </div>
+
+    <div class="quiz-container z-10">
+        <div class="decoration-question-mark">?</div>
+        
+        <div class="stats-container" id="stats-container">
+            <div class="stat-item stat-correct">
+                <span>Acertos:</span>
+                <span id="real-time-correct">0</span>
+            </div>
+            <div class="stat-item stat-wrong">
+                <span>Erros:</span>
+                <span id="real-time-wrong">0</span>
+            </div>
+        </div>
+
+        <div class="quiz-header" id="quiz-header">
+            <div class="question-number text-xl" id="question-number-display">#001 / 051</div>
+            <div class="decorations">
+                x x x<br>x x x
+            </div>
+        </div>
+
+        <!-- Tela da Pergunta -->
+        <div class="quiz-body" id="question-screen">
+            <div class="question-text" id="question-text">
+                Carregando pergunta...
+            </div>
+            
+            <div id="options-container">
+                <!-- Alternativas serão geradas aqui -->
+            </div>
+
+            <div id="feedback-container">
+                <div class="feedback-title text-black" id="feedback-title">JUSTIFICATIVA:</div>
+                <div class="text-gray-800" id="feedback-text"></div>
+            </div>
+
+            <div class="controls" id="controls-container">
+                <button id="next-btn" class="action-btn text-sm py-2 px-4">Próxima Questão ➔</button>
+            </div>
+        </div>
+
+        <!-- Tela de Resultados -->
+        <div id="result-screen">
+            <div class="result-title">FIM DO TESTE!</div>
+            <p class="text-xl font-bold mb-2">Você acertou</p>
+            <div class="score-display">
+                <span id="score-correct">0</span> / <span id="score-total">51</span>
+            </div>
+            <p class="text-lg font-bold mb-6" id="result-message"></p>
+            
+            <button id="restart-btn" class="action-btn">TENTE AGORA MESMO! (Refazer)</button>
+        </div>
+    </div>
+
+    <!-- Link do Instagram Prof. Tenebroso -->
+    <a href="https://instagram.com/prof.tenebroso" target="_blank" rel="noopener noreferrer" class="mt-6 mb-2 z-10 flex items-center justify-center gap-2 bg-white text-black text-lg px-5 py-2 rounded-full border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-transform hover:scale-105 hover:-translate-y-1" style="font-family: 'Arial Black', sans-serif;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+        </svg>
+        @prof.tenebroso
+    </a>
+
+<script>
+    // Dados do Quiz (inseridos diretamente conforme o JSON fornecido)
+    const allQuestions = [
+  {
+    "id": 1,
+    "pergunta": "Quando é mais indicado o uso de escalas logarítmicas nos eixos de um gráfico?",
+    "alternativas": [
+      "Quando os dados representam categorias qualitativas e ordinais sem relação matemática.",
+      "Quando os dados apresentam crescimento exponencial ou grande variação de magnitude.",
+      "Quando o objetivo é mostrar a proporção exata de partes de um todo em poucas categorias.",
+      "Quando a distribuição das variáveis numéricas é perfeitamente normal e simétrica."
+    ],
+    "resposta_correta": "Quando os dados apresentam crescimento exponencial ou grande variação de magnitude.",
+    "justificativa": "As escalas logarítmicas ajudam a comprimir uma grande amplitude de valores, permitindo que taxas de variação em dados exponenciais sejam visualizadas sem que os valores extremos ofusquem as menores magnitudes."
+  },
+  {
+    "id": 2,
+    "pergunta": "O que indicam coeficientes de correlação próximos de zero em uma matriz de correlação?",
+    "alternativas": [
+      "Indicam que há uma relação linear perfeita e inversamente proporcional entre as variáveis.",
+      "Sugerem a presença de um forte crescimento exponencial entre as duas variáveis.",
+      "Indicam a ausência total de relação ou uma relação linear muito fraca entre as variáveis.",
+      "Comprovam que uma variável é a causa direta do comportamento da outra."
+    ],
+    "resposta_correta": "Indicam a ausência total de relação ou uma relação linear muito fraca entre as variáveis.",
+    "justificativa": "Na estatística, o coeficiente de correlação varia de -1 a 1. Valores próximos a 0 demonstram ausência de correlação linear significativa entre os pares analisados."
+  },
+  {
+    "id": 3,
+    "pergunta": "Por que a análise descritiva costuma preceder a análise preditiva em um projeto de Ciência de Dados?",
+    "alternativas": [
+      "Porque a análise descritiva já utiliza Inteligência Artificial avançada, eliminando a necessidade de modelos adicionais.",
+      "Porque ela foca exclusivamente em otimizar os parâmetros hiper-parametrizáveis de uma rede neural profunda.",
+      "Porque ela garante a compreensão inicial do comportamento histórico dos dados antes que qualquer modelagem futura seja feita.",
+      "Porque a análise descritiva serve para gerar as recomendações automáticas finais ao usuário do painel."
+    ],
+    "resposta_correta": "Porque ela garante a compreensão inicial do comportamento histórico dos dados antes que qualquer modelagem futura seja feita.",
+    "justificativa": "A análise descritiva sumariza o que já ocorreu. Entender esse contexto básico é fundamental para garantir a integridade da modelagem preditiva subsequente."
+  },
+  {
+    "id": 4,
+    "pergunta": "Qual é a principal vantagem e utilidade do gráfico de violino (violin plot)?",
+    "alternativas": [
+      "Substituir os mapas de calor na visualização de dados categóricos de alta cardinalidade.",
+      "Demonstrar exclusivamente a evolução de uma variável numérica ao longo do tempo.",
+      "Combinar a curva de densidade de probabilidade com as medidas de dispersão e tendência central, sendo ótimo para comparar distribuições.",
+      "Representar hierarquias estruturais complexas, substituindo gráficos de rede (network graphs)."
+    ],
+    "resposta_correta": "Combinar a curva de densidade de probabilidade com as medidas de dispersão e tendência central, sendo ótimo para comparar distribuições.",
+    "justificativa": "O gráfico de violino funde os conceitos de boxplot e densidade Kernel, revelando nuances da distribuição dos dados (como bimodalidade) que o boxplot pode ocultar."
+  },
+  {
+    "id": 5,
+    "pergunta": "Sobre a utilização de animações no processo de Storytelling com Dados, assinale a alternativa correta:",
+    "alternativas": [
+      "Devem ser utilizadas com cautela, pois podem distrair o público em vez de auxiliar na compreensão.",
+      "São sempre recomendadas, pois garantem independentemente do público um maior nível de retenção da informação.",
+      "São obrigatórias quando se apresenta um dashboard gerencial para a diretoria.",
+      "Devem ser usadas apenas em gráficos estáticos impressos."
+    ],
+    "resposta_correta": "Devem ser utilizadas com cautela, pois podem distrair o público em vez de auxiliar na compreensão.",
+    "justificativa": "Embora atrativas, animações exageradas geram carga cognitiva desnecessária. Devem ser reservadas para casos em que o movimento explica algo (como transição no tempo)."
+  },
+  {
+    "id": 6,
+    "pergunta": "A normalização ou padronização dos dados é uma etapa sempre obrigatória antes de gerar visualizações na Análise Exploratória (EDA)?",
+    "alternativas": [
+      "Sim, gráficos não podem ser plotados com dados em escalas diferentes.",
+      "Não, a visualização exploratória pode e deve muitas vezes analisar a escala bruta original antes de transformações.",
+      "Sim, pois ferramentas como Python e R exigem matrizes padronizadas (z-score) para renderizar plots básicos.",
+      "Não, porque a normalização só é feita após o modelo de IA entrar em produção (deploy)."
+    ],
+    "resposta_correta": "Não, a visualização exploratória pode e deve muitas vezes analisar a escala bruta original antes de transformações.",
+    "justificativa": "Ver os dados na sua forma original é parte crucial da exploração para identificar anomalias, embora a normalização seja vital mais adiante para algoritmos de IA."
+  },
+  {
+    "id": 7,
+    "pergunta": "Qual das opções a seguir apresenta uma visualização essencialmente projetada para ajudar na identificação matemática de 'outliers' (valores atípicos)?",
+    "alternativas": [
+      "Gráfico de Pizza",
+      "Nuvem de Palavras (Word Cloud)",
+      "Diagrama de Caixa (Boxplot)",
+      "Gráfico de Área Empilhada"
+    ],
+    "resposta_correta": "Diagrama de Caixa (Boxplot)",
+    "justificativa": "O boxplot utiliza o limite interquartil (IQR) para traçar limites (whiskers), marcando individualmente pontos que extrapolam esses limites, que são definidos como outliers."
+  },
+  {
+    "id": 8,
+    "pergunta": "Qual a relação entre a Análise Explanatória de Dados e o Storytelling com Dados?",
+    "alternativas": [
+      "São conceitos totalmente opostos; a explanatória é técnica e o storytelling é apenas marketing.",
+      "A análise explanatória comunica achados relevantes a um público-alvo, utilizando os princípios do storytelling para construir uma narrativa lógica.",
+      "A explanatória serve para descobrir padrões ocultos e o storytelling apenas para limpeza de dados.",
+      "Não há relação, pois o storytelling exige animações em 3D, algo que não é suportado na explanatória."
+    ],
+    "resposta_correta": "A análise explanatória comunica achados relevantes a um público-alvo, utilizando os princípios do storytelling para construir uma narrativa lógica.",
+    "justificativa": "Enquanto a análise exploratória busca os insights (para o analista), a explanatória traduz isso para a audiência, sendo o storytelling a ferramenta comunicativa central dessa tradução."
+  },
+  {
+    "id": 9,
+    "pergunta": "Por que o uso de paletas de cores em visualizações exige cuidado e embasamento técnico?",
+    "alternativas": [
+      "Porque o excesso de cores aumenta o tamanho do arquivo do dashboard.",
+      "Porque paletas inadequadas podem distorcer o dado e dificultar severamente a leitura, especialmente para pessoas com daltonismo.",
+      "Porque cores escuras diminuem a taxa de conversão em relatórios empresariais.",
+      "Porque todas as cores quentes significam automaticamente perdas financeiras."
+    ],
+    "resposta_correta": "Porque paletas inadequadas podem distorcer o dado e dificultar severamente a leitura, especialmente para pessoas com daltonismo.",
+    "justificativa": "Acessibilidade é um pilar de visualização. Usar combinações exclusivas de vermelho e verde para dados cruciais, por exemplo, prejudica usuários daltônicos (deuteranopia)."
+  },
+  {
+    "id": 10,
+    "pergunta": "Como ferramentas de Inteligência Artificial e Machine Learning impactam a evolução da análise de dados?",
+    "alternativas": [
+      "Eliminam totalmente a necessidade de limpar os dados, fazendo correções de forma mágica.",
+      "Permitem detectar padrões de forma automatizada e criar análises preditivas/prescritivas avançadas.",
+      "Substituem os dashboards interativos por interfaces unicamente de áudio.",
+      "Limitam o volume de dados, pois algoritmos de IA só funcionam em pequenas amostras."
+    ],
+    "resposta_correta": "Permitem detectar padrões de forma automatizada e criar análises preditivas/prescritivas avançadas.",
+    "justificativa": "A IA potencializa as capacidades analíticas, indo além da sumarização humana e descobrindo relações complexas e imperceptíveis a olho nu."
+  },
+  {
+    "id": 11,
+    "pergunta": "É correto afirmar que o histograma é o gráfico ideal para verificar a relação entre duas variáveis quantitativas distintas?",
+    "alternativas": [
+      "Sim, ele traça a linha de tendência entre a variável X e Y.",
+      "Não, o histograma é univariado (mostra a distribuição de uma única variável); a relação entre duas é vista no Gráfico de Dispersão (Scatter Plot).",
+      "Sim, desde que as barras sejam empilhadas.",
+      "Não, porque histogramas servem apenas para dados estritamente nominais, como nomes de cidades."
+    ],
+    "resposta_correta": "Não, o histograma é univariado (mostra a distribuição de uma única variável); a relação entre duas é vista no Gráfico de Dispersão (Scatter Plot).",
+    "justificativa": "O histograma exibe a frequência de intervalos de uma variável. Para cruzar o impacto de uma métrica em relação a outra (X vs Y), usa-se dispersão."
+  },
+  {
+    "id": 12,
+    "pergunta": "Qual é a definição mais apropriada de uma 'série temporal' no contexto analítico?",
+    "alternativas": [
+      "Qualquer gráfico de barras que compare diferentes categorias demográficas.",
+      "Um modelo de machine learning voltado apenas para o processamento de linguagem natural.",
+      "Um conjunto de observações de uma mesma variável coletadas em ordem cronológica, geralmente em intervalos regulares.",
+      "Uma matriz de correlação que exclui dados com data e hora."
+    ],
+    "resposta_correta": "Um conjunto de observações de uma mesma variável coletadas em ordem cronológica, geralmente em intervalos regulares.",
+    "justificativa": "A variável principal em uma série temporal é o tempo cronológico (eixo x), servindo para identificar tendências históricas."
+  },
+  {
+    "id": 13,
+    "pergunta": "Uma série temporal pode ser desmembrada/caracterizada por componentes específicos. Quais são os mais clássicos?",
+    "alternativas": [
+      "Amplitude, Frequência Sonora e Decibéis.",
+      "Outliers, Mediana e Desvio Padrão.",
+      "Tendência, Sazonalidade, Ciclos e Ruído (Residual).",
+      "Categorias, Agrupamentos, Correlações e Redes."
+    ],
+    "resposta_correta": "Tendência, Sazonalidade, Ciclos e Ruído (Residual).",
+    "justificativa": "Na estatística, decompomos séries temporais para entender a direção geral (tendência), padrões repetitivos fixos (sazonal), longos (ciclos) e aleatoriedade (ruído)."
+  },
+  {
+    "id": 14,
+    "pergunta": "No domínio do Aprendizado de Máquina (Machine Learning), o que é a tarefa de classificação?",
+    "alternativas": [
+      "Uma tarefa não supervisionada focada na redução de dimensionalidade de vetores.",
+      "Uma tarefa supervisionada em que o objetivo é atribuir um rótulo ou categoria predefinida a uma nova observação de dados.",
+      "Uma tarefa de otimização contínua focada apenas na recomendação de preços numéricos exatos.",
+      "Um tipo de algoritmo focado unicamente na limpeza de valores nulos."
+    ],
+    "resposta_correta": "Uma tarefa supervisionada em que o objetivo é atribuir um rótulo ou categoria predefinida a uma nova observação de dados.",
+    "justificativa": "Modelos de classificação aprendem de dados históricos rotulados (supervisionados) para classificar novas entradas em baldes categóricos (ex: fraude / não fraude)."
+  },
+  {
+    "id": 15,
+    "pergunta": "A Análise Exploratória de Dados (AED) é o tipo de análise que proporciona o maior valor estratégico final para as organizações?",
+    "alternativas": [
+      "Sim, porque sem explorar os dados é impossível tomar qualquer decisão na empresa.",
+      "Não, a análise com maior grau de complexidade e valor estratégico agregado é a Análise Prescritiva.",
+      "Sim, pois foca em estatísticas básicas facilmente consumíveis pela diretoria.",
+      "Não, o maior valor está exclusivamente na coleta crua dos dados em Data Lakes."
+    ],
+    "resposta_correta": "Não, a análise com maior grau de complexidade e valor estratégico agregado é a Análise Prescritiva.",
+    "justificativa": "No modelo de maturidade analítica (Gartner), a escada vai de Descritiva -> Diagnóstica -> Preditiva -> Prescritiva (esta última gerando mais valor por sugerir ações)."
+  },
+  {
+    "id": 16,
+    "pergunta": "Quais são as principais etapas cronológicas envolvidas no ciclo de vida da criação de um modelo de Inteligência Artificial?",
+    "alternativas": [
+      "Storytelling, Modelagem UML, Arquitetura em Nuvem e Faturamento.",
+      "Testes A/B, Criação de Relatório PDF e Apresentação Executiva.",
+      "Coleta, Preparação (Limpeza/AED), Treinamento, Validação/Teste e Implantação (Deploy).",
+      "Geração de Gráfico 3D, Análise Descritiva e Escolha de Cores."
+    ],
+    "resposta_correta": "Coleta, Preparação (Limpeza/AED), Treinamento, Validação/Teste e Implantação (Deploy).",
+    "justificativa": "O pipeline de Ciência de Dados padronizado requer obter os dados, higienizá-los, treinar o algoritmo, verificar sua precisão estatística e, por fim, colocá-lo em produção."
+  },
+  {
+    "id": 17,
+    "pergunta": "Dentre as etapas de preparação de dados (pré-treino de modelo), quais operações são prioritárias?",
+    "alternativas": [
+      "Desenvolver painéis com storytelling avançado e animações.",
+      "Limpeza de nulos/ruídos, tratamento de outliers e transformação/normalização de variáveis.",
+      "Uso de IA Generativa para criar dados falsos unicamente por estética.",
+      "Criação exclusiva de gráficos de pizza para toda e qualquer variável disponível."
+    ],
+    "resposta_correta": "Limpeza de nulos/ruídos, tratamento de outliers e transformação/normalização de variáveis.",
+    "justificativa": "Tratar valores ausentes e extremos previne vieses e distorções matemáticas durante o treinamento dos modelos de Machine Learning (Garbage in, Garbage out)."
+  },
+  {
+    "id": 18,
+    "pergunta": "Ao transformar dados não estruturados textuais em um gráfico, como facilitar a leitura que antes seria feita em uma Nuvem de Palavras (Word Cloud)?",
+    "alternativas": [
+      "Utilizar um gráfico de dispersão conectando as letras.",
+      "Utilizar um gráfico de barras com rótulos numéricos, destacando as mais frequentes com cor contrastante.",
+      "Plotar as palavras em um mapa geográfico.",
+      "Utilizar um gráfico de pizza com mais de 30 fatias, uma para cada palavra."
+    ],
+    "resposta_correta": "Utilizar um gráfico de barras com rótulos numéricos, destacando as mais frequentes com cor contrastante.",
+    "justificativa": "Diferente da Word Cloud que dificulta a comparação precisa de tamanhos, as barras organizadas por ordem de frequência trazem exatidão numérica e ordem visual lógica."
+  },
+  {
+    "id": 19,
+    "pergunta": "Apesar de suas limitações analíticas quantitativas, a visualização 'Nuvem de Palavras' é bastante útil em qual cenário prático?",
+    "alternativas": [
+      "Na projeção de faturamento financeiro futuro (análise preditiva).",
+      "No mapeamento de desvios padrões em um banco de dados relacional logístico.",
+      "Na análise heurística e visualização rápida de termos frequentes em dados não estruturados, como reviews e feedbacks.",
+      "No cruzamento geoespacial de rotas comerciais de vendas."
+    ],
+    "resposta_correta": "Na análise heurística e visualização rápida de termos frequentes em dados não estruturados, como reviews e feedbacks.",
+    "justificativa": "Em análises de sentimentos e mineração de textos, a Word Cloud funciona bem para apresentar rapidamente ao público leigo quais tópicos dominam a narrativa."
+  },
+  {
+    "id": 20,
+    "pergunta": "Qual é o principal diferencial da Análise Exploratória (EDA) em relação à Análise Explanatória?",
+    "alternativas": [
+      "A exploratória é um processo investigativo voltado ao analista para descobrir padrões; a explanatória comunica os achados ao público de decisão.",
+      "A exploratória só lida com textos, a explanatória só lida com números.",
+      "A exploratória gera dashboards ao vivo, enquanto a explanatória apenas gera relatórios em papel.",
+      "Não há diferença estatística ou visual, apenas mudança de nomenclatura."
+    ],
+    "resposta_correta": "A exploratória é um processo investigativo voltado ao analista para descobrir padrões; a explanatória comunica os achados ao público de decisão.",
+    "justificativa": "Cole Nussbaumer Knaflic define essa barreira: você explora 100 ostras para achar 2 pérolas (exploratória), e apresenta apenas as 2 pérolas na explanatória."
+  },
+  {
+    "id": 21,
+    "pergunta": "Em um projeto focado em entender cancelamentos (Churn), quando seria mais vantajoso usar um relatório analítico tradicional do que um dashboard iterativo?",
+    "alternativas": [
+      "Para a diretoria que deseja checar o volume de cancelamentos do dia de hoje.",
+      "Para os analistas de produto e cientistas de dados que precisam de análises profundas, textuais e explicativas históricas das causas-raiz.",
+      "Para enviar alertas dinâmicos (push notifications) pelo smartphone dos gerentes de vendas.",
+      "Para a equipe de call center aplicar filtros dinâmicos cruzando idades em tempo real."
+    ],
+    "resposta_correta": "Para os analistas de produto e cientistas de dados que precisam de análises profundas, textuais e explicativas históricas das causas-raiz.",
+    "justificativa": "Relatórios estáticos são formatos excelentes para documentar contexto denso, narrativas explicativas (causa e efeito) e conclusões imutáveis de um período."
+  },
+  {
+    "id": 22,
+    "pergunta": "A Análise Preditiva tem como principal definição estatística e funcional:",
+    "alternativas": [
+      "A elaboração de painéis operacionais que não usam variáveis históricas.",
+      "A utilização de regras textuais manuais sem o uso de estatística ou matemática.",
+      "A utilização de técnicas de estatística avançada e aprendizado de máquina para estimar ou classificar resultados e tendências futuras com base no passado.",
+      "A identificação isolada dos responsáveis pelos erros cometidos em um sistema em tempo real."
+    ],
+    "resposta_correta": "A utilização de técnicas de estatística avançada e aprendizado de máquina para estimar ou classificar resultados e tendências futuras com base no passado.",
+    "justificativa": "O coração da preditiva é o uso do histórico (padrões passados) para projetar com certo grau de probabilidade o que ocorrerá no futuro."
+  },
+  {
+    "id": 23,
+    "pergunta": "A Análise Diagnóstica tem um papel central no ciclo de vida de dados corporativos. Qual é seu foco?",
+    "alternativas": [
+      "Determinar unicamente as variáveis de banco de dados e suas chaves primárias.",
+      "Procurar explicar e encontrar as correlações e causas do porquê um determinado evento aconteceu no passado.",
+      "Prescrever as decisões autônomas que o robô deve tomar sem supervisão.",
+      "Ignorar o histórico e trabalhar apenas com simulações de futuro hipotético (Monte Carlo)."
+    ],
+    "resposta_correta": "Procurar explicar e encontrar as correlações e causas do porquê um determinado evento aconteceu no passado.",
+    "justificativa": "Se a descritiva diz 'O que aconteceu?' (ex: vendas caíram), a diagnóstica responde 'Por que aconteceu?' (ex: caíram devido à falta de estoque na região X)."
+  },
+  {
+    "id": 24,
+    "pergunta": "Além de realizar previsões, o que a Análise Prescritiva propõe fazer?",
+    "alternativas": [
+      "Apenas desenhar os diagramas de Entidade-Relacionamento do projeto.",
+      "Sugerir ações ótimas a serem tomadas e seu possível impacto, baseando-se em simulações e algoritmos de otimização (IA).",
+      "Restringir a comunicação através de painéis monocromáticos.",
+      "Excluir completamente a necessidade de qualquer aprovação humana nos negócios."
+    ],
+    "resposta_correta": "Sugerir ações ótimas a serem tomadas e seu possível impacto, baseando-se em simulações e algoritmos de otimização (IA).",
+    "justificativa": "Enquanto modelos preditivos entregam a probabilidade, a prescrição simula caminhos de decisão e orienta os gestores sobre qual a melhor estratégia adotar."
+  },
+  {
+    "id": 25,
+    "pergunta": "Qual o perfil de foco de um Dashboard Estratégico em uma organização?",
+    "alternativas": [
+      "Monitorar o status online/offline dos servidores em tempo real a cada segundo.",
+      "Acompanhar métricas de longo prazo (macro), KPIs empresariais globais e é direcionado especificamente à alta gestão.",
+      "Facilitar o cruzamento intensivo de milhões de variáveis para uso exclusivo dos cientistas de dados.",
+      "Servir de interface gráfica para o cadastro de novos produtos no sistema."
+    ],
+    "resposta_correta": "Acompanhar métricas de longo prazo (macro), KPIs empresariais globais e é direcionado especificamente à alta gestão.",
+    "justificativa": "Estratégico foca no 'Big Picture' (diretoria). Diferencia-se dos dashboards Táticos (gerência/departamental) e Operacionais (chão de fábrica/tempo real)."
+  },
+  {
+    "id": 26,
+    "pergunta": "Um bom gráfico ou dashboard deve sempre priorizar o apelo visual artístico, mesmo que isso venha a comprometer levemente a precisão matemática da informação?",
+    "alternativas": [
+      "Sim, pois dashboards são, antes de tudo, ferramentas de marketing interno.",
+      "Não. A precisão, integridade e facilidade de leitura do dado devem sempre prevalecer sobre meros enfeites estéticos.",
+      "Sim, gráficos 'chatos' sempre serão ignorados e portanto podem ser distorcidos a favor da arte.",
+      "Não existe regra, fica inteiramente a critério do gosto pessoal do desenvolvedor."
+    ],
+    "resposta_correta": "Não. A precisão, integridade e facilidade de leitura do dado devem sempre prevalecer sobre meros enfeites estéticos.",
+    "justificativa": "Visualização de dados é sobre função antes da forma. Estética é bem-vinda (princípios de Gestalt/Design), mas jamais à custa da integridade e veracidade dos números."
+  },
+  {
+    "id": 27,
+    "pergunta": "Por que gráficos em 3D, em sua ampla maioria de uso na área de negócios, não são recomendados?",
+    "alternativas": [
+      "Porque o custo computacional de renderização exige placas de vídeo dedicadas.",
+      "Porque a perspectiva de profundidade adiciona ruído e distorce visualmente a proporção das áreas/fatias dificultando a comparação humana.",
+      "Porque as paletas de cores padrão do mercado não suportam sombras e luzes 3D.",
+      "Porque eles não podem ser exportados para arquivos no formato PDF."
+    ],
+    "resposta_correta": "Porque a perspectiva de profundidade adiciona ruído e distorce visualmente a proporção das áreas/fatias dificultando a comparação humana.",
+    "justificativa": "A falsa terceira dimensão em gráficos altera os ângulos visuais; fatias de pizza mais próximas ao leitor parecem maiores do que as do fundo, quebrando a integridade quantitativa."
+  },
+  {
+    "id": 28,
+    "pergunta": "Em qual situação o gráfico de barras empilhadas costuma se tornar uma escolha ruim (anti-padrão)?",
+    "alternativas": [
+      "Quando há o desejo de comparar os totais gerais das barras principais.",
+      "Quando existem apenas duas categorias em cada barra.",
+      "Quando há excesso de categorias e partições internas na mesma barra, tornando a comparação das sub-partes visualmente caótica e imprecisa.",
+      "Quando os dados apresentados possuem valores puramente inteiros."
+    ],
+    "resposta_correta": "Quando há excesso de categorias e partições internas na mesma barra, tornando a comparação das sub-partes visualmente caótica e imprecisa.",
+    "justificativa": "Comparar as partes internas das barras empilhadas é difícil porque elas não começam na mesma base fixa (linha zero). Muitas categorias geram um arco-íris ilegível."
+  },
+  {
+    "id": 29,
+    "pergunta": "Um KPI (Indicador-Chave de Desempenho) eficaz possui características cruciais. Quais são elas no contexto analítico?",
+    "alternativas": [
+      "Ser genérico, focado em métricas de vaidade e puramente qualitativo.",
+      "Ter relevância para o negócio, ser quantitativamente mensurável e estar alinhado aos objetivos estratégicos.",
+      "Ser atualizado impreterivelmente a cada 5 segundos independentemente da métrica tratada.",
+      "Consistir apenas em um valor monetário expresso na moeda local."
+    ],
+    "resposta_correta": "Ter relevância para o negócio, ser quantitativamente mensurável e estar alinhado aos objetivos estratégicos.",
+    "justificativa": "KPIs devem guiar o negócio (Actionable). Diferente de métricas comuns, eles indicam se a empresa está ou não atingindo os resultados definidos em seu planejamento."
+  },
+  {
+    "id": 30,
+    "pergunta": "Qual a grande limitação perceptiva do Gráfico de Pizza quando se deseja exibir categorias com valores matemáticos muito próximos?",
+    "alternativas": [
+      "O sistema visual humano é excelente em comparar fatias angulares em graus, logo ele é altamente recomendado.",
+      "O olho humano possui severas restrições ao tentar comparar ângulos e áreas ligeiramente distintas sem a ajuda de rótulos exatos, dificultando a distinção do maior para o menor.",
+      "Ele exige que os dados sejam formatados obrigatoriamente como variáveis contínuas numéricas no eixo polar.",
+      "Ele não permite a utilização de cores quentes e frias simultaneamente em suas renderizações."
+    ],
+    "resposta_correta": "O olho humano possui severas restrições ao tentar comparar ângulos e áreas ligeiramente distintas sem a ajuda de rótulos exatos, dificultando a distinção do maior para o menor.",
+    "justificativa": "Sem rótulos explícitos, diferenciar uma fatia de 30% de uma de 33% é complexo no modelo polar (pizza). Já num gráfico de barras (comprimento linear), essa diferença salta aos olhos imediatamente."
+  },
+  {
+    "id": 31,
+    "pergunta": "Qual é a principal função e o benefício do uso de indicadores visuais clássicos, como ícones de semáforos, em painéis de gestão?",
+    "alternativas": [
+      "Diminuir a velocidade de processamento dos dashboards na web.",
+      "Reduzir drasticamente a carga cognitiva, permitindo uma interpretação mental quase instantânea do status do negócio (Bom, Alerta, Crítico).",
+      "Garantir a conformidade legal para apresentação em relatórios fiscais.",
+      "Substituir totalmente a necessidade de apresentar os números nos painéis de dados."
+    ],
+    "resposta_correta": "Reduzir drasticamente a carga cognitiva, permitindo uma interpretação mental quase instantânea do status do negócio (Bom, Alerta, Crítico).",
+    "justificativa": "A associação pré-atentiva de cores do cotidiano (verde = avance, vermelho = pare) ajuda o cérebro do usuário a processar prioridades de leitura sem gastar energia processando os números brutos."
+  },
+  {
+    "id": 32,
+    "pergunta": "Ao refatorar um gráfico de barras convencional buscando elevar a razão dados-tinta (data-ink ratio) segundo os preceitos de design analítico, qual ação é pertinente?",
+    "alternativas": [
+      "Aumentar o brilho das cores secundárias e colocar texturas dentro das barras.",
+      "Adicionar marcas de grade densas em todo o fundo do gráfico para facilitar os cliques no painel.",
+      "Remover bordas de contenção das barras, apagar linhas de grade desnecessárias e retirar o contorno (box) do gráfico geral.",
+      "Duplicar os eixos (Y primário e Y secundário) para repetir os mesmos valores na direita e esquerda."
+    ],
+    "resposta_correta": "Remover bordas de contenção das barras, apagar linhas de grade desnecessárias e retirar o contorno (box) do gráfico geral.",
+    "justificativa": "Edward Tufte cunhou o Data-Ink Ratio: a ideia de que a 'tinta' (pixels) gasta no gráfico deve focar em mostrar o dado. Bordas e grades pesadas são 'tinta não-dado' (chartjunk) e devem ser minimizadas."
+  },
+  {
+    "id": 33,
+    "pergunta": "No contexto da evolução contínua temporal (ex: despesa pública entre 2010 a 2024), qual visualização substitui perfeitamente as barras agrupadas?",
+    "alternativas": [
+      "Mapa Georreferenciado",
+      "Diagrama de Árvore (Treemap)",
+      "Gráfico de Linhas Clássico",
+      "Gráfico de Dispersão sem conexão"
+    ],
+    "resposta_correta": "Gráfico de Linhas Clássico",
+    "justificativa": "A linha traçada entre os pontos conectando os anos respeita o princípio de continuidade e flui organicamente ao longo do tempo (eixo x), evidenciando de imediato a curva (tendência e declínio) que a série sofreu."
+  },
+  {
+    "id": 34,
+    "pergunta": "Sobre as boas práticas visuais e o design de relatórios, o que significa projetar painéis 'responsivos'?",
+    "alternativas": [
+      "Projetar dashboards usando ferramentas limitadas exclusivamente a desktops fixos na companhia.",
+      "Construir visualizações que respondam às consultas do banco de dados na linguagem SQL tradicional.",
+      "Criar estruturas de exibição de relatórios e dashboards flexíveis, cujos blocos e contêineres de gráficos se adaptam automaticamente ao tamanho e resolução de tela do dispositivo do usuário (PC, Tablet, Mobile).",
+      "Restringir a apresentação dos dados unicamente via tabelas dinâmicas em planilhas."
+    ],
+    "resposta_correta": "Criar estruturas de exibição de relatórios e dashboards flexíveis, cujos blocos e contêineres de gráficos se adaptam automaticamente ao tamanho e resolução de tela do dispositivo do usuário (PC, Tablet, Mobile).",
+    "justificativa": "O conceito front-end de responsividade atende à experiência do usuário, garantindo que o consumo do dado mantenha-se fluido em diferentes devices, sem quebras do layout dos gráficos."
+  },
+  {
+    "id": 35,
+    "pergunta": "Na EDA, uma das etapas mais analíticas ocorre após a checagem isolada dos dados. Qual é o objetivo principal da Análise Bivariada?",
+    "alternativas": [
+      "Plotar individualmente histogramas de absolutamente todas as colunas de texto da base para medir assimetrias em caracteres.",
+      "Identificar relações matemáticas empíricas, padrões espaciais e possíveis correlações lineares cruzando especificamente variáveis aos pares.",
+      "Exportar os conjuntos de dados do SQL para arquivos CSV contendo duas colunas (bi-variadas).",
+      "Normalizar variáveis com distribuição anormal."
+    ],
+    "resposta_correta": "Identificar relações matemáticas empíricas, padrões espaciais e possíveis correlações lineares cruzando especificamente variáveis aos pares.",
+    "justificativa": "Cruzar pares de features (como peso vs altura, ou idade vs gasto) é onde começam a nascer os principais insights do relacionamento dos dados, muitas vezes validados usando scatter plots ou mapas de calor de correlação."
+  },
+  {
+    "id": 36,
+    "pergunta": "Como os Mapas de Calor (Heatmaps) representam a magnitude quantitativa dos dados contidos em uma matriz?",
+    "alternativas": [
+      "Apresentando um ícone 3D em chamas sobre células cruciais da matriz.",
+      "Mapeando os números inteiros em diferentes tamanhos de fontes textuais.",
+      "Convertendo os dados numéricos em escalas de tons, gradientes ou matizes de cores (saturação e luminosidade), preenchendo as células da matriz para permitir uma visão global de concentração.",
+      "Plotando minigráficos de barra dentro de cada célula da tabela Excel."
+    ],
+    "resposta_correta": "Convertendo os dados numéricos em escalas de tons, gradientes ou matizes de cores (saturação e luminosidade), preenchendo as células da matriz para permitir uma visão global de concentração.",
+    "justificativa": "No Heatmap numérico, o cérebro processa instintivamente a intensidade da cor. Tons escuros (ou quentes) costumam representar alta densidade, e cores claras indicam baixos valores."
+  },
+  {
+    "id": 37,
+    "pergunta": "Em relação à criação de visualizações iterativas, é verdadeiro afirmar que 'Gráficos interativos devem ser usados em todos os contextos de negócios possíveis, inclusive estáticos'?",
+    "alternativas": [
+      "Sim, gráficos interativos geram código fonte limpo nas ferramentas, melhorando a perfomance em impressões PDF.",
+      "Não. Em contextos de impressos físicos (jornal/revistas), ou slides estáticos, a interatividade perde o propósito e exige uma elaboração exaustiva e focada na mensagem explícita e definitiva (explanatória).",
+      "Sim, um executivo prefere sempre perder tempo apertando botões em vez de receber um relatório já finalizado no formato PDF.",
+      "Não, porque a interatividade quebra a compatibilidade com todos os navegadores web atuais."
+    ],
+    "resposta_correta": "Não. Em contextos de impressos físicos (jornal/revistas), ou slides estáticos, a interatividade perde o propósito e exige uma elaboração exaustiva e focada na mensagem explícita e definitiva (explanatória).",
+    "justificativa": "O formato dita a ferramenta. A interatividade exige que o usuário tenha disposição (e mouse/toque) para extrair valor. Em meios estáticos/executivos rápidos, o analista deve entregar as conclusões de imediato."
+  },
+  {
+    "id": 38,
+    "pergunta": "Na criação e calibração de um Histograma, qual parâmetro possui o maior potencial de distorcer a percepção visual do analista caso não seja escolhido adequadamente?",
+    "alternativas": [
+      "A cor de fundo do eixo Y.",
+      "A substituição da fonte Arial por Times New Roman nos títulos.",
+      "O número/quantidade de intervalos (bins) definidos no particionamento e agrupamento dos dados no eixo X.",
+      "O acréscimo de uma legenda superior direita para indicar valores fixos numéricos."
+    ],
+    "resposta_correta": "O número/quantidade de intervalos (bins) definidos no particionamento e agrupamento dos dados no eixo X.",
+    "justificativa": "Poucos bins (intervalos amplos) escondem picos e particularidades (bimodalidade, gaps). Muitos bins (intervalos microscópicos) transformam o gráfico num pente fino ruidoso. É preciso otimizar a distribuição."
+  },
+  {
+    "id": 39,
+    "pergunta": "Em qual cenário a substituição de um gráfico de barras vertical clássico por um Gráfico de Barras Horizontal é mais indicada pelas boas práticas?",
+    "alternativas": [
+      "Quando há extrema necessidade de mostrar a linha de tendência estatística regressiva.",
+      "Quando a base possui dados de faturamento expressos obrigatoriamente na cor verde neon.",
+      "Quando os textos (rótulos nominais/categóricos) do eixo X são muito extensos, exigindo rotação diagonal e dificultando a leitura humana se fossem mantidos na vertical.",
+      "Quando se trabalha com variáveis ordinais numéricas no eixo polar sem legenda aparente."
+    ],
+    "resposta_correta": "Quando os textos (rótulos nominais/categóricos) do eixo X são muito extensos, exigindo rotação diagonal e dificultando a leitura humana se fossem mantidos na vertical.",
+    "justificativa": "No formato horizontal, os extensos textos das categorias no eixo Y permanecem alinhados naturalmente da esquerda para a direita (como no modelo de leitura ocidental) economizando espaço precioso na tela e no pescoço do leitor."
+  },
+  {
+    "id": 40,
+    "pergunta": "Sobre visualizações voltadas ao público em geral, como as do Portal da Transparência, a interatividade através de Tooltips, Filtros Cruzados e Drill-downs é considerada um benefício. Por quê?",
+    "alternativas": [
+      "Porque obriga os usuários leigos a programarem macros dentro das interfaces.",
+      "Porque simplificam inicialmente o volume colossal de informações, permitindo o engajamento e a exploração (zoom-in) aos usuários de acordo com sua necessidade e curiosidade pessoal sem sobrecarregar a tela principal.",
+      "Porque transformam todos os dados abertos do governo em relatórios imutáveis em banco de dados NOSQL restritos.",
+      "Porque evitam o uso de métricas de KPI em análises governamentais."
+    ],
+    "resposta_correta": "Porque simplificam inicialmente o volume colossal de informações, permitindo o engajamento e a exploração (zoom-in) aos usuários de acordo com sua necessidade e curiosidade pessoal sem sobrecarregar a tela principal.",
+    "justificativa": "O mantra das interfaces visuais de Shneiderman diz: 'Visão geral primeiro, zoom e filtros depois e, por fim, detalhes sob demanda'. Isso organiza volumes complexos."
+  },
+  {
+    "id": 41,
+    "pergunta": "Em relação à afirmação 'Em um boxplot, a mediana sempre coincide exatamente com o valor da média da distribuição', como você a avalia na perspectiva da Ciência de Dados?",
+    "alternativas": [
+      "É verdadeira, pois são a mesma medida fundamental por definição matemática na estatística descritiva.",
+      "É falsa. A linha interna central do boxplot sempre apontará a média, enquanto a mediana deve ser inferida calculando o IQR fora do diagrama.",
+      "É falsa. A mediana centraliza o diagrama e é robusta a outliers, mas em dados assimétricos (enviesados), a média sofrerá atração e será deslocada não coincidindo com a mediana.",
+      "É verdadeira. Somente em gráficos de pizza existe essa distorção e discrepância visual."
+    ],
+    "resposta_correta": "É falsa. A mediana centraliza o diagrama e é robusta a outliers, mas em dados assimétricos (enviesados), a média sofrerá atração e será deslocada não coincidindo com a mediana.",
+    "justificativa": "A mediana divide a base em 50% / 50% espacialmente na caixa. Em casos onde há muitos valores altíssimos atípicos, a média é corrompida (puxada para cima), divorciando-se espacialmente da mediana."
+  },
+  {
+    "id": 42,
+    "pergunta": "Qual a diferença central e primária entre Dashboards Operacionais e Analíticos?",
+    "alternativas": [
+      "Operacionais focam unicamente no visual e nas cores pastéis. Analíticos apenas focam em matrizes de cinza e branco.",
+      "Operacionais são estáticos em PDF. Analíticos só rodam em telas touch screen industriais gigantes.",
+      "Operacionais orientam a rotina de curto prazo (monitoramento dinâmico diário). Analíticos oferecem exploração profunda (slice-and-dice e modelos) para especialistas encontrarem novas oportunidades e gaps.",
+      "Não há distinção e ambos monitoram dados governamentais de censo macroeconômico com ciclos mensais definidos."
+    ],
+    "resposta_correta": "Operacionais orientam a rotina de curto prazo (monitoramento dinâmico diário). Analíticos oferecem exploração profunda (slice-and-dice e modelos) para especialistas encontrarem novas oportunidades e gaps.",
+    "justificativa": "Dashboard Operacional: Exemplo: SLA e Fila de Atendimento do Suporte. Dashboard Analítico: Análise da taxa anual de falhas dos equipamentos agrupado por micro-região para prever falhas futuras."
+  },
+  {
+    "id": 43,
+    "pergunta": "É correto afirmar que o gráfico de dispersão (scatter plot) é indicado primária e exclusivamente para visualizar a frequência de dados estritamente categóricos?",
+    "alternativas": [
+      "Sim, ele traça polígonos entre classes nominais usando machine learning supervisionado.",
+      "Não, sua principal aplicação é correlacionar duas variáveis quantitativas (contínuas ou discretas) posicionando-as nos eixos cartesianos X e Y.",
+      "Sim, desde que se utilize paletas de cores monocromáticas para as classes envolvidas.",
+      "Não, ele só funciona com dados georreferenciados em plotagens polares 3D."
+    ],
+    "resposta_correta": "Não, sua principal aplicação é correlacionar duas variáveis quantitativas (contínuas ou discretas) posicionando-as nos eixos cartesianos X e Y.",
+    "justificativa": "O Scatter Plot mapeia intersecções numéricas (ex: IDH vs PIB per capita), revelando visualmente a força, forma (linear/curvilínea) e direção da correlação entre as duas métricas."
+  },
+  {
+    "id": 44,
+    "pergunta": "O uso de um gráfico de linhas que conecta observações totalmente independentes e categóricas no eixo X sempre representa uma tendência real e válida nos dados?",
+    "alternativas": [
+      "Sim, não importa a variável, o gráfico de linhas sempre validará estatisticamente o achado numérico.",
+      "Não, se o eixo X não tiver uma ordenação temporal ou lógica progressiva, conectar os pontos gera padrões artificiais e falsas interpretações de continuidade.",
+      "Sim, inclusive essa é a prática recomendada ao substituir gráficos de rede ou mapas cartográficos densos.",
+      "Não, porque a união dos pontos através da técnica das linhas reduz a segurança e estabilidade dos painéis dinâmicos integrados."
+    ],
+    "resposta_correta": "Não, se o eixo X não tiver uma ordenação temporal ou lógica progressiva, conectar os pontos gera padrões artificiais e falsas interpretações de continuidade.",
+    "justificativa": "A linha implica relação fluída entre vizinhos. Traçar uma linha unindo países aleatórios em ordem alfabética no eixo X não tem sentido, sugerindo uma falsa 'evolução' entre eles."
+  },
+  {
+    "id": 45,
+    "pergunta": "Sobre os níveis de complexidade das análises de dados e o uso de IA, as análises descritiva e preditiva são as únicas etapas que, por regra matemática exata, empregam Inteligência Artificial de modo fundamental?",
+    "alternativas": [
+      "Sim, pois sem a descritiva e a preditiva, nenhuma outra consegue usar técnicas de IA modernas devido ao volume do hardware.",
+      "Não. A análise descritiva, em regra, usa matemática estatística simples. Já a prescritiva faz enorme uso de IA (otimização e simulações) para orientar os gestores nas ações estratégicas.",
+      "Sim. A análise prescritiva é desenvolvida unicamente em planilhas sem recursos computacionais complexos agregados.",
+      "Sim, uma vez que a IA só pode calcular o que já passou e prever o futuro estático, ignorando a dinâmica."
+    ],
+    "resposta_correta": "Não. A análise descritiva, em regra, usa matemática estatística simples. Já a prescritiva faz enorme uso de IA (otimização e simulações) para orientar os gestores nas ações estratégicas.",
+    "justificativa": "Modelos prescritivos dependem de heurísticas, meta-heurísticas e algoritmos avançados computacionais (Machine Learning/Pesquisa Operacional) para definir a ação ótima entre milhões de cenários, contrariando a afirmação."
+  },
+  {
+    "id": 46,
+    "pergunta": "A afirmação 'Um dashboard (painel de métricas interativas) será sempre a melhor opção disponível para resumir todos os insights possíveis obtidos de um conjunto de dados' pode ser considerada correta?",
+    "alternativas": [
+      "Sim, o painel interativo eliminou por completo o uso dos antigos relatórios escritos e e-mails descritivos na modernidade corporativa.",
+      "Não. Em muitos casos práticos, um relatório estático textualmente embasado, uma apresentação formal ou até mesmo uma única tabela resumida pode ser a melhor resposta comunicativa, dependendo do público e da complexidade.",
+      "Sim, porque um sistema governamental não pode aprovar projetos analíticos que não estejam no formato web dashboard.",
+      "Sim, devido ao fato de que todos os dados possuem dimensões geográficas precisas para mapas interativos polares."
+    ],
+    "resposta_correta": "Não. Em muitos casos práticos, um relatório estático textualmente embasado, uma apresentação formal ou até mesmo uma única tabela resumida pode ser a melhor resposta comunicativa, dependendo do público e da complexidade.",
+    "justificativa": "Depende do contexto (explanatório vs exploratório). Gestores podem preferir relatórios consolidados no final do mês, onde as decisões textuais já foram tomadas por analistas, em vez de ficarem buscando agulhas em dashboards interativos complexos."
+  },
+  {
+    "id": 47,
+    "pergunta": "Dentro da estrutura técnica, como operam majoritariamente as abordagens de Análise Prescritiva sem o uso da Inteligência Artificial em seu escopo total?",
+    "alternativas": [
+      "Ela depende estritamente da manipulação 100% manual por meio de regras humanas restritas e não se beneficia em nada das predições de redes neurais ou estatística computacional.",
+      "Na verdade, essa afirmação conceitual é falsa. O grande salto da Análise Prescritiva moderna está justamente em alavancar modelos computacionais de otimização automatizada, agentes inteligentes e motores de simulação.",
+      "Ela utiliza exclusivamente fluxogramas de papel baseados em opiniões abstratas de comitês executivos.",
+      "Ela depende que todos os algoritmos do mundo ignorem correlações lógicas básicas para evitar viés de seleção."
+    ],
+    "resposta_correta": "Na verdade, essa afirmação conceitual é falsa. O grande salto da Análise Prescritiva moderna está justamente em alavancar modelos computacionais de otimização automatizada, agentes inteligentes e motores de simulação.",
+    "justificativa": "Embora regras de negócios hard-coded (se x, então y) possam ser consideradas prescrições rústicas, a verdadeira análise prescritiva em big data requer agentes de IA para processar as variáveis e otimizar as sugestões (ex: Waze calculando a rota ótima ao vivo)."
+  },
+  {
+    "id": 48,
+    "pergunta": "Com o avanço veloz da disciplina de análise visual, a interatividade e a dinâmica web são características predominantes. Sendo assim, o uso do Storytelling com Dados pode ser aplicado na criação de dashboards ou limita-se estritamente aos relatórios formatados (PDFs e Slides)?",
+    "alternativas": [
+      "Limita-se, invariavelmente, a apresentações lineares em PowerPoint devido ao conceito estrito de 'enredo fixo sem desvios do usuário final'.",
+      "O uso do Storytelling se aplica brilhantemente a dashboards, exigindo a estruturação das métricas numa hierarquia fluida que conduz o olhar humano do macro (contexto principal) ao micro (detalhes e filtros) formando um fluxo narrativo claro.",
+      "Ele não deve ser adotado em dashboards, pois o painel precisa ter todos os gráficos no mesmo tamanho visando não ofender diferentes departamentos, anulando a narrativa.",
+      "A técnica é restrita a bases de dados não-relacionais, que suportam metadados literários textuais sem formatação."
+    ],
+    "resposta_correta": "O uso do Storytelling se aplica brilhantemente a dashboards, exigindo a estruturação das métricas numa hierarquia fluida que conduz o olhar humano do macro (contexto principal) ao micro (detalhes e filtros) formando um fluxo narrativo claro.",
+    "justificativa": "Mesmo em telas livres exploratórias, o 'Z-pattern' (padrão de leitura ocular) e o destaque hierárquico nos guiam em uma historinha. O painel começa na manchete dos grandes KPIs acima, aprofunda causas no meio e traz dados de ação/listas no rodapé."
+  },
+  {
+    "id": 49,
+    "pergunta": "Qual a consequência perceptiva natural gerada pelo excesso não planejado de elementos visuais e decorativos (bordas fortes, logotipos imensos, fundos coloridos, efeitos sombreados tridimensionais) empregados em um artefato gráfico corporativo analítico?",
+    "alternativas": [
+      "Proporciona aos modelos preditivos a calibração de pesos precisos em Redes Neurais para reduzir falsos-negativos estatísticos em nuvem.",
+      "Gera poluição severa do tipo ruído cognitivo de carga, o que ofusca os verdadeiros números analíticos e causa confusão no público em frações de segundo.",
+      "Acelera a compilação paralela do banco de dados na web moderna.",
+      "Obriga o usuário a imprimir o dashboard com o máximo de saturação possível em plotters de engenharia A0."
+    ],
+    "resposta_correta": "Gera poluição severa do tipo ruído cognitivo de carga, o que ofusca os verdadeiros números analíticos e causa confusão no público em frações de segundo.",
+    "justificativa": "Fenômeno conhecido no design analítico como 'Chartjunk' (entulho gráfico), ele eleva a carga extrínseca (esforço cerebral não voltado ao entendimento do dado em si), fadiga o leitor e oculta os insights estratégicos críticos no oceano colorido."
+  },
+  {
+    "id": 50,
+    "pergunta": "Durante um cruzamento espacial de geolocalizações no Portal da Transparência, verificamos o conceito da utilização indiscriminada de gráficos ou ferramentas operacionais em dados gerenciais. É válido afirmar que o dashboard estático e impresso é sempre ideal para o consumo de insights de dados provenientes de streaming em tempo real (dados voláteis vivos)?",
+    "alternativas": [
+      "Sim, dados voláteis possuem o risco de alterarem sua estrutura e causarem bugs; o estático mantém a estabilidade computacional analítica segura para os diretores da organização em nuvem pública escalonável.",
+      "Sim, pois evita custos gigantes de servidor com cálculos secundários matemáticos para métricas triviais.",
+      "Não. Como o próprio nome diz, se os dados possuem grande variação, necessitam de telas dinâmicas conectadas à API e alimentadas constantemente para demonstrar o exato ponto de pulsação e oscilação sem recortes congelados antigos.",
+      "Não, a não ser que os usuários aprendam a converter arquivos HTML interativos em códigos compilados proprietários de baixo nível via linguagem Assembly local."
+    ],
+    "resposta_correta": "Não. Como o próprio nome diz, se os dados possuem grande variação, necessitam de telas dinâmicas conectadas à API e alimentadas constantemente para demonstrar o exato ponto de pulsação e oscilação sem recortes congelados antigos.",
+    "justificativa": "Dados voláteis (ex: controle aéreo, criptomoedas) não casam com artefatos estáticos. Você não joga no xadrez analisando uma fotografia de três rodadas atrás: painéis em tempo real (Dashboards Operacionais ativos) são obrigatórios aqui."
+  },
+  {
+    "id": 51,
+    "pergunta": "Ao discutir métodos estruturais avançados de Ciência de Dados, constata-se a falsa premissa: 'A análise diagnóstica, devido a sua natureza temporal regressa explicativa, procura essencialmente prever o futuro em longos horizontes por meio de Modelos em Ensembles Multicamadas'. Por que isso está tecnicamente errado?",
+    "alternativas": [
+      "Porque o escopo primário e essencial do diagnóstico é identificar anomalias sistêmicas da arquitetura unicamente no momento de coleta nos relatórios estáticos textuais governamentais macro.",
+      "Porque o diagnóstico se prende estritamente à mineração profunda do que JÁ FOI (o passado), tentando encontrar os conectivos e os relacionamentos causais cruzados; enquanto projetar o amanhã é a função canônica da Análise Preditiva e não da Diagnóstica.",
+      "Porque as simulações ensemble multicamadas são impossíveis hoje mesmo com hardwares paralelos, limitando tudo ao passado estrito da humanidade sem projeção futura computacional viável nos softwares atuais nativos de exploração relacional.",
+      "Porque o processo exige exclusão completa e mandatória da IA em qualquer hipótese."
+    ],
+    "resposta_correta": "Porque o diagnóstico se prende estritamente à mineração profunda do que JÁ FOI (o passado), tentando encontrar os conectivos e os relacionamentos causais cruzados; enquanto projetar o amanhã é a função canônica da Análise Preditiva e não da Diagnóstica.",
+    "justificativa": "A separação de responsabilidades é vital no pipeline analítico da maturidade. 'Por que minhas vendas caíram mês passado?' (Diagnóstico). 'Quanto eu venderei se mantiver essa estratégia amanhã?' (Preditiva)."
+  }
+];
+
+    // Configurações do Quiz
+    const QUESTIONS_PER_QUIZ = allQuestions.length; // Quantidade de perguntas por tentativa
+    let currentQuizQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let wrongAnswers = 0;
+    // Elementos do DOM
+    const questionNumberDisplay = document.getElementById('question-number-display');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackContainer = document.getElementById('feedback-container');
+    const feedbackText = document.getElementById('feedback-text');
+    const controlsContainer = document.getElementById('controls-container');
+    const nextBtn = document.getElementById('next-btn');
+    
+    const quizHeader = document.getElementById('quiz-header');
+    const questionScreen = document.getElementById('question-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const scoreCorrectDisplay = document.getElementById('score-correct');
+    const scoreTotalDisplay = document.getElementById('score-total');
+    const resultMessage = document.getElementById('result-message');
+    const restartBtn = document.getElementById('restart-btn');
+    
+    const realTimeCorrect = document.getElementById('real-time-correct');
+    const realTimeWrong = document.getElementById('real-time-wrong');
+    const statsContainer = document.getElementById('stats-container');
+
+    // Função para embaralhar um array (Fisher-Yates)
+    function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Inicia o Quiz
+    function startQuiz() {
+        // Esconde resultados, mostra painel principal
+        resultScreen.style.display = 'none';
+        quizHeader.style.display = 'flex';
+        statsContainer.style.display = 'flex';        questionScreen.style.display = 'block';
+
+        // Reseta variáveis
+        score = 0;
+        wrongAnswers = 0;
+        currentQuestionIndex = 0;
+        
+        updateStatsDisplay();
+
+        // Seleciona e embaralha perguntas
+        const shuffledAll = shuffleArray([...allQuestions]);
+        currentQuizQuestions = shuffledAll.slice(0, Math.min(QUESTIONS_PER_QUIZ, allQuestions.length));
+        
+        scoreTotalDisplay.innerText = currentQuizQuestions.length;
+
+        loadQuestion();
+    }
+    
+    function updateStatsDisplay() {
+        realTimeCorrect.innerText = score;
+        realTimeWrong.innerText = wrongAnswers;
+    }
+
+    // Carrega a pergunta atual na tela
+    function loadQuestion() {
+        resetState();
+        
+        const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+        
+        const numStr = (currentQuestionIndex + 1).toString().padStart(3, '0');
+        const totalStr = currentQuizQuestions.length.toString().padStart(3, '0');
+        questionNumberDisplay.innerText = `#${numStr} / ${totalStr}`;
+        
+        // Define o texto da pergunta
+            questionText.innerText = currentQuestion.pergunta;
+
+            // Embaralha as alternativas para esta pergunta
+            const shuffledOptions = shuffleArray([...currentQuestion.alternativas]);
+
+            // Cria os botões
+            shuffledOptions.forEach(optionText => {
+                const button = document.createElement('button');
+                button.innerText = optionText;
+                button.classList.add('option-btn');
+                
+                // Event listener para seleção
+                button.addEventListener('click', () => selectAnswer(button, optionText, currentQuestion));
+                
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Reseta a interface para a próxima pergunta
+        function resetState() {
+            controlsContainer.style.display = 'none';
+            feedbackContainer.style.display = 'none';
+            while (optionsContainer.firstChild) {
+                optionsContainer.removeChild(optionsContainer.firstChild);
+            }
+        }
+
+        // Lida com a seleção de uma resposta
+    function selectAnswer(selectedButton, selectedText, questionData) {
+        const isCorrect = selectedText === questionData.resposta_correta;
+        
+        if (isCorrect) {
+            selectedButton.classList.add('correct');
+            score++;
+        } else {
+            selectedButton.classList.add('wrong');
+            wrongAnswers++;
+            // Destaca a correta também
+            const buttons = optionsContainer.children;
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].innerText === questionData.resposta_correta) {
+                    buttons[i].classList.add('correct');
+                }
+            }
+        }
+        
+        updateStatsDisplay();
+
+        // Desabilita todos os botões após a escolha
+            const allButtons = optionsContainer.children;
+            for (let i = 0; i < allButtons.length; i++) {
+                allButtons[i].disabled = true;
+            }
+
+            // Mostra justificativa
+            feedbackText.innerText = questionData.justificativa;
+            feedbackContainer.style.display = 'block';
+            
+            // Mostra botão de próximo
+            controlsContainer.style.display = 'block';
+        }
+
+        // Avança para a próxima ou finaliza
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        // Mostra a tela final
+    function showResults() {
+        quizHeader.style.display = 'none';
+        statsContainer.style.display = 'none';        questionScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        scoreCorrectDisplay.innerText = score;
+
+            // Mensagem dinâmica baseada no acerto
+            const percentage = (score / currentQuizQuestions.length) * 100;
+            if (percentage === 100) {
+                resultMessage.innerText = "PERFEITO! Você é um mestre dos dados!";
+            } else if (percentage >= 70) {
+                resultMessage.innerText = "MUITO BOM! Consegue acertar todas na próxima?";
+            } else if (percentage >= 40) {
+                resultMessage.innerText = "NA MÉDIA. Que tal tentar mais uma vez?";
+            } else {
+                resultMessage.innerText = "PRECISA PRATICAR MAIS. Não desista!";
+            }
+        }
+
+        // Botão de refazer
+        restartBtn.addEventListener('click', startQuiz);
+
+        // Iniciar ao carregar
+        startQuiz();
+
+    </script>
+</body>
+</html>
