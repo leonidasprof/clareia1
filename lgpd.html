@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise e Visualização de Dados</title>
+    <!-- Tailwind CSS para estilização rápida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Variáveis de cores baseadas nas imagens de referência */
+        :root {
+            --bg-purple: #B222FF; /* Cor de fundo roxa vibrante */
+            --box-black: #0D0D0D; /* Fundo preto da caixa */
+            --box-gray: #EAEAEA;  /* Fundo cinza claro da área de questões */
+            --text-yellow: #FFF133; /* Amarelo das estrelas e interrogação */
+            --text-white: #FFFFFF;
+            --text-black: #000000;
+            --btn-bg: #F4F4F4;
+            --btn-hover: #D0D0D0;
+            --btn-border: #000000;
+            --correct-bg: #86efac; /* Verde claro para acerto */
+            --wrong-bg: #fca5a5;   /* Vermelho claro para erro */
+        }
+
+        body {
+            background-color: var(--bg-purple);
+            background-image: radial-gradient(circle at 10% 20%, rgba(0,0,0,0.05) 0%, transparent 20%), 
+                              radial-gradient(circle at 90% 80%, rgba(0,0,0,0.05) 0%, transparent 20%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Estilização da caixa principal do Quiz inspirada no "quiz.png" */
+        .quiz-container {
+            background-color: var(--box-black);
+            border-radius: 16px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid var(--box-black);
+        }
+
+        .quiz-header {
+            background-color: var(--box-black);
+            color: var(--text-white);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 2rem;
+            text-transform: uppercase;
+        }
+
+        .quiz-header .question-number {
+            font-family: 'Arial Black', Impact, sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .quiz-header .decorations {
+            color: var(--text-yellow);
+            font-family: monospace;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .quiz-body {
+            background-color: var(--box-gray);
+            padding: 30px 20px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* Elementos decorativos (Interrogação e Estrelas simplificadas via CSS/Unicode) */
+        .decoration-question-mark {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 5rem;
+            color: var(--text-yellow);
+            font-family: 'Arial Black', sans-serif;
+            text-shadow: 3px 3px 0 var(--text-black), -1px -1px 0 var(--text-black), 1px -1px 0 var(--text-black), -1px 1px 0 var(--text-black), 1px 1px 0 var(--text-black);
+            transform: rotate(15deg);
+            z-index: 10;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-black);
+            margin-bottom: 25px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        /* Botões das alternativas com estilo inspirado na imagem */
+        .option-btn {
+            background-color: var(--btn-bg);
+            border: 2px solid var(--btn-border);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-black);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Ícone simulando o tick/cross da imagem */
+        .option-btn::before {
+            content: '○';
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 1.2rem;
+            font-weight: normal;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--btn-hover);
+            transform: translateX(5px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        /* Estados de resposta */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: #166534;
+        }
+        .option-btn.correct::before {
+            content: '✓';
+            color: #166534;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong-bg);
+            border-color: #991b1b;
+        }
+        .option-btn.wrong::before {
+            content: '✕';
+            color: #991b1b;
+        }
+
+        /* Feedback da justificativa */
+        #feedback-container {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border: 2px dashed var(--box-black);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        /* Tela de Resultados com fundo inspirado no laranja.jpg */
+        #result-screen {
+            display: none;
+            background: linear-gradient(135deg, #FFB347 0%, #FF7B00 100%);
+            /* Uma textura simples para imitar os pontinhos se possível com CSS */
+            background-image: radial-gradient(rgba(255,255,255,0.2) 2px, transparent 2px);
+            background-size: 15px 15px;
+            padding: 40px 20px;
+            border-radius: 0 0 12px 12px;
+            text-align: center;
+            color: var(--text-white);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .score-display {
+            font-size: 4rem;
+            font-family: 'Arial Black', sans-serif;
+            margin-bottom: 30px;
+            color: var(--text-yellow);
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .action-btn {
+            background-color: var(--box-black);
+            color: var(--text-yellow);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+            margin: 5px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(2px) translateX(2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: flex-start; /* Alinhando os itens à esquerda */
+            gap: 20px; /* Espaçamento entre acertos e erros */
+            align-items: center;
+            background-color: var(--box-black);
+            padding: 10px 20px;
+            border-bottom: 2px solid var(--box-gray);
+            font-size: 0.9rem;
+            color: var(--text-white);
+            font-weight: bold;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-correct {
+            color: #86efac;
+        }
+
+        .stat-wrong {
+            color: #fca5a5;
+        }
+        
+        /* Controles gerais */
+        .controls {
+            margin-top: 20px;
+            text-align: right;
+            display: none;
+        }
+
+        /* Responsividade para Celulares */
+        @media (max-width: 600px) {
+            body {
+                padding: 15px 10px;
+                justify-content: flex-start;
+            }
+            .quiz-header {
+                padding: 15px;
+                font-size: 1.5rem;
+            }
+            .decoration-question-mark {
+                font-size: 3.5rem;
+                top: -5px;
+                right: 5px;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .option-btn {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+            }
+            .action-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+            .score-display {
+                font-size: 3rem;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="w-full max-w-[600px] z-0 mb-5 flex flex-row justify-between items-center px-2 gap-3">
+        <h1 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-black flex-1" style="font-family: 'Arial Black', sans-serif; text-shadow: 2px 2px 0px rgba(255,255,255,0.5);">
+            <span class="block text-left">Tópicos em Direito</span>
+            <span class="flex items-center justify-start gap-1 sm:gap-2 mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-black flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(2px 2px 0px rgba(255,255,255,0.5));">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                (LGPD)
+            </span>
+        </h1>
+
+        <!-- Logo da Faculdade em Retângulo Arredondado -->
+        <div class="bg-white rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,0.3)] border-2 border-black overflow-hidden flex flex-shrink-0 transition-transform hover:scale-105">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRce9bE9X0Uc8wPX4e34SWUYnNTktqe0hCR1xUJvVEL_JCmaofsAj56CS1p&s=10" alt="Logo Instituição" class="h-12 sm:h-14 md:h-16 object-cover" onerror="this.src='https://placehold.co/100x50/FFFFFF/000000?text=Logo'">
+        </div>
+    </div>
+
+    <div class="quiz-container z-10">
+        <div class="decoration-question-mark">?</div>
+        
+        <div class="stats-container" id="stats-container">
+            <div class="stat-item stat-correct">
+                <span>Acertos:</span>
+                <span id="real-time-correct">0</span>
+            </div>
+            <div class="stat-item stat-wrong">
+                <span>Erros:</span>
+                <span id="real-time-wrong">0</span>
+            </div>
+        </div>
+
+        <div class="quiz-header" id="quiz-header">
+            <div class="question-number text-xl" id="question-number-display">#001 / 051</div>
+            <div class="decorations">
+                x x x<br>x x x
+            </div>
+        </div>
+
+        <!-- Tela da Pergunta -->
+        <div class="quiz-body" id="question-screen">
+            <div class="question-text" id="question-text">
+                Carregando pergunta...
+            </div>
+            
+            <div id="options-container">
+                <!-- Alternativas serão geradas aqui -->
+            </div>
+
+            <div id="feedback-container">
+                <div class="feedback-title text-black" id="feedback-title">JUSTIFICATIVA:</div>
+                <div class="text-gray-800" id="feedback-text"></div>
+            </div>
+
+            <div class="controls" id="controls-container">
+                <button id="next-btn" class="action-btn text-sm py-2 px-4">Próxima Questão ➔</button>
+            </div>
+        </div>
+
+        <!-- Tela de Resultados -->
+        <div id="result-screen">
+            <div class="result-title">FIM DO TESTE!</div>
+            <p class="text-xl font-bold mb-2">Você acertou</p>
+            <div class="score-display">
+                <span id="score-correct">0</span> / <span id="score-total">51</span>
+            </div>
+            <p class="text-lg font-bold mb-6" id="result-message"></p>
+            
+            <button id="restart-btn" class="action-btn">TENTE AGORA MESMO! (Refazer)</button>
+        </div>
+    </div>
+
+    <!-- Link do Instagram Prof. Tenebroso -->
+    <a href="https://instagram.com/prof.tenebroso" target="_blank" rel="noopener noreferrer" class="mt-6 mb-2 z-10 flex items-center justify-center gap-2 bg-white text-black text-lg px-5 py-2 rounded-full border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-transform hover:scale-105 hover:-translate-y-1" style="font-family: 'Arial Black', sans-serif;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+        </svg>
+        @prof.tenebroso
+    </a>
+
+<script>
+    // Dados do Quiz (inseridos a partir do txt fornecido)
+    const allQuestions = [
+  {
+    "id": 1,
+    "pergunta": "Qual das opções a seguir descreve corretamente o objetivo da multa prevista pela LGPD em casos de infrações graves?",
+    "alternativas": [
+      "Reverter os danos causados aos titulares de dados pessoais.",
+      "Garantir aumento de receita para a ANPD.",
+      "Suspender temporariamente o tratamento de dados.",
+      "Eliminar todos os dados pessoais da empresa."
+    ],
+    "resposta_correta": "Reverter os danos causados aos titulares de dados pessoais.",
+    "justificativa": "A multa tem caráter reparatório e busca compensar os danos sofridos pelos titulares de dados.",
+    "is_lgpd": true
+  },
+  {
+    "id": 2,
+    "pergunta": "Em caso de infração muito grave à LGPD, qual é o limite máximo da multa que pode ser aplicada pela ANPD?",
+    "alternativas": [
+      "R$ 10.000.000,00",
+      "R$ 25.000.000,00",
+      "R$ 50.000.000,00",
+      "R$ 100.000.000,00"
+    ],
+    "resposta_correta": "R$ 50.000.000,00",
+    "justificativa": "A LGPD estabelece multa de até 2% do faturamento, limitada a R$ 50 milhões por infração.",
+    "is_lgpd": true
+  },
+  {
+    "id": 3,
+    "pergunta": "Quando a ANPD aplica a sanção de 'suspensão temporária das atividades de tratamento', o que é exigido da empresa infratora?",
+    "alternativas": [
+      "Comprovar que não houve falha no tratamento.",
+      "Revisar o plano de resposta a incidentes sem interromper atividades.",
+      "Pagar multa fixa para retomar atividades.",
+      "Interromper imediatamente e temporariamente todas as atividades de tratamento relacionadas ao incidente."
+    ],
+    "resposta_correta": "Interromper imediatamente e temporariamente todas as atividades de tratamento relacionadas ao incidente.",
+    "justificativa": "A suspensão exige paralisação imediata para proteger os titulares e corrigir falhas graves.",
+    "is_lgpd": true
+  },
+  {
+    "id": 4,
+    "pergunta": "Qual é o primeiro passo para o desenvolvimento de um programa de privacidade e proteção de dados em uma instituição durante o mapeamento?",
+    "alternativas": [
+      "Criar uma política de comunicação de incidentes.",
+      "Definir sanções internas.",
+      "Contratar um DPO.",
+      "Identificar os dados pessoais que são coletados e tratados."
+    ],
+    "resposta_correta": "Identificar os dados pessoais que são coletados e tratados.",
+    "justificativa": "O mapeamento inicial permite compreender o ciclo de vida dos dados e avaliar riscos."
+  },
+  {
+    "id": 5,
+    "pergunta": "No contexto de um programa de privacidade, qual é o papel do encarregado de proteção de dados (DPO)?",
+    "alternativas": [
+      "Supervisionar a implementação do programa de privacidade e atuar como ponto de contato entre a instituição e a ANPD.",
+      "Auditar as finanças da organização.",
+      "Gerenciar contratos de fornecedores.",
+      "Implantar medidas de segurança física."
+    ],
+    "resposta_correta": "Supervisionar a implementação do programa de privacidade e atuar como ponto de contato entre a instituição e a ANPD.",
+    "justificativa": "O DPO garante conformidade com a LGPD e serve como elo de comunicação e supervisão.",
+    "is_lgpd": true
+  },
+  {
+    "id": 6,
+    "pergunta": "Qual documento é essencial para demonstrar que uma organização está em conformidade com a LGPD?",
+    "alternativas": [
+      "Política de privacidade interna.",
+      "Relatório de auditoria financeira.",
+      "Política de segurança da informação.",
+      "Relatório de impacto à proteção de dados (DPIA)."
+    ],
+    "resposta_correta": "Relatório de impacto à proteção de dados (DPIA).",
+    "justificativa": "O DPIA avalia riscos e medidas de mitigação, demonstrando conformidade com a LGPD.",
+    "is_lgpd": true
+  },
+  {
+    "id": 7,
+    "pergunta": "Quais são as ações que devem ser tomadas por uma instituição em caso de violação de dados pessoais?",
+    "alternativas": [
+      "Apenas comunicar internamente.",
+      "Suspender todas as operações da empresa.",
+      "Apagar imediatamente todos os dados afetados sem notificar os titulares.",
+      "Informar a ANPD e os titulares afetados, além de adotar medidas corretivas."
+    ],
+    "resposta_correta": "Informar a ANPD e os titulares afetados, além de adotar medidas corretivas.",
+    "justificativa": "A LGPD exige comunicação à ANPD e aos titulares, além de medidas de mitigação.",
+    "is_lgpd": true
+  },
+  {
+    "id": 8,
+    "pergunta": "A implementação de um programa de privacidade deve ser:",
+    "alternativas": [
+      "Somente aplicada em empresas de grande porte.",
+      "Focada apenas em ações de treinamento.",
+      "Integrada a todos os setores da organização.",
+      "Exclusiva do departamento jurídico."
+    ],
+    "resposta_correta": "Integrada a todos os setores da organização.",
+    "justificativa": "A privacidade deve ser transversal e envolver todos os setores da empresa."
+  },
+  {
+    "id": 9,
+    "pergunta": "Qual é a principal responsabilidade do setor de TI na implementação de um programa de privacidade e proteção de dados?",
+    "alternativas": [
+      "Controlar contratos com fornecedores.",
+      "Realizar auditorias financeiras.",
+      "Elaborar políticas de RH.",
+      "Proteger os dados pessoais por meio de medidas de segurança adequadas."
+    ],
+    "resposta_correta": "Proteger os dados pessoais por meio de medidas de segurança adequadas.",
+    "justificativa": "O setor de TI deve garantir segurança técnica com criptografia, controle de acesso e monitoramento."
+  },
+  {
+    "id": 10,
+    "pergunta": "Quais medidas devem ser incluídas em um programa de privacidade para garantir o cumprimento da LGPD?",
+    "alternativas": [
+      "Minimizar armazenamento sem anonimização.",
+      "Criar sistema de votação para consentimento.",
+      "Recolher dados apenas para uso interno sem comunicação.",
+      "Adotar práticas transparentes sobre coleta e uso de dados e garantir que os direitos dos titulares sejam respeitados."
+    ],
+    "resposta_correta": "Adotar práticas transparentes sobre coleta e uso de dados e garantir que os direitos dos titulares sejam respeitados.",
+    "justificativa": "A LGPD exige transparência e respeito aos direitos dos titulares.",
+    "is_lgpd": true
+  },
+  {
+    "id": 11,
+    "pergunta": "Qual das opções abaixo descreve um procedimento essencial dentro de um programa de privacidade e proteção de dados para garantir o direito de acesso dos titulares?",
+    "alternativas": [
+      "Coletar dados sem consentimento.",
+      "Enviar e-mails anuais informativos.",
+      "Disponibilizar um canal direto para que os titulares possam exercer seus direitos.",
+      "Realizar auditoria semestral dos dados pessoais."
+    ],
+    "resposta_correta": "Disponibilizar um canal direto para que os titulares possam exercer seus direitos.",
+    "justificativa": "Um canal direto garante que os titulares possam solicitar acesso e exercer seus direitos."
+  },
+  {
+    "id": 12,
+    "pergunta": "Durante a fase de 'gap analysis' em um programa de proteção de dados, o que a organização deve buscar identificar?",
+    "alternativas": [
+      "Todos os processos de tratamento de dados.",
+      "O melhor software de segurança.",
+      "A lacuna entre as práticas atuais de proteção de dados e os requisitos legais, regulatórios e de boas práticas.",
+      "A quantidade de dados coletados sem consentimento."
+    ],
+    "resposta_correta": "A lacuna entre as práticas atuais de proteção de dados e os requisitos legais, regulatórios e de boas práticas.",
+    "justificativa": "O objetivo da gap analysis é identificar pontos fora de conformidade e corrigi-los."
+  },
+  {
+    "id": 13,
+    "pergunta": "Qual é a finalidade do monitoramento contínuo após a conclusão do projeto de adequação à legislação de proteção de dados?",
+    "alternativas": [
+      "Verificar e corrigir falhas rapidamente.",
+      "Avaliar apenas desempenho financeiro.",
+      "Garantir que a empresa permaneça em conformidade com a LGPD e responda rapidamente a novos riscos ou mudanças regulatórias.",
+      "Deletar automaticamente todos os dados após uso."
+    ],
+    "resposta_correta": "Garantir que a empresa permaneça em conformidade com a LGPD e responda rapidamente a novos riscos ou mudanças regulatórias.",
+    "justificativa": "O monitoramento contínuo assegura conformidade permanente e resposta a novos riscos.",
+    "is_lgpd": true
+  },
+  {
+    "id": 14,
+    "pergunta": "Associe cada penalidade administrativa da LGPD ao seu conceito.",
+    "alternativas": [
+      "Proibição do tratamento de dados: impede definitivamente o tratamento.",
+      "Suspensão do tratamento de dados: impede temporariamente o tratamento.",
+      "Multa simples: penalidade financeira de até 2% do faturamento, limitada a R$ 50 milhões.",
+      "Advertência: sanção menos severa aplicada em casos de baixo impacto."
+    ],
+    "resposta_correta": "Proibição do tratamento de dados: impede definitivamente o tratamento.",
+    "justificativa": "A proibição é a penalidade mais extrema, aplicada quando outras medidas não são suficientes.",
+    "is_lgpd": true
+  },
+  {
+    "id": 15,
+    "pergunta": "Associe cada etapa de um projeto de adequação à LGPD ao seu conceito.",
+    "alternativas": [
+      "Monitoramento: etapa contínua que visa garantir a manutenção da conformidade.",
+      "Gap analysis: identificação das divergências e pontos a ajustar.",
+      "Mapeamento: levantamento detalhado de todos os dados pessoais coletados.",
+      "Implementação: adoção das medidas necessárias para corrigir lacunas."
+    ],
+    "resposta_correta": "Monitoramento: etapa contínua que visa garantir a manutenção da conformidade.",
+    "justificativa": "O monitoramento contínuo garante que a empresa permaneça em conformidade com a LGPD.",
+    "is_lgpd": true
+  },
+  {
+    "id": 16,
+    "pergunta": "No modelo de maturidade do COBIT, qual nível descreve processos realizados, documentados e comunicados na organização?",
+    "alternativas": [
+      "Inicial",
+      "Repetível",
+      "Definido",
+      "Gerenciado"
+    ],
+    "resposta_correta": "Definido",
+    "justificativa": "O nível definido indica que o processo está formalizado e comunicado internamente."
+  },
+  {
+    "id": 17,
+    "pergunta": "Na central de serviços ITIL, qual conduta é adequada quando há reincidência de incidentes sem causa raiz identificada?",
+    "alternativas": [
+      "Encaminhar ao gerenciamento de mudanças.",
+      "Manter o reinício como restauração e acionar o gerenciamento de problemas.",
+      "Substituir reinício por análise de causa em cada chamado.",
+      "Registrar ocorrências no gerenciamento de configuração."
+    ],
+    "resposta_correta": "Manter o reinício como restauração e acionar o gerenciamento de problemas.",
+    "justificativa": "O gerenciamento de incidentes restaura rapidamente, enquanto o de problemas elimina a causa raiz."
+  },
+  {
+    "id": 18,
+    "pergunta": "Qual ação inicial é adequada em caso de ataque de ransomware em servidores com dados pessoais?",
+    "alternativas": [
+      "Manter servidores em operação sob monitoramento.",
+      "Desligar imediatamente os servidores afetados.",
+      "Restaurar arquivos da cópia em rede.",
+      "Isolar da rede os servidores afetados e restaurar da cópia desconectada."
+    ],
+    "resposta_correta": "Isolar da rede os servidores afetados e restaurar da cópia desconectada.",
+    "justificativa": "A cópia em rede pode estar comprometida; o isolamento preserva evidências e garante restauração segura."
+  },
+  {
+    "id": 19,
+    "pergunta": "Em um contrato de SLA com 99,5% de disponibilidade mensal, qual mês exige desconto se houve 240 minutos de indisponibilidade e TMA de 33 minutos?",
+    "alternativas": [
+      "Julho",
+      "Agosto",
+      "Setembro",
+      "Nenhum"
+    ],
+    "resposta_correta": "Agosto",
+    "justificativa": "A indisponibilidade superou 216 minutos e o TMA excedeu 30 minutos, descumprindo ambas as metas."
+  },
+  {
+    "id": 20,
+    "pergunta": "No PETI, qual carteira de investimentos é compatível com as regras de seleção (orçamento, contribuição alta obrigatória e saldo aplicado à maior contribuição)?",
+    "alternativas": [
+      "I1, I2 e I4",
+      "I1, I4 e I5",
+      "I1, I3 e I4",
+      "I2, I3 e I4"
+    ],
+    "resposta_correta": "I1, I3 e I4",
+    "justificativa": "As iniciativas de contribuição alta (I1 e I4) são obrigatórias; o saldo restante contempla I3."
+  },
+  {
+    "id": 21,
+    "pergunta": "No ciclo BPM, qual avaliação correta do redesenho que eliminou a triagem manual mas aumentou reclassificações?",
+    "alternativas": [
+      "Tratou a causa do gargalo em sua origem.",
+      "Foi malsucedido, pois aumentou retrabalho.",
+      "Automatizou apenas a distribuição sem efeito no tempo de fila.",
+      "Eliminou o gargalo da triagem, mas transferiu o problema para a classificação."
+    ],
+    "resposta_correta": "Eliminou o gargalo da triagem, mas transferiu o problema para a classificação.",
+    "justificativa": "O tempo de fila caiu, mas o retrabalho aumentou devido à classificação incorreta pelos solicitantes."
+  },
+  {
+    "id": 22,
+    "pergunta": "No COBIT, qual lacuna impede que a gestão de mudanças evolua do nível Definido para Gerenciado?",
+    "alternativas": [
+      "Ausência de documentação e comunicação.",
+      "Ausência de métricas de desempenho e monitoramento contínuo.",
+      "Ausência de automação e melhores práticas.",
+      "Ausência de padronização entre equipes."
+    ],
+    "resposta_correta": "Ausência de métricas de desempenho e monitoramento contínuo.",
+    "justificativa": "O nível Gerenciado exige métricas e monitoramento, inexistentes na gestão de mudanças descrita."
+  },
+  {
+    "id": 23,
+    "pergunta": "No ITIL, qual processo busca identificar e remover erros do ambiente de TI por meio da análise dos incidentes registrados?",
+    "alternativas": [
+      "Gerenciamento de Incidentes",
+      "Gerenciamento de Problemas",
+      "Gerenciamento de Configuração",
+      "Gerenciamento de Mudanças"
+    ],
+    "resposta_correta": "Gerenciamento de Problemas",
+    "justificativa": "O gerenciamento de problemas elimina a causa raiz dos incidentes para garantir estabilidade."
+  },
+  {
+    "id": 24,
+    "pergunta": "Em resposta a incidentes de ransomware, qual medida preserva evidências e garante restauração confiável?",
+    "alternativas": [
+      "Desligar imediatamente os servidores.",
+      "Restaurar da cópia em rede.",
+      "Isolar da rede os servidores afetados e restaurar da cópia desconectada.",
+      "Manter servidores em operação sob monitoramento."
+    ],
+    "resposta_correta": "Isolar da rede os servidores afetados e restaurar da cópia desconectada.",
+    "justificativa": "O isolamento preserva evidências e a cópia desconectada garante integridade dos dados."
+  },
+  {
+    "id": 25,
+    "pergunta": "Em contratos de SLA, qual é a indisponibilidade máxima permitida em minutos para 99,5% de disponibilidade em 30 dias?",
+    "alternativas": [
+      "180 minutos",
+      "200 minutos",
+      "216 minutos",
+      "240 minutos"
+    ],
+    "resposta_correta": "216 minutos",
+    "justificativa": "0,5% de 43.200 minutos equivale a 216 minutos de indisponibilidade permitida."
+  },
+  {
+    "id": 26,
+    "pergunta": "No PETI, qual iniciativa deve ser priorizada obrigatoriamente segundo a regra de contribuição Alta?",
+    "alternativas": [
+      "Automação do fluxo de emissão de laudos",
+      "Substituição das estações administrativas",
+      "Portal de consulta de resultados",
+      "Ferramenta de inteligência comercial"
+    ],
+    "resposta_correta": "Automação do fluxo de emissão de laudos",
+    "justificativa": "Toda iniciativa com contribuição Alta deve ser contemplada, como a automação de laudos."
+  },
+  {
+    "id": 27,
+    "pergunta": "No BPM, qual indicador mostrou redução significativa após o redesenho do processo de atendimento?",
+    "alternativas": [
+      "Tempo médio de fila até a triagem",
+      "Chamados reclassificados",
+      "Tempo médio total de atendimento",
+      "Volume de chamados"
+    ],
+    "resposta_correta": "Tempo médio de fila até a triagem",
+    "justificativa": "O tempo de fila caiu de 6 horas para 0,5 hora após o redesenho."
+  },
+  {
+    "id": 28,
+    "pergunta": "Na LGPD, qual penalidade é considerada menos severa e aplicada em casos de baixo impacto?",
+    "alternativas": [
+      "Proibição do tratamento de dados",
+      "Suspensão do tratamento de dados",
+      "Multa simples",
+      "Advertência"
+    ],
+    "resposta_correta": "Advertência",
+    "justificativa": "A advertência é aplicada como alerta em infrações de baixo impacto.",
+    "is_lgpd": true
+  },
+  {
+    "id": 29,
+    "pergunta": "Qual etapa da adequação à LGPD consiste em levantar todos os dados pessoais coletados, armazenados e processados?",
+    "alternativas": [
+      "Monitoramento",
+      "Gap analysis",
+      "Mapeamento",
+      "Implementação"
+    ],
+    "resposta_correta": "Mapeamento",
+    "justificativa": "O mapeamento detalha o ciclo de vida dos dados pessoais na organização.",
+    "is_lgpd": true
+  },
+  {
+    "id": 30,
+    "pergunta": "Qual etapa da adequação à LGPD envolve corrigir lacunas identificadas e garantir conformidade?",
+    "alternativas": [
+      "Monitoramento",
+      "Gap analysis",
+      "Mapeamento",
+      "Implementação"
+    ],
+    "resposta_correta": "Implementação",
+    "justificativa": "A implementação aplica medidas necessárias para corrigir falhas e atender à LGPD.",
+    "is_lgpd": true
+  },
+  {
+    "id": 31,
+    "pergunta": "No COBIT, qual nível de maturidade descreve processos monitorados com métricas de desempenho?",
+    "alternativas": [
+      "Inicial",
+      "Definido",
+      "Gerenciado",
+      "Otimizado"
+    ],
+    "resposta_correta": "Gerenciado",
+    "justificativa": "O nível Gerenciado exige métricas e monitoramento contínuo das atividades."
+  },
+  {
+    "id": 32,
+    "pergunta": "No ITIL, qual processo tem como objetivo restaurar a operação normal do serviço o mais rápido possível?",
+    "alternativas": [
+      "Gerenciamento de Problemas",
+      "Gerenciamento de Incidentes",
+      "Gerenciamento de Configuração",
+      "Gerenciamento de Mudanças"
+    ],
+    "resposta_correta": "Gerenciamento de Incidentes",
+    "justificativa": "O gerenciamento de incidentes busca restaurar rapidamente a operação normal do serviço."
+  },
+  {
+    "id": 33,
+    "pergunta": "Qual é o documento exigido pela LGPD para operações de tratamento que possam gerar alto risco aos titulares?",
+    "alternativas": [
+      "Política de segurança da informação",
+      "Relatório de impacto à proteção de dados (DPIA)",
+      "Plano de continuidade de negócios",
+      "Manual de boas práticas"
+    ],
+    "resposta_correta": "Relatório de impacto à proteção de dados (DPIA)",
+    "justificativa": "O DPIA avalia riscos e medidas de mitigação em operações de alto risco.",
+    "is_lgpd": true
+  },
+  {
+    "id": 34,
+    "pergunta": "Qual é a principal função do Service Desk no ITIL?",
+    "alternativas": [
+      "Registrar todos os itens de configuração",
+      "Ponto central de contato para clientes reportarem dificuldades",
+      "Autorizar mudanças na infraestrutura",
+      "Remover erros do ambiente de TI"
+    ],
+    "resposta_correta": "Ponto central de contato para clientes reportarem dificuldades",
+    "justificativa": "O Service Desk é o ponto único de contato entre usuários e TI."
+  },
+  {
+    "id": 35,
+    "pergunta": "Na LGPD, qual penalidade impede definitivamente o tratamento de dados pessoais?",
+    "alternativas": [
+      "Advertência",
+      "Multa simples",
+      "Suspensão do tratamento de dados",
+      "Proibição do tratamento de dados"
+    ],
+    "resposta_correta": "Proibição do tratamento de dados",
+    "justificativa": "É a penalidade mais extrema, aplicada quando o tratamento representa risco significativo.",
+    "is_lgpd": true
+  },
+  {
+    "id": 36,
+    "pergunta": "Qual é o objetivo principal da fase de gap analysis em projetos de adequação à LGPD?",
+    "alternativas": [
+      "Definir políticas internas",
+      "Identificar lacunas entre práticas atuais e requisitos legais",
+      "Contratar fornecedores de TI",
+      "Treinar colaboradores"
+    ],
+    "resposta_correta": "Identificar lacunas entre práticas atuais e requisitos legais",
+    "justificativa": "A gap analysis compara práticas atuais com exigências legais e regulatórias.",
+    "is_lgpd": true
+  },
+  {
+    "id": 37,
+    "pergunta": "Qual é a principal responsabilidade do setor de TI em programas de privacidade?",
+    "alternativas": [
+      "Gerenciar contratos",
+      "Auditar finanças",
+      "Proteger dados pessoais com medidas de segurança",
+      "Definir políticas de RH"
+    ],
+    "resposta_correta": "Proteger dados pessoais com medidas de segurança",
+    "justificativa": "O setor de TI deve implementar controles técnicos para proteger os dados."
+  },
+  {
+    "id": 38,
+    "pergunta": "Qual é a penalidade financeira prevista pela LGPD em caso de infrações?",
+    "alternativas": [
+      "Advertência",
+      "Multa simples",
+      "Suspensão do tratamento",
+      "Proibição do tratamento"
+    ],
+    "resposta_correta": "Multa simples",
+    "justificativa": "A multa simples pode chegar a 2% do faturamento, limitada a R$ 50 milhões.",
+    "is_lgpd": true
+  }
+];
+
+    // Configurações do Quiz
+    const QUESTIONS_PER_QUIZ = allQuestions.length; // Quantidade de perguntas por tentativa
+    let currentQuizQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let wrongAnswers = 0;
+    // Elementos do DOM
+    const questionNumberDisplay = document.getElementById('question-number-display');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackContainer = document.getElementById('feedback-container');
+    const feedbackText = document.getElementById('feedback-text');
+    const controlsContainer = document.getElementById('controls-container');
+    const nextBtn = document.getElementById('next-btn');
+    
+    const quizHeader = document.getElementById('quiz-header');
+    const questionScreen = document.getElementById('question-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const scoreCorrectDisplay = document.getElementById('score-correct');
+    const scoreTotalDisplay = document.getElementById('score-total');
+    const resultMessage = document.getElementById('result-message');
+    const restartBtn = document.getElementById('restart-btn');
+    
+    const realTimeCorrect = document.getElementById('real-time-correct');
+    const realTimeWrong = document.getElementById('real-time-wrong');
+    const statsContainer = document.getElementById('stats-container');
+
+    // Função para embaralhar um array (Fisher-Yates)
+    function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Inicia o Quiz
+    function startQuiz() {
+        // Esconde resultados, mostra painel principal
+        resultScreen.style.display = 'none';
+        quizHeader.style.display = 'flex';
+        statsContainer.style.display = 'flex';        questionScreen.style.display = 'block';
+
+        // Reseta variáveis
+        score = 0;
+        wrongAnswers = 0;
+        currentQuestionIndex = 0;
+        
+        updateStatsDisplay();
+
+        // Seleciona e embaralha perguntas
+        const shuffledAll = shuffleArray([...allQuestions]);
+        
+        // Separa as questões LGPD das demais
+        const lgpdQuestions = shuffledAll.filter(q => q.is_lgpd || q.pergunta.includes("LGPD") || q.pergunta.includes("ANPD"));
+        const otherQuestions = shuffledAll.filter(q => !(q.is_lgpd || q.pergunta.includes("LGPD") || q.pergunta.includes("ANPD")));
+        
+        // Junta novamente colocando as LGPD primeiro
+        currentQuizQuestions = [...lgpdQuestions, ...otherQuestions].slice(0, Math.min(QUESTIONS_PER_QUIZ, allQuestions.length));
+        
+        scoreTotalDisplay.innerText = currentQuizQuestions.length;
+
+        loadQuestion();
+    }
+    
+    function updateStatsDisplay() {
+        realTimeCorrect.innerText = score;
+        realTimeWrong.innerText = wrongAnswers;
+    }
+
+    // Carrega a pergunta atual na tela
+    function loadQuestion() {
+        resetState();
+        
+        const currentQuestion = currentQuizQuestions[currentQuestionIndex];
+        
+        const numStr = (currentQuestionIndex + 1).toString().padStart(3, '0');
+        const totalStr = currentQuizQuestions.length.toString().padStart(3, '0');
+        questionNumberDisplay.innerText = `#${numStr} / ${totalStr}`;
+        
+        // Verifica se é uma pergunta sobre LGPD para mudar a cor
+        if (currentQuestion.is_lgpd || currentQuestion.pergunta.includes("LGPD") || currentQuestion.pergunta.includes("ANPD")) {
+            questionText.style.color = "#a21caf"; // Um tom de roxo/magenta para destacar
+            questionText.innerHTML = `<span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">Tema: LGPD</span><br>${currentQuestion.pergunta}`;
+        } else {
+            questionText.style.color = "var(--text-black)";
+            questionText.innerText = currentQuestion.pergunta;
+        }
+
+            // Embaralha as alternativas para esta pergunta
+            const shuffledOptions = shuffleArray([...currentQuestion.alternativas]);
+
+            // Cria os botões
+            shuffledOptions.forEach(optionText => {
+                const button = document.createElement('button');
+                button.innerText = optionText;
+                button.classList.add('option-btn');
+                
+                // Event listener para seleção
+                button.addEventListener('click', () => selectAnswer(button, optionText, currentQuestion));
+                
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Reseta a interface para a próxima pergunta
+        function resetState() {
+            controlsContainer.style.display = 'none';
+            feedbackContainer.style.display = 'none';
+            while (optionsContainer.firstChild) {
+                optionsContainer.removeChild(optionsContainer.firstChild);
+            }
+        }
+
+        // Lida com a seleção de uma resposta
+    function selectAnswer(selectedButton, selectedText, questionData) {
+        const isCorrect = selectedText === questionData.resposta_correta;
+        
+        if (isCorrect) {
+            selectedButton.classList.add('correct');
+            score++;
+        } else {
+            selectedButton.classList.add('wrong');
+            wrongAnswers++;
+            // Destaca a correta também
+            const buttons = optionsContainer.children;
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].innerText === questionData.resposta_correta) {
+                    buttons[i].classList.add('correct');
+                }
+            }
+        }
+        
+        updateStatsDisplay();
+
+        // Desabilita todos os botões após a escolha
+            const allButtons = optionsContainer.children;
+            for (let i = 0; i < allButtons.length; i++) {
+                allButtons[i].disabled = true;
+            }
+
+            // Mostra justificativa
+            feedbackText.innerText = questionData.justificativa;
+            feedbackContainer.style.display = 'block';
+            
+            // Mostra botão de próximo
+            controlsContainer.style.display = 'block';
+        }
+
+        // Avança para a próxima ou finaliza
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuizQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        // Mostra a tela final
+    function showResults() {
+        quizHeader.style.display = 'none';
+        statsContainer.style.display = 'none';        questionScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+
+        scoreCorrectDisplay.innerText = score;
+
+            // Mensagem dinâmica baseada no acerto
+            const percentage = (score / currentQuizQuestions.length) * 100;
+            if (percentage === 100) {
+                resultMessage.innerText = "PERFEITO! Você é um mestre dos dados!";
+            } else if (percentage >= 70) {
+                resultMessage.innerText = "MUITO BOM! Consegue acertar todas na próxima?";
+            } else if (percentage >= 40) {
+                resultMessage.innerText = "NA MÉDIA. Que tal tentar mais uma vez?";
+            } else {
+                resultMessage.innerText = "PRECISA PRATICAR MAIS. Não desista!";
+            }
+        }
+
+        // Botão de refazer
+        restartBtn.addEventListener('click', startQuiz);
+
+        // Iniciar ao carregar
+        startQuiz();
+
+    </script>
+</body>
+</html>
