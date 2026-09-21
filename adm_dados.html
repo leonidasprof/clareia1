@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula: Administração e Dados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; padding: 0; overflow: hidden; }
+        .slide-container { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.4s ease-in-out; }
+        .slide-container.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        
+        /* Gráfico de Rosca */
+        .doughnut-chart {
+            width: 250px; height: 250px; border-radius: 50%;
+            background: conic-gradient(
+                #3b82f6 0% 25.2%, /* Carla (50/198 = 25.2%) */
+                #a855f7 25.2% 47.9%, /* Ana (45 = 22.7%) */
+                #10b981 47.9% 68.1%, /* Elena (40 = 20.2%) */
+                #f97316 68.1% 85.8%, /* Bruno (35 = 17.6%) */
+                #ef4444 85.8% 100%   /* Diego (28 = 14.1%) */
+            );
+            position: relative; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .doughnut-chart::after {
+            content: ""; position: absolute; width: 140px; height: 140px;
+            background-color: white; border-radius: 50%; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Navegação */
+        .nav-btn { transition: all 0.2s; }
+        .nav-btn:hover { background-color: #1e3a8a; transform: translateY(-2px); }
+        .nav-btn:active { transform: translateY(0); }
+    </style>
+</head>
+<body class="h-screen w-screen bg-gray-100 flex flex-col relative">
+
+    <!-- Setas de Navegação Laterais -->
+    <button onclick="prevSlide()" class="absolute left-4 top-1/2 transform -translate-y-1/2 z-50 bg-white/90 hover:bg-white text-blue-600 w-14 h-14 flex items-center justify-center rounded-full shadow-xl border border-gray-200 transition-transform hover:scale-110 text-3xl font-black nav-btn" id="prevBtn" title="Anterior">&#10094;</button>
+    <button onclick="nextSlide()" class="absolute right-4 top-1/2 transform -translate-y-1/2 z-50 bg-white/90 hover:bg-white text-blue-600 w-14 h-14 flex items-center justify-center rounded-full shadow-xl border border-gray-200 transition-transform hover:scale-110 text-3xl font-black nav-btn" id="nextBtn" title="Próximo">&#10095;</button>
+    
+    <!-- Contador Discreto -->
+    <div class="absolute top-4 right-6 z-50 px-4 py-2 font-bold text-gray-500 bg-white/80 backdrop-blur-sm rounded-md shadow-sm border border-gray-100"><span id="slide-counter">1 / 8</span></div>
+
+    <!-- AREA DE SLIDES (Ocupa o espaço entre o topo e o rodapé) -->
+    <main id="presentation-area" class="flex-1 w-full max-w-6xl mx-auto bg-white shadow-2xl overflow-hidden relative mt-4 mb-4 rounded-xl border border-gray-200 flex flex-col">
+        
+        <!-- SLIDE 1: Capa -->
+        <div class="slide-container active text-center justify-center p-8 bg-gradient-to-br from-slate-50 to-blue-50">
+            <h1 class="text-6xl font-extrabold text-blue-900 mb-6 drop-shadow-sm">Administração & Dados</h1>
+            <p class="text-3xl text-blue-600 font-semibold mb-8">Do Quadro Branco à Inteligência Artificial</p>
+            <div class="w-24 h-1 bg-blue-500 mx-auto rounded-full mb-8"></div>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">Preparem-se para um exercício prático. Hoje vamos descobrir como números transformam negócios e como a IA pode acelerar essa análise.</p>
+        </div>
+
+        <!-- SLIDE 2: Por que Matemática? -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-4 border-blue-500 pb-2 inline-block">Por que Matemática na Administração?</h2>
+            <div class="flex-1 flex flex-col md:flex-row gap-6 items-center justify-center pb-2">
+                <div class="w-full md:w-1/2 rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop" alt="Profissionais analisando dados no escritório" class="w-full h-64 object-cover">
+                </div>
+                <div class="w-full md:w-1/2 space-y-4">
+                    <div class="bg-blue-50 p-5 rounded-lg border border-blue-100">
+                        <h3 class="text-xl font-bold text-blue-800 mb-1">Não é só fazer conta!</h3>
+                        <p class="text-gray-700 text-base">A matemática aqui não é para achar o valor de X. É para <strong>tomar decisões reais</strong> que salvam empresas ou geram lucros astronômicos.</p>
+                    </div>
+                    <div class="bg-green-50 p-5 rounded-lg border border-green-100">
+                        <h3 class="text-xl font-bold text-green-800 mb-1">Os números contam a história</h3>
+                        <p class="text-gray-700 text-base">Um vendedor ruim não avisa que é ruim. A tabela de dados é quem vai "fofocar" isso para o gestor. Vocês precisam saber ler os sinais!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: Base de Dados -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-4 border-blue-500 pb-2 inline-block">Nossa Base de Dados (Copiem!)</h2>
+            <p class="text-lg text-red-600 font-semibold mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Missão Inicial: Anotem esta tabela. Ela será a base de toda a nossa análise hoje!
+            </p>
+            <div class="flex-1 rounded-xl border border-gray-300 shadow-sm flex flex-col justify-center overflow-hidden">
+                <table class="w-full bg-white text-base">
+                    <thead class="bg-blue-800 text-white">
+                        <tr>
+                            <th class="py-3 px-4 text-left font-semibold">Vendedor(a)</th>
+                            <th class="py-3 px-4 text-center font-semibold">Clientes Atendidos</th>
+                            <th class="py-3 px-4 text-center font-semibold">Total Vendido (R$)</th>
+                            <th class="py-3 px-4 text-center font-semibold">Tempo Médio (min)</th>
+                            <th class="py-3 px-4 text-center font-semibold">Satisfação (1-5)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-blue-50 transition-colors bg-white">
+                            <td class="py-3 px-4 font-bold text-gray-800">Carla</td>
+                            <td class="py-3 px-4 text-center text-gray-700">50</td>
+                            <td class="py-3 px-4 text-center text-green-600 font-semibold">R$ 6.100</td>
+                            <td class="py-3 px-4 text-center text-gray-700">15</td>
+                            <td class="py-3 px-4 text-center text-yellow-600 font-bold">4.8</td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition-colors bg-gray-50">
+                            <td class="py-3 px-4 font-bold text-gray-800">Ana</td>
+                            <td class="py-3 px-4 text-center text-gray-700">45</td>
+                            <td class="py-3 px-4 text-center text-green-600 font-semibold">R$ 5.000</td>
+                            <td class="py-3 px-4 text-center text-gray-700">20</td>
+                            <td class="py-3 px-4 text-center text-yellow-600 font-bold">4.5</td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition-colors bg-white">
+                            <td class="py-3 px-4 font-bold text-gray-800">Elena</td>
+                            <td class="py-3 px-4 text-center text-gray-700">40</td>
+                            <td class="py-3 px-4 text-center text-green-600 font-semibold">R$ 4.500</td>
+                            <td class="py-3 px-4 text-center text-gray-700">25</td>
+                            <td class="py-3 px-4 text-center text-yellow-600 font-bold">4.2</td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition-colors bg-gray-50">
+                            <td class="py-3 px-4 font-bold text-gray-800">Bruno</td>
+                            <td class="py-3 px-4 text-center text-gray-700">35</td>
+                            <td class="py-3 px-4 text-center text-green-600 font-semibold">R$ 3.200</td>
+                            <td class="py-3 px-4 text-center text-gray-700">30</td>
+                            <td class="py-3 px-4 text-center text-yellow-600 font-bold">3.9</td>
+                        </tr>
+                        <tr class="hover:bg-blue-50 transition-colors bg-white">
+                            <td class="py-3 px-4 font-bold text-gray-800">Diego</td>
+                            <td class="py-3 px-4 text-center text-gray-700">28</td>
+                            <td class="py-3 px-4 text-center text-green-600 font-semibold">R$ 2.800</td>
+                            <td class="py-3 px-4 text-center text-gray-700">40</td>
+                            <td class="py-3 px-4 text-center text-yellow-600 font-bold">3.5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Perguntas Exploratórias -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b-4 border-blue-500 pb-2 inline-block">Análise Exploratória: O que investigar?</h2>
+            <div class="flex-1 flex flex-col gap-4 justify-center">
+                <div class="bg-white border-l-8 border-blue-500 p-5 rounded-r-xl shadow-md transform hover:scale-[1.01] transition-transform">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-3">
+                        <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">1</span>
+                        Velocidade e Qualidade
+                    </h3>
+                    <p class="text-lg text-gray-600 mt-1 ml-11">Quem atende mais rápido? Atender rápido faz a nota de satisfação subir ou cair?</p>
+                </div>
+                
+                <div class="bg-white border-l-8 border-purple-500 p-5 rounded-r-xl shadow-md transform hover:scale-[1.01] transition-transform">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-3">
+                        <span class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">2</span>
+                        O Fator Dinheiro
+                    </h3>
+                    <p class="text-lg text-gray-600 mt-1 ml-11">A pessoa que faz mais vendas é a mesma pessoa que atende mais clientes?</p>
+                </div>
+
+                <div class="bg-white border-l-8 border-green-500 p-5 rounded-r-xl shadow-md transform hover:scale-[1.01] transition-transform">
+                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-3">
+                        <span class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm">3</span>
+                        Eficiência Operacional
+                    </h3>
+                    <p class="text-lg text-gray-600 mt-1 ml-11">Existe algum vendedor que gasta muito tempo por cliente, mas não traz um bom retorno financeiro?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Gráfico Barras -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-4 border-blue-500 pb-2 inline-block">Visualização 1: O Pódio de Vendas (R$)</h2>
+            <div class="flex-1 bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-inner flex flex-col justify-center">
+                
+                <div class="space-y-5 max-w-4xl mx-auto w-full">
+                    <!-- Carla - Azul -->
+                    <div class="flex items-center">
+                        <span class="w-24 text-lg font-bold text-gray-700">Carla</span>
+                        <div class="flex-1 h-10 bg-gray-200 rounded-r-full overflow-hidden flex">
+                            <div class="h-full bg-blue-500 text-white font-bold flex items-center px-4 justify-end shadow-md" style="width: 100%;">R$ 6.100</div>
+                        </div>
+                    </div>
+                    <!-- Ana - Roxo -->
+                    <div class="flex items-center">
+                        <span class="w-24 text-lg font-bold text-gray-700">Ana</span>
+                        <div class="flex-1 h-10 bg-gray-200 rounded-r-full overflow-hidden flex">
+                            <div class="h-full bg-purple-500 text-white font-bold flex items-center px-4 justify-end shadow-md" style="width: 82%;">R$ 5.000</div>
+                        </div>
+                    </div>
+                    <!-- Elena - Verde -->
+                    <div class="flex items-center">
+                        <span class="w-24 text-lg font-bold text-gray-700">Elena</span>
+                        <div class="flex-1 h-10 bg-gray-200 rounded-r-full overflow-hidden flex">
+                            <div class="h-full bg-emerald-500 text-white font-bold flex items-center px-4 justify-end shadow-md" style="width: 74%;">R$ 4.500</div>
+                        </div>
+                    </div>
+                    <!-- Bruno - Laranja -->
+                    <div class="flex items-center">
+                        <span class="w-24 text-lg font-bold text-gray-700">Bruno</span>
+                        <div class="flex-1 h-10 bg-gray-200 rounded-r-full overflow-hidden flex">
+                            <div class="h-full bg-orange-500 text-white font-bold flex items-center px-4 justify-end shadow-md" style="width: 52%;">R$ 3.200</div>
+                        </div>
+                    </div>
+                    <!-- Diego - Vermelho -->
+                    <div class="flex items-center">
+                        <span class="w-24 text-lg font-bold text-gray-700">Diego</span>
+                        <div class="flex-1 h-10 bg-gray-200 rounded-r-full overflow-hidden flex">
+                            <div class="h-full bg-red-500 text-white font-bold flex items-center px-4 justify-end shadow-md" style="width: 46%;">R$ 2.800</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 bg-white p-3 rounded-lg shadow border border-gray-200 text-center">
+                    <p class="text-base text-gray-700"><strong>Dica de Mestre:</strong> O gráfico de barras grita na sua cara quem está no topo e quem está na lanterna. Sem precisar ler uma única linha de tabela!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Gráfico Rosca -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 border-b-4 border-blue-500 pb-2 inline-block">Visualização 2: Clientes Atendidos</h2>
+            <div class="flex-1 flex flex-col md:flex-row items-center justify-center gap-12 bg-gray-50 rounded-xl p-6 border border-gray-200 shadow-inner">
+                
+                <div class="relative">
+                    <div class="doughnut-chart" style="width: 220px; height: 220px;"></div>
+                    <div class="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
+                        <span class="text-2xl font-extrabold text-gray-800">198</span>
+                        <span class="text-xs font-semibold text-gray-500">Clientes</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3 bg-white px-5 py-2 rounded-lg shadow-sm border border-gray-100">
+                        <div class="w-5 h-5 rounded bg-blue-500"></div>
+                        <span class="text-lg text-gray-700 font-semibold">Carla - 50 (25%)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white px-5 py-2 rounded-lg shadow-sm border border-gray-100">
+                        <div class="w-5 h-5 rounded bg-purple-500"></div>
+                        <span class="text-lg text-gray-700 font-semibold">Ana - 45 (23%)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white px-5 py-2 rounded-lg shadow-sm border border-gray-100">
+                        <div class="w-5 h-5 rounded bg-emerald-500"></div>
+                        <span class="text-lg text-gray-700 font-semibold">Elena - 40 (20%)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white px-5 py-2 rounded-lg shadow-sm border border-gray-100">
+                        <div class="w-5 h-5 rounded bg-orange-500"></div>
+                        <span class="text-lg text-gray-700 font-semibold">Bruno - 35 (18%)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white px-5 py-2 rounded-lg shadow-sm border border-gray-100">
+                        <div class="w-5 h-5 rounded bg-red-500"></div>
+                        <span class="text-lg text-gray-700 font-semibold">Diego - 28 (14%)</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-base text-gray-700 bg-blue-50 inline-block px-6 py-2 rounded-full font-medium">Este gráfico mostra proporção! Descobrimos que a Carla carrega sozinha ¼ da demanda da loja.</p>
+            </div>
+        </div>
+
+        <!-- SLIDE 7: O Desafio do Dashboard com IA -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 border-b-4 border-blue-500 pb-2 inline-block">Integrando com IA: Estrutura do Dashboard</h2>
+            <p class="text-base text-gray-600 mb-4">Abaixo é um modelo básico. O objetivo de vocês é pedir para a IA montar algo visualmente melhor e responder as perguntas críticas do negócio.</p>
+            
+            <div class="flex-1 bg-slate-900 rounded-xl p-5 shadow-2xl flex flex-col justify-center">
+                <!-- Prompt Box -->
+                <div class="bg-slate-800 rounded-lg p-3 border border-slate-700 mb-4">
+                    <p class="text-cyan-400 font-mono text-xs mb-1">> PROMPT PARA A IA:</p>
+                    <p class="text-white italic text-sm">"Aja como um analista de dados. Analise a tabela de vendedores, crie um dashboard mostrando a performance financeira e o impacto do tempo, e me dê 3 sugestões estratégicas sobre o Diego."</p>
+                </div>
+
+                <!-- Dashboard Mockup -->
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="col-span-1 bg-slate-800 rounded-lg p-3 border border-slate-700 flex flex-col justify-center">
+                        <h4 class="text-slate-400 text-xs font-semibold uppercase">Top Faturamento</h4>
+                        <p class="text-green-400 text-2xl font-bold mt-1">Carla (R$ 6.100)</p>
+                    </div>
+                    <div class="col-span-1 bg-slate-800 rounded-lg p-3 border border-slate-700 flex flex-col justify-center">
+                        <h4 class="text-slate-400 text-xs font-semibold uppercase">Média Satisfação</h4>
+                        <p class="text-yellow-400 text-2xl font-bold mt-1">4.18 / 5.0</p>
+                    </div>
+                    <div class="col-span-1 bg-slate-800 rounded-lg p-3 border border-slate-700 flex flex-col justify-center">
+                        <h4 class="text-slate-400 text-xs font-semibold uppercase">Alerta Crítico</h4>
+                        <p class="text-red-400 text-2xl font-bold mt-1">Diego (Tempo Alto)</p>
+                    </div>
+                    
+                    <div class="col-span-3 bg-gradient-to-r from-blue-900 to-indigo-900 rounded-lg p-4 mt-1 border border-blue-700 flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-1">Desafio Extra para o Grupo!</h3>
+                            <p class="text-blue-200 text-sm">No dashboard de vocês, cruzem a coluna "Tempo Médio" com "Total Vendido". O que acontece com quem demora muito?</p>
+                        </div>
+                        <svg class="w-10 h-10 text-blue-400 opacity-50 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Mãos à obra! -->
+        <div class="slide-container p-8 flex-col">
+            <h2 class="text-3xl font-extrabold text-blue-800 mb-4 border-b-4 border-yellow-400 pb-2 inline-block">🚀 Mãos à Obra! (O Seu Desafio)</h2>
+            <p class="text-lg text-gray-700 mb-4">Agora é com vocês! Abram as ferramentas de IA, alimentem com os dados e criem um Dashboard que responda OBRIGATORIAMENTE a estas 3 perguntas:</p>
+            
+            <div class="flex-1 flex flex-col justify-between space-y-2 bg-yellow-50 rounded-xl p-6 border border-yellow-200 shadow-md">
+                
+                <div class="flex gap-4 items-start">
+                    <div class="bg-yellow-400 text-yellow-900 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0 mt-1">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">O Paradoxo do Tempo</h3>
+                        <p class="text-base text-gray-700 leading-snug">Como o "Tempo Médio" gasto impacta o "Total Vendido" e a "Satisfação"? Demorar mais significa vender mais?</p>
+                    </div>
+                </div>
+                
+                <hr class="border-yellow-200 my-1">
+
+                <div class="flex gap-4 items-start">
+                    <div class="bg-yellow-400 text-yellow-900 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0 mt-1">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Decisão Difícil</h3>
+                        <p class="text-base text-gray-700 leading-snug">Se a loja demitir os dois com pior desempenho financeiro, quanto perderia no total? Vocês demitiriam ou treinariam?</p>
+                    </div>
+                </div>
+
+                <hr class="border-yellow-200 my-1">
+
+                <div class="flex gap-4 items-start">
+                    <div class="bg-yellow-400 text-yellow-900 rounded-full w-8 h-8 flex items-center justify-center font-bold text-lg flex-shrink-0 mt-1">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800">Consultoria do Grupo</h3>
+                        <p class="text-base text-gray-700 leading-snug">Baseado nos dados, qual é a <strong>Recomendação Oficial</strong> para melhorar o faturamento no mês que vem?</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- RODAPÉ FIXO (Nunca sobrepõe o conteúdo) -->
+    <footer class="w-full bg-white border-t-2 border-gray-200 shadow-md flex justify-between items-center px-8 py-4 z-40">
+        <div class="flex items-center h-12">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDzY-T1D5cLxFfZ9-YD1fYpVrxHCJwpvszlo5AcLP3lUXfwaGsfgl864I&s=10" alt="Logo Salesiano" class="max-h-full object-contain">
+        </div>
+        <div class="text-gray-500 font-bold uppercase tracking-wider text-sm hidden md:block">
+            Administração & Análise de Dados
+        </div>
+        <div class="flex items-center">
+            <a href="https://instagram.com/prof.tenebroso" target="_blank" class="text-blue-700 font-black text-xl hover:text-blue-900 transition-colors bg-blue-50 px-4 py-2 rounded-lg border border-blue-100 flex items-center gap-2">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" /></svg>
+                @prof.tenebroso
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-container');
+        const counter = document.getElementById('slide-counter');
+
+        function updateSlides() {
+            slides.forEach((slide, index) => {
+                if(index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+            counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlides();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlides();
+            }
+        }
+
+        // Suporte para teclas de seta (Direita/Esquerda)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+    </script>
+</body>
+</html>
