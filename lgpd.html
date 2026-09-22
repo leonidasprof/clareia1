@@ -293,12 +293,12 @@
         .gamification-overlay.active { opacity: 1; pointer-events: auto; }
 
         .gami-circle {
-            width: 200px; height: 200px;
+            width: 350px; height: 350px; /* Aumentado para melhor visualização */
             border-radius: 50%;
-            border: 8px solid var(--text-yellow);
+            border: 12px solid var(--text-yellow); /* Borda mais grossa */
             overflow: hidden;
             transform: scale(0);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Transição mais lenta (0.8s) */
             background-color: var(--text-white);
             display: flex;
             justify-content: center;
@@ -309,13 +309,15 @@
         .gamification-overlay.active .gami-circle { transform: scale(1); }
 
         .gami-happy { 
-            animation: pulseHappy 0.8s infinite alternate; 
+            /* Animação de acerto mais lenta e suave (1.5s) */
+            animation: pulseHappy 1.5s infinite alternate ease-in-out; 
             border-color: var(--correct-bg); 
             box-shadow: 0 0 50px rgba(134, 239, 172, 0.9), inset 0 0 20px rgba(134, 239, 172, 0.5); 
         }
         
         .gami-sad { 
-            animation: shakeSad 0.4s infinite; 
+            /* Animação de erro mais lenta e suave (1.2s) */
+            animation: shakeSad 1.2s infinite ease-in-out; 
             border-color: var(--wrong-bg); 
             box-shadow: 0 0 50px rgba(252, 165, 165, 0.9), inset 0 0 20px rgba(252, 165, 165, 0.5); 
         }
@@ -324,20 +326,19 @@
 
         @keyframes pulseHappy {
             0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--correct-bg)); }
-            100% { transform: scale(1.15); filter: drop-shadow(0 0 25px var(--correct-bg)) brightness(1.2); }
+            100% { transform: scale(1.1); filter: drop-shadow(0 0 25px var(--correct-bg)) brightness(1.1); }
         }
 
         @keyframes shakeSad {
             0% { transform: scale(1) translateX(0); filter: grayscale(0%);}
-            25% { transform: scale(1) translateX(-8px) rotate(-5deg); }
-            50% { transform: scale(1) translateX(8px) rotate(5deg); filter: grayscale(30%);}
-            75% { transform: scale(1) translateX(-8px) rotate(-5deg); }
+            25% { transform: scale(1) translateX(-10px) rotate(-3deg); } /* Movimentos menores e rotacionados suavemente */
+            50% { transform: scale(1) translateX(10px) rotate(3deg); filter: grayscale(30%);}
+            75% { transform: scale(1) translateX(-10px) rotate(-3deg); }
             100% { transform: scale(1) translateX(0); filter: grayscale(0%);}
         }
 
-        /* Responsividade Extrema */
         @media (max-width: 600px) {
-            .gami-circle { width: 150px; height: 150px; }
+            .gami-circle { width: 250px; height: 250px; } /* Aumentado de 150px para 250px no mobile */
             .score-display { font-size: 3rem; }
             .action-btn { width: 100%; text-align: center; }
             .quiz-header { flex-direction: column; align-items: flex-start; gap: 5px;}
@@ -369,7 +370,7 @@
 
     <div class="main-layout z-10">
         
-        <!-- SIDEBAR (Agora renderizada no CSS para ficar na direita via Flex Order) -->
+        <!-- SIDEBAR -->
         <div class="sidebar">
             <div class="sidebar-title">Modos de Jogo</div>
             <div id="sidebar-modes">
@@ -438,7 +439,7 @@
                 <div class="gamification-overlay" id="gami-overlay">
                     <div class="gami-circle" id="gami-circle">
                         <!-- Imagens Fallback via placehold.co caso arquivo local falhe -->
-                        <img src="julio_rindo.png" id="gami-img" onerror="this.src='https://placehold.co/200x200/FFF133/0D0D0D?text=Julio'" alt="Gamificação">
+                        <img src="julio_rindo.png" id="gami-img" onerror="this.src='https://placehold.co/300x300/FFF133/0D0D0D?text=Julio'" alt="Gamificação">
                     </div>
                 </div>
             </div>
@@ -530,7 +531,7 @@ const rawData = [
   {"id": "B6", "pergunta": "A LGPD estabelece dez princípios que devem ser observados nas atividades de tratamento de dados pessoais. O princípio da “Finalidade” implica em qual das seguintes práticas?", "alternativas": ["Manter os dados precisos a todo o momento, deletando ou atualizando dados errados.", "Apenas coletar dados pessoais para fins legítimos, informando com clareza ao usuário a finalidade da coleta.", "Adotar medidas preventivas para proteção dos dados, evitando danos aos titulares.", "Disponibilizar para o usuário todas as informações sobre a coleta e uso de dados de forma honesta.", "Não utilizar os dados para nenhum fim discriminatório, ilícito ou abusivo."], "resposta_correta": "Apenas coletar dados pessoais para fins legítimos, informando com clareza ao usuário a finalidade da coleta.", "dica": "Finalidade = coletar só para fins legítimos e informar claramente para quê. É a definição exata do slide."},
   {"id": "B7", "pergunta": "Um dos princípios fundamentais da LGPD é a “Responsabilidade e Prestação de Contas”. Qual a exigência desse princípio para as empresas?", "alternativas": ["Ser capaz de apresentar ao usuário os dados e a forma como são processados ao ser requisitado.", "Manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.", "Adotar os princípios da LGPD e ter condições de provar sua adoção em todos os procedimentos da empresa.", "Informar o usuário de maneira clara e acessível sobre os riscos e direitos sobre seus dados.", "Tomar medidas técnicas e administrativas para proteger os dados de danos, furtos ou perdas."], "resposta_correta": "Adotar os princípios da LGPD e ter condições de provar sua adoção em todos os procedimentos da empresa.", "dica": "Responsabilização = cumprir E PROVAR que cumpre. A palavra-chave é “provar/demonstrar”."},
   {"id": "B8", "pergunta": "De acordo com a LGPD, “Dado Sensível” é uma categoria especial de dados pessoais que exige proteção adicional. Qual das opções a seguir contém apenas exemplos de dados que são classificados como dados sensíveis?", "alternativas": ["Nome completo, CPF, endereço IP.", "E-mail pessoal, geolocalização, filiação sindical.", "Origem racial ou étnica, convicção religiosa, dados de saúde ou vida sexual.", "Endereço residencial, dados genéticos, número de telefone.", "Opinião política, idade, número de contrato."], "resposta_correta": "Origem racial ou étnica, convicção religiosa, dados de saúde ou vida sexual.", "dica": "Todos os itens da C estão no rol do art. 5º, II. Atenção ao “apenas”: basta um item comum para invalidar a alternativa."},
-  {"id": "B9", "pergunta": "A LGPD define “Dado Anonimizado” como um dado que não pode mais identificar seu titular. Qual a condição para que um dado seja considerado anonimizado?", "alternativas": ["Informação relacionada à pessoa natural identificada ou identificável.", "Informação pessoal sobre origem racial ou étnica.", "Dado relativo a titular que não possa ser identificado, considerando a utilização de meios técnicos razoáveis e disponíveis na ocasião de seu tratamento.", "Conjunto estruturado de dados pessoais, estabelecido em um ou em vários locais.", "Dados pessoais de indivíduos com idade inferior a 18 anos."], "resposta_correta": "Dado relativo a titular que não possa ser identificado, considerando a utilização de meios técnicos razoáveis e disponíveis na ocasião de seu tratamento.", "dica": "Art. 5º, III: anonimizado é o dado que não permite identificar o titular usando meios técnicos razoáveis e disponíveis no momento do tratamento."},
+  {"id": "B9", "pergunta": "A LGPD define “Dado Anonimizado” como um dado que não pode mais identifycar seu titular. Qual a condição para que um dado seja considerado anonimizado?", "alternativas": ["Informação relacionada à pessoa natural identificada ou identificável.", "Informação pessoal sobre origem racial ou étnica.", "Dado relativo a titular que não possa ser identificado, considerando a utilização de meios técnicos razoáveis e disponíveis na ocasião de seu tratamento.", "Conjunto estruturado de dados pessoais, estabelecido em um ou em vários locais.", "Dados pessoais de indivíduos com idade inferior a 18 anos."], "resposta_correta": "Dado relativo a titular que não possa ser identificado, considerando a utilização de meios técnicos razoáveis e disponíveis na ocasião de seu tratamento.", "dica": "Art. 5º, III: anonimizado é o dado que não permite identificar o titular usando meios técnicos razoáveis e disponíveis no momento do tratamento."},
   {"id": "B10", "pergunta": "A Lei Geral de Proteção de Dados (LGPD) possui um escopo de aplicação abrangente. Segundo a introdução da lei, o que ela abrange em relação ao tratamento de dados pessoais?", "alternativas": ["Apenas operações realizadas por pessoas jurídicas de direito privado em território nacional.", "Qualquer operação de tratamento de dados pessoais realizada por órgãos públicos federais.", "Operações de tratamento de dados pessoais realizadas por pessoas físicas com fins exclusivamente comerciais.", "Qualquer operação de tratamento de dados pessoais realizada no território brasileiro, independentemente de ser executada por pessoa física ou jurídica, de natureza pública ou privada.", "Apenas operações de tratamento de dados pessoais que envolvam transferência internacional de dados."], "resposta_correta": "Qualquer operação de tratamento de dados pessoais realizada no território brasileiro, independentemente de ser executada por pessoa física ou jurídica, de natureza pública ou privada.", "dica": "Art. 1º e 3º: vale para pessoa física ou jurídica, pública ou privada. (As exceções do art. 4º, como uso pessoal ou jornalístico, existem, mas a regra geral é essa.)"},
   {"id": "B11", "pergunta": "A LGPD estabelece que o tratamento de dados pessoais só pode ocorrer mediante uma das bases legais previstas na lei. Qual base legal permite o tratamento de dados para a execução de um contrato ou de procedimentos preliminares relacionados a um contrato?", "alternativas": ["I - mediante o fornecimento de consentimento pelo titular.", "II - para o cumprimento de obrigação legal ou regulatória pelo controlador.", "III - pela administração pública, para o tratamento e uso compartilhado de dados necessários à execução de políticas públicas previstas em leis e regulamentos ou respaldadas em contratos, convênios ou instrumentos congêneres, observadas as disposições do Capítulo IV desta Lei.", "V - quando necessário para a execução de contrato ou de procedimentos preliminares relacionados a contrato do qual seja parte o titular, a pedido do titular dos dados.", "IX - quando necessário para atender aos interesses legítimos do controlador ou de terceiro, exceto no caso de prevalecerem direitos e liberdades fundamentais do titular que exijam a proteção dos dados pessoais."], "resposta_correta": "V - quando necessário para a execução de contrato ou de procedimentos preliminares relacionados a contrato do qual seja parte o titular, a pedido do titular dos dados.", "dica": "Art. 7º, V: execução de contrato ou procedimentos preliminares do qual o titular seja parte."},
   {"id": "B12", "pergunta": "Na estrutura da LGPD, o “Controlador” desempenha um papel fundamental. Qual a principal responsabilidade atribuída ao Controlador?", "alternativas": ["Executar as instruções do controlador e implementar medidas de segurança técnicas.", "Atuar como canal de comunicação entre os agentes, titulares e a ANPD.", "Receber reclamações e comunicações dos titulares de dados.", "Definir as finalidades específicas do tratamento, determinar os meios e procedimentos utilizados, e ser o responsável principal pela conformidade com a LGPD.", "Adotar providências e responder à ANPD em caso de incidentes."], "resposta_correta": "Definir as finalidades específicas do tratamento, determinar os meios e procedimentos utilizados, e ser o responsável principal pela conformidade com a LGPD.", "dica": "Controlador DECIDE: define finalidades, meios e é o responsável principal pela conformidade (slide Cap. VI)."},
@@ -592,7 +593,7 @@ const rawData = [
 ];
 
 const DATA = rawData.map(item => {
-    const isClosed = !!item.alternativas; // Verifica se tem array de alternativas
+    const isClosed = !!item.alternativas; 
     
     // Define o grupo pelo prefixo do ID
     let group = "b1";
@@ -610,7 +611,7 @@ const DATA = rawData.map(item => {
             q: item.pergunta,
             o: item.alternativas,
             a: item.alternativas.indexOf(item.resposta_correta),
-            e: item.dica // Justificativa que será mostrada no feedback
+            e: item.dica 
         };
     } else {
         // Questão Aberta
@@ -793,7 +794,7 @@ function checkAnswer(btn, chosenIndex, viewIndex, x) {
     }
 
     if(isCorrect) score++;
-    log.push({x, ok: isCorrect, chosen: x.o[chosenIndex], why: ""}); // Removida a key "w" antiga
+    log.push({x, ok: isCorrect, chosen: x.o[chosenIndex], why: ""}); 
     
     let errs = store.get();
     if(!isCorrect) { if(!errs.includes(x.id)) errs.push(x.id); } 
@@ -881,11 +882,12 @@ function triggerGamification(isCorrect) {
 
     overlay.classList.add('active');
 
+    // Aumentado o tempo de 1.5s (1500) para 2.5s (2500) para permitir que a animação mais lenta seja contemplada
     setTimeout(() => {
         overlay.classList.remove('active');
         document.getElementById('feedback-container').style.display = 'block';
         document.getElementById('controls-container').classList.remove('hidden');
-    }, 1500);
+    }, 2500);
 }
 
 document.getElementById('next-btn').onclick = () => {
