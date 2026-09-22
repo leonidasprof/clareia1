@@ -2,24 +2,25 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise e Visualização de Dados</title>
-    <!-- Tailwind CSS para estilização rápida -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Tópicos em Direito (LGPD)</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Variáveis de cores baseadas nas imagens de referência */
         :root {
-            --bg-purple: #B222FF; /* Cor de fundo roxa vibrante */
-            --box-black: #0D0D0D; /* Fundo preto da caixa */
-            --box-gray: #EAEAEA;  /* Fundo cinza claro da área de questões */
-            --text-yellow: #FFF133; /* Amarelo das estrelas e interrogação */
+            --bg-purple: #B222FF;
+            --box-black: #0D0D0D;
+            --box-gray: #EAEAEA;
+            --text-yellow: #FFF133;
             --text-white: #FFFFFF;
             --text-black: #000000;
             --btn-bg: #F4F4F4;
             --btn-hover: #D0D0D0;
             --btn-border: #000000;
-            --correct-bg: #86efac; /* Verde claro para acerto */
-            --wrong-bg: #fca5a5;   /* Vermelho claro para erro */
+            --correct-bg: #86efac;
+            --correct-border: #166534;
+            --wrong-bg: #fca5a5;
+            --wrong-border: #991b1b;
         }
 
         body {
@@ -30,134 +31,219 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* Estilização da caixa principal do Quiz inspirada no "quiz.png" */
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1100px;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 850px) {
+            .main-layout {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .sidebar {
+            background-color: var(--box-black);
+            border-radius: 16px;
+            border: 4px solid var(--box-black);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
+            padding: 20px;
+            color: var(--text-white);
+            flex: 1;
+            min-width: 280px;
+            /* No desktop, a sidebar vai para a direita (order-last) */
+            order: 2; 
+        }
+
+        .sidebar-title {
+            color: var(--text-yellow);
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            border-bottom: 2px dashed var(--text-yellow);
+            padding-bottom: 5px;
+        }
+
+        .sidebar-btn {
+            background-color: var(--box-gray);
+            color: var(--text-black);
+            border: 2px solid var(--box-black);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.1s, background-color 0.2s;
+        }
+
+        .sidebar-btn:hover:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+            background-color: var(--text-white);
+        }
+        
+        .sidebar-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .sidebar-btn span {
+            display: block;
+            font-size: 0.75rem;
+            color: #555;
+            font-weight: normal;
+            margin-top: 2px;
+        }
+
         .quiz-container {
             background-color: var(--box-black);
             border-radius: 16px;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 600px;
+            flex: 2.5;
             position: relative;
-            overflow: hidden;
             border: 4px solid var(--box-black);
+            display: flex;
+            flex-direction: column;
+            order: 1;
         }
+
+        .stats-container {
+            display: flex;
+            justify-content: flex-start; /* Alinhado à esquerda conforme solicitado */
+            gap: 20px;
+            align-items: center;
+            background-color: var(--box-black);
+            padding: 10px 20px;
+            border-bottom: 2px solid #333;
+            font-size: 0.95rem;
+            color: var(--text-white);
+            font-weight: bold;
+        }
+
+        .stat-correct { color: var(--correct-bg); }
+        .stat-wrong { color: var(--wrong-bg); }
 
         .quiz-header {
             background-color: var(--box-black);
             color: var(--text-white);
-            padding: 20px;
+            padding: 10px 20px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: bold;
-            font-size: 2rem;
-            text-transform: uppercase;
-        }
-
-        .quiz-header .question-number {
-            font-family: 'Arial Black', Impact, sans-serif;
-            letter-spacing: 2px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid var(--box-gray);
         }
 
         .quiz-header .decorations {
             color: var(--text-yellow);
             font-family: monospace;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             line-height: 1;
+            text-align: right;
         }
 
         .quiz-body {
             background-color: var(--box-gray);
-            padding: 30px 20px;
+            padding: 25px 20px;
             border-radius: 0 0 12px 12px;
+            flex-grow: 1;
+            position: relative;
         }
 
-        /* Elementos decorativos (Interrogação e Estrelas simplificadas via CSS/Unicode) */
         .decoration-question-mark {
             position: absolute;
             top: -10px;
-            right: 10px;
-            font-size: 5rem;
+            right: 15px;
+            font-size: 3.5rem;
             color: var(--text-yellow);
             font-family: 'Arial Black', sans-serif;
-            text-shadow: 3px 3px 0 var(--text-black), -1px -1px 0 var(--text-black), 1px -1px 0 var(--text-black), -1px 1px 0 var(--text-black), 1px 1px 0 var(--text-black);
+            text-shadow: 2px 2px 0 var(--text-black), -1px -1px 0 var(--text-black);
             transform: rotate(15deg);
             z-index: 10;
+            pointer-events: none;
+            opacity: 0.8;
         }
 
         .question-text {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 800;
             color: var(--text-black);
             margin-bottom: 25px;
-            text-align: center;
-            text-transform: uppercase;
+            text-align: left;
+            line-height: 1.4;
         }
 
-        /* Botões das alternativas com estilo inspirado na imagem */
         .option-btn {
             background-color: var(--btn-bg);
             border: 2px solid var(--btn-border);
             border-radius: 8px;
-            padding: 15px 20px;
-            margin-bottom: 15px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
             width: 100%;
             text-align: left;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
             color: var(--text-black);
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
             display: flex;
-            align-items: center;
-        }
-
-        /* Ícone simulando o tick/cross da imagem */
-        .option-btn::before {
-            content: '○';
-            display: inline-block;
-            margin-right: 10px;
-            font-size: 1.2rem;
-            font-weight: normal;
+            align-items: flex-start;
+            gap: 10px;
         }
 
         .option-btn:hover:not(:disabled) {
             background-color: var(--btn-hover);
-            transform: translateX(5px);
+            transform: translateX(4px);
         }
 
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.9;
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.9; }
+        .option-btn.correct { background-color: var(--correct-bg); border-color: var(--correct-border); }
+        .option-btn.wrong { background-color: var(--wrong-bg); border-color: var(--wrong-border); }
+
+        .action-btn {
+            background-color: var(--box-black);
+            color: var(--text-yellow);
+            border: 2px solid var(--box-black);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .action-btn:hover { transform: translateY(2px) translateX(2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.5); }
+
+        textarea.open-answer {
+            width: 100%;
+            min-height: 120px;
+            font-family: inherit;
+            color: var(--text-black);
+            background: var(--text-white);
+            border: 2px solid var(--box-black);
+            border-radius: 10px;
+            padding: 12px;
+            resize: vertical;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
-        /* Estados de resposta */
-        .option-btn.correct {
-            background-color: var(--correct-bg);
-            border-color: #166534;
-        }
-        .option-btn.correct::before {
-            content: '✓';
-            color: #166534;
-        }
-
-        .option-btn.wrong {
-            background-color: var(--wrong-bg);
-            border-color: #991b1b;
-        }
-        .option-btn.wrong::before {
-            content: '✕';
-            color: #991b1b;
-        }
-
-        /* Feedback da justificativa */
         #feedback-container {
             display: none;
             margin-top: 20px;
@@ -168,205 +254,225 @@
             font-size: 0.95rem;
         }
         
-        .feedback-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
+        .feedback-title { font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+        .hl { background: var(--text-yellow); padding: 2px 4px; border-radius: 4px; font-weight: bold; }
+        .kw-tag { display: inline-block; padding: 3px 8px; border-radius: 20px; border: 1.5px solid var(--box-black); font-size: 0.8rem; margin: 3px; font-weight: bold;}
+        .kw-tag.y { border-color: var(--correct-border); color: var(--correct-border); background: var(--correct-bg); }
+        .kw-tag.n { border-color: var(--wrong-border); color: var(--wrong-border); background: var(--wrong-bg); }
 
-        /* Tela de Resultados com fundo inspirado no laranja.jpg */
-        #result-screen {
+        #result-screen, #welcome-screen, #sheet-screen {
             display: none;
-            background: linear-gradient(135deg, #FFB347 0%, #FF7B00 100%);
-            /* Uma textura simples para imitar os pontinhos se possível com CSS */
-            background-image: radial-gradient(rgba(255,255,255,0.2) 2px, transparent 2px);
+            background: linear-gradient(135deg, #FFB347 0%, #FF7B00 100%); /* Laranja pontilhado inspirado na imagem */
+            background-image: radial-gradient(rgba(255,255,255,0.25) 2px, transparent 2px);
             background-size: 15px 15px;
             padding: 40px 20px;
             border-radius: 0 0 12px 12px;
             text-align: center;
             color: var(--text-white);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            flex-grow: 1;
         }
 
-        .result-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+        #welcome-screen { display: block; }
+        .score-display { font-size: 4rem; font-family: 'Arial Black', sans-serif; color: var(--text-yellow); text-shadow: 3px 3px 0 #000; margin: 15px 0;}
+
+        .gamification-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            border-radius: 0 0 12px 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
         }
 
-        .score-display {
-            font-size: 4rem;
-            font-family: 'Arial Black', sans-serif;
-            margin-bottom: 30px;
-            color: var(--text-yellow);
-            text-shadow: 2px 2px 0 #000;
+        .gamification-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .gami-circle {
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            border: 8px solid var(--text-yellow);
+            overflow: hidden;
+            transform: scale(0);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background-color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
         }
 
-        .action-btn {
-            background-color: var(--box-black);
-            color: var(--text-yellow);
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.5);
-            transition: transform 0.1s;
-            margin: 5px;
-        }
+        .gamification-overlay.active .gami-circle { transform: scale(1); }
 
-        .action-btn:hover {
-            transform: translateY(2px) translateX(2px);
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+        .gami-happy { 
+            animation: pulseHappy 0.8s infinite alternate; 
+            border-color: var(--correct-bg); 
+            box-shadow: 0 0 50px rgba(134, 239, 172, 0.9), inset 0 0 20px rgba(134, 239, 172, 0.5); 
         }
         
-        .stats-container {
-            display: flex;
-            justify-content: flex-start; /* Alinhando os itens à esquerda */
-            gap: 20px; /* Espaçamento entre acertos e erros */
-            align-items: center;
-            background-color: var(--box-black);
-            padding: 10px 20px;
-            border-bottom: 2px solid var(--box-gray);
-            font-size: 0.9rem;
-            color: var(--text-white);
-            font-weight: bold;
+        .gami-sad { 
+            animation: shakeSad 0.4s infinite; 
+            border-color: var(--wrong-bg); 
+            box-shadow: 0 0 50px rgba(252, 165, 165, 0.9), inset 0 0 20px rgba(252, 165, 165, 0.5); 
         }
 
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .gami-circle img { width: 90%; height: 90%; object-fit: contain; }
+
+        @keyframes pulseHappy {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--correct-bg)); }
+            100% { transform: scale(1.15); filter: drop-shadow(0 0 25px var(--correct-bg)) brightness(1.2); }
         }
 
-        .stat-correct {
-            color: #86efac;
+        @keyframes shakeSad {
+            0% { transform: scale(1) translateX(0); filter: grayscale(0%);}
+            25% { transform: scale(1) translateX(-8px) rotate(-5deg); }
+            50% { transform: scale(1) translateX(8px) rotate(5deg); filter: grayscale(30%);}
+            75% { transform: scale(1) translateX(-8px) rotate(-5deg); }
+            100% { transform: scale(1) translateX(0); filter: grayscale(0%);}
         }
 
-        .stat-wrong {
-            color: #fca5a5;
-        }
-        
-        /* Controles gerais */
-        .controls {
-            margin-top: 20px;
-            text-align: right;
-            display: none;
-        }
-
-        /* Responsividade para Celulares */
+        /* Responsividade Extrema */
         @media (max-width: 600px) {
-            body {
-                padding: 15px 10px;
-                justify-content: flex-start;
-            }
-            .quiz-header {
-                padding: 15px;
-                font-size: 1.5rem;
-            }
-            .decoration-question-mark {
-                font-size: 3.5rem;
-                top: -5px;
-                right: 5px;
-            }
-            .question-text {
-                font-size: 1.1rem;
-            }
-            .option-btn {
-                padding: 12px 15px;
-                font-size: 0.95rem;
-            }
-            .action-btn {
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
-            .score-display {
-                font-size: 3rem;
-            }
+            .gami-circle { width: 150px; height: 150px; }
+            .score-display { font-size: 3rem; }
+            .action-btn { width: 100%; text-align: center; }
+            .quiz-header { flex-direction: column; align-items: flex-start; gap: 5px;}
+            .quiz-header .decorations { display: none; }
         }
-
     </style>
 </head>
 <body>
 
-    <div class="w-full max-w-[600px] z-0 mb-5 flex flex-row justify-between items-center px-2 gap-3">
-        <h1 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-black flex-1" style="font-family: 'Arial Black', sans-serif; text-shadow: 2px 2px 0px rgba(255,255,255,0.5);">
-            <span class="block text-left">Tópicos em Direito</span>
-            <span class="flex items-center justify-start gap-1 sm:gap-2 mt-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 text-black flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(2px 2px 0px rgba(255,255,255,0.5));">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
-                (LGPD)
-            </span>
-        </h1>
+    <div class="w-full max-w-[1100px] z-0 flex flex-col sm:flex-row justify-between items-center gap-4 mt-2 px-2">
+        <div class="flex-1 text-center sm:text-left">
+            <h1 class="text-xl sm:text-3xl font-black uppercase tracking-tighter text-black flex flex-col" style="font-family: 'Arial Black', sans-serif; text-shadow: 2px 2px 0px rgba(255,255,255,0.5);">
+                <span class="block text-left">Tópicos em Direito</span>
+                <span class="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 mt-1 text-purple-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(2px 2px 0px rgba(255,255,255,0.5));">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    (LGPD)
+                </span>
+            </h1>
+            <p class="text-black font-bold mt-2" style="text-shadow: 1px 1px 0px rgba(255,255,255,0.5);" id="global-total-display">Carregando total de questões...</p>
+        </div>
 
-        <!-- Logo da Faculdade em Retângulo Arredondado -->
         <div class="bg-white rounded-xl shadow-[4px_4px_0px_rgba(0,0,0,0.3)] border-2 border-black overflow-hidden flex flex-shrink-0 transition-transform hover:scale-105">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRce9bE9X0Uc8wPX4e34SWUYnNTktqe0hCR1xUJvVEL_JCmaofsAj56CS1p&s=10" alt="Logo Instituição" class="h-12 sm:h-14 md:h-16 object-cover" onerror="this.src='https://placehold.co/100x50/FFFFFF/000000?text=Logo'">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRce9bE9X0Uc8wPX4e34SWUYnNTktqe0hCR1xUJvVEL_JCmaofsAj56CS1p&s=10" alt="Logo Instituição" class="h-14 sm:h-16 md:h-20 object-cover" onerror="this.src='https://placehold.co/120x60/FFFFFF/000000?text=Logo'">
         </div>
     </div>
 
-    <div class="quiz-container z-10">
-        <div class="decoration-question-mark">?</div>
+    <div class="main-layout z-10">
         
-        <div class="stats-container" id="stats-container">
-            <div class="stat-item stat-correct">
-                <span>Acertos:</span>
-                <span id="real-time-correct">0</span>
-            </div>
-            <div class="stat-item stat-wrong">
-                <span>Erros:</span>
-                <span id="real-time-wrong">0</span>
-            </div>
-        </div>
-
-        <div class="quiz-header" id="quiz-header">
-            <div class="question-number text-xl" id="question-number-display">#001 / 051</div>
-            <div class="decorations">
-                x x x<br>x x x
-            </div>
-        </div>
-
-        <!-- Tela da Pergunta -->
-        <div class="quiz-body" id="question-screen">
-            <div class="question-text" id="question-text">
-                Carregando pergunta...
+        <!-- SIDEBAR (Agora renderizada no CSS para ficar na direita via Flex Order) -->
+        <div class="sidebar">
+            <div class="sidebar-title">Modos de Jogo</div>
+            <div id="sidebar-modes">
+                <!-- Gerado via JS -->
             </div>
             
-            <div id="options-container">
-                <!-- Alternativas serão geradas aqui -->
+            <div class="sidebar-title mt-6">Treino por Tema</div>
+            <div id="sidebar-themes">
+                <!-- Gerado via JS -->
             </div>
 
-            <div id="feedback-container">
-                <div class="feedback-title text-black" id="feedback-title">JUSTIFICATIVA:</div>
-                <div class="text-gray-800" id="feedback-text"></div>
+            <div class="sidebar-title mt-6">Revisão</div>
+            <div id="sidebar-review">
+                <!-- Gerado via JS -->
             </div>
-
-            <div class="controls" id="controls-container">
-                <button id="next-btn" class="action-btn text-sm py-2 px-4">Próxima Questão ➔</button>
-            </div>
+            
+            <label class="flex items-center gap-2 mt-5 text-sm text-gray-300 cursor-pointer p-2 bg-gray-800 rounded-lg border border-gray-600">
+                <input type="checkbox" id="sh-opts" checked class="w-4 h-4 accent-[#B222FF]">
+                Embaralhar alternativas
+            </label>
         </div>
 
-        <!-- Tela de Resultados -->
-        <div id="result-screen">
-            <div class="result-title">FIM DO TESTE!</div>
-            <p class="text-xl font-bold mb-2">Você acertou</p>
-            <div class="score-display">
-                <span id="score-correct">0</span> / <span id="score-total">51</span>
-            </div>
-            <p class="text-lg font-bold mb-6" id="result-message"></p>
+        <!-- QUIZ CONTAINER -->
+        <div class="quiz-container">
             
-            <button id="restart-btn" class="action-btn">TENTE AGORA MESMO! (Refazer)</button>
+            <div class="stats-container" id="stats-container" style="display: none;">
+                <div class="stat-item stat-correct flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> <span id="real-time-correct">0</span></div>
+                <div class="stat-item stat-wrong flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> <span id="real-time-wrong">0</span></div>
+            </div>
+
+            <div class="quiz-header" id="quiz-header" style="display: none;">
+                <div class="flex items-center gap-2">
+                    <span class="text-yellow-300">Questão</span>
+                    <span id="question-number-display" class="font-black bg-gray-800 px-2 py-1 rounded text-lg border border-gray-600">#000 / 000</span>
+                </div>
+                <div class="decorations">x x x<br>x x x</div>
+            </div>
+
+            <!-- TELA INICIAL -->
+            <div id="welcome-screen">
+                <div class="text-2xl sm:text-3xl font-black mb-4 uppercase">Escolha um modo ao lado!</div>
+                <p class="text-lg font-bold mb-6 max-w-md mx-auto">Prepare-se para gabaritar. Pratique os conhecimentos, descubra seus erros e veja a justificativa detalhada para cada questão.</p>
+                <div class="text-7xl mb-4 animate-bounce">📚</div>
+            </div>
+
+            <!-- TELA DA PERGUNTA -->
+            <div class="quiz-body" id="question-screen" style="display: none;">
+                <div class="decoration-question-mark">?</div>
+                
+                <div class="inline-block text-xs font-black text-purple-900 bg-purple-200 border border-purple-400 rounded-full px-3 py-1 mb-3 uppercase tracking-wide" id="question-theme-tag">Tema</div>
+                <div class="question-text" id="question-text">Carregando...</div>
+                
+                <div id="options-container">
+                    <!-- Alternativas / Textarea JS -->
+                </div>
+
+                <div id="feedback-container">
+                    <!-- Feedback JS -->
+                </div>
+
+                <div class="mt-5 text-right hidden" id="controls-container">
+                    <button id="next-btn" class="action-btn w-full sm:w-auto">Próxima Questão ➔</button>
+                </div>
+
+                <!-- GAMIFICAÇÃO OVERLAY -->
+                <div class="gamification-overlay" id="gami-overlay">
+                    <div class="gami-circle" id="gami-circle">
+                        <!-- Imagens Fallback via placehold.co caso arquivo local falhe -->
+                        <img src="julio_rindo.png" id="gami-img" onerror="this.src='https://placehold.co/200x200/FFF133/0D0D0D?text=Julio'" alt="Gamificação">
+                    </div>
+                </div>
+            </div>
+
+            <!-- TELA DE RESULTADOS -->
+            <div id="result-screen">
+                <div class="text-4xl font-black mb-2 uppercase">Fim do Teste!</div>
+                <p class="text-xl font-bold mb-2">Desempenho Final:</p>
+                <div class="score-display">
+                    <span id="score-correct">0</span> / <span id="score-total">0</span>
+                </div>
+                <p class="text-lg font-bold mb-8 bg-black bg-opacity-30 p-3 rounded-lg inline-block" id="result-message"></p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-3" id="result-actions">
+                    <!-- Botoes JS -->
+                </div>
+                
+                <div id="wrong-summary-container" class="mt-8 text-left bg-white text-black p-4 rounded-xl border-4 border-black shadow-[4px_4px_0px_rgba(0,0,0,0.5)] hidden">
+                    <h3 class="font-black text-xl mb-3 text-red-600 border-b-2 border-red-200 pb-2">O que você errou:</h3>
+                    <div id="wrong-summary-list" class="space-y-4 text-sm font-semibold"></div>
+                </div>
+            </div>
+
+            <!-- TELA DE RESUMO -->
+            <div id="sheet-screen" class="text-left">
+                <h2 class="text-3xl font-black mb-6 uppercase text-yellow-300 border-b-2 border-yellow-300 pb-2">Resumo de Memorização</h2>
+                <div id="sheet-content" class="text-sm space-y-4"></div>
+            </div>
+
         </div>
     </div>
 
-    <!-- Link do Instagram Prof. Tenebroso -->
-    <a href="https://instagram.com/prof.tenebroso" target="_blank" rel="noopener noreferrer" class="mt-6 mb-2 z-10 flex items-center justify-center gap-2 bg-white text-black text-lg px-5 py-2 rounded-full border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-transform hover:scale-105 hover:-translate-y-1" style="font-family: 'Arial Black', sans-serif;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <a href="https://instagram.com/prof.tenebroso" target="_blank" rel="noopener noreferrer" class="mt-8 mb-4 z-10 flex items-center justify-center gap-2 bg-white text-black text-lg px-6 py-3 rounded-full border-4 border-black shadow-[6px_6px_0px_rgba(0,0,0,0.4)] transition-transform hover:scale-105 hover:-translate-y-1" style="font-family: 'Arial Black', sans-serif;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
             <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
@@ -375,669 +481,504 @@
     </a>
 
 <script>
-    // Dados do Quiz (inseridos a partir do txt fornecido)
-    const allQuestions = [
-  {
-    "id": 1,
-    "pergunta": "Qual das opções a seguir descreve corretamente o objetivo da multa prevista pela LGPD em casos de infrações graves?",
-    "alternativas": [
-      "Reverter os danos causados aos titulares de dados pessoais.",
-      "Garantir aumento de receita para a ANPD.",
-      "Suspender temporariamente o tratamento de dados.",
-      "Eliminar todos os dados pessoais da empresa."
-    ],
-    "resposta_correta": "Reverter os danos causados aos titulares de dados pessoais.",
-    "justificativa": "A multa tem caráter reparatório e busca compensar os danos sofridos pelos titulares de dados.",
-    "is_lgpd": true
-  },
-  {
-    "id": 2,
-    "pergunta": "Em caso de infração muito grave à LGPD, qual é o limite máximo da multa que pode ser aplicada pela ANPD?",
-    "alternativas": [
-      "R$ 10.000.000,00",
-      "R$ 25.000.000,00",
-      "R$ 50.000.000,00",
-      "R$ 100.000.000,00"
-    ],
-    "resposta_correta": "R$ 50.000.000,00",
-    "justificativa": "A LGPD estabelece multa de até 2% do faturamento, limitada a R$ 50 milhões por infração.",
-    "is_lgpd": true
-  },
-  {
-    "id": 3,
-    "pergunta": "Quando a ANPD aplica a sanção de 'suspensão temporária das atividades de tratamento', o que é exigido da empresa infratora?",
-    "alternativas": [
-      "Comprovar que não houve falha no tratamento.",
-      "Revisar o plano de resposta a incidentes sem interromper atividades.",
-      "Pagar multa fixa para retomar atividades.",
-      "Interromper imediatamente e temporariamente todas as atividades de tratamento relacionadas ao incidente."
-    ],
-    "resposta_correta": "Interromper imediatamente e temporariamente todas as atividades de tratamento relacionadas ao incidente.",
-    "justificativa": "A suspensão exige paralisação imediata para proteger os titulares e corrigir falhas graves.",
-    "is_lgpd": true
-  },
-  {
-    "id": 4,
-    "pergunta": "Qual é o primeiro passo para o desenvolvimento de um programa de privacidade e proteção de dados em uma instituição durante o mapeamento?",
-    "alternativas": [
-      "Criar uma política de comunicação de incidentes.",
-      "Definir sanções internas.",
-      "Contratar um DPO.",
-      "Identificar os dados pessoais que são coletados e tratados."
-    ],
-    "resposta_correta": "Identificar os dados pessoais que são coletados e tratados.",
-    "justificativa": "O mapeamento inicial permite compreender o ciclo de vida dos dados e avaliar riscos."
-  },
-  {
-    "id": 5,
-    "pergunta": "No contexto de um programa de privacidade, qual é o papel do encarregado de proteção de dados (DPO)?",
-    "alternativas": [
-      "Supervisionar a implementação do programa de privacidade e atuar como ponto de contato entre a instituição e a ANPD.",
-      "Auditar as finanças da organização.",
-      "Gerenciar contratos de fornecedores.",
-      "Implantar medidas de segurança física."
-    ],
-    "resposta_correta": "Supervisionar a implementação do programa de privacidade e atuar como ponto de contato entre a instituição e a ANPD.",
-    "justificativa": "O DPO garante conformidade com a LGPD e serve como elo de comunicação e supervisão.",
-    "is_lgpd": true
-  },
-  {
-    "id": 6,
-    "pergunta": "Qual documento é essencial para demonstrar que uma organização está em conformidade com a LGPD?",
-    "alternativas": [
-      "Política de privacidade interna.",
-      "Relatório de auditoria financeira.",
-      "Política de segurança da informação.",
-      "Relatório de impacto à proteção de dados (DPIA)."
-    ],
-    "resposta_correta": "Relatório de impacto à proteção de dados (DPIA).",
-    "justificativa": "O DPIA avalia riscos e medidas de mitigação, demonstrando conformidade com a LGPD.",
-    "is_lgpd": true
-  },
-  {
-    "id": 7,
-    "pergunta": "Quais são as ações que devem ser tomadas por uma instituição em caso de violação de dados pessoais?",
-    "alternativas": [
-      "Apenas comunicar internamente.",
-      "Suspender todas as operações da empresa.",
-      "Apagar imediatamente todos os dados afetados sem notificar os titulares.",
-      "Informar a ANPD e os titulares afetados, além de adotar medidas corretivas."
-    ],
-    "resposta_correta": "Informar a ANPD e os titulares afetados, além de adotar medidas corretivas.",
-    "justificativa": "A LGPD exige comunicação à ANPD e aos titulares, além de medidas de mitigação.",
-    "is_lgpd": true
-  },
-  {
-    "id": 8,
-    "pergunta": "A implementação de um programa de privacidade deve ser:",
-    "alternativas": [
-      "Somente aplicada em empresas de grande porte.",
-      "Focada apenas em ações de treinamento.",
-      "Integrada a todos os setores da organização.",
-      "Exclusiva do departamento jurídico."
-    ],
-    "resposta_correta": "Integrada a todos os setores da organização.",
-    "justificativa": "A privacidade deve ser transversal e envolver todos os setores da empresa."
-  },
-  {
-    "id": 9,
-    "pergunta": "Qual é a principal responsabilidade do setor de TI na implementação de um programa de privacidade e proteção de dados?",
-    "alternativas": [
-      "Controlar contratos com fornecedores.",
-      "Realizar auditorias financeiras.",
-      "Elaborar políticas de RH.",
-      "Proteger os dados pessoais por meio de medidas de segurança adequadas."
-    ],
-    "resposta_correta": "Proteger os dados pessoais por meio de medidas de segurança adequadas.",
-    "justificativa": "O setor de TI deve garantir segurança técnica com criptografia, controle de acesso e monitoramento."
-  },
-  {
-    "id": 10,
-    "pergunta": "Quais medidas devem ser incluídas em um programa de privacidade para garantir o cumprimento da LGPD?",
-    "alternativas": [
-      "Minimizar armazenamento sem anonimização.",
-      "Criar sistema de votação para consentimento.",
-      "Recolher dados apenas para uso interno sem comunicação.",
-      "Adotar práticas transparentes sobre coleta e uso de dados e garantir que os direitos dos titulares sejam respeitados."
-    ],
-    "resposta_correta": "Adotar práticas transparentes sobre coleta e uso de dados e garantir que os direitos dos titulares sejam respeitados.",
-    "justificativa": "A LGPD exige transparência e respeito aos direitos dos titulares.",
-    "is_lgpd": true
-  },
-  {
-    "id": 11,
-    "pergunta": "Qual das opções abaixo descreve um procedimento essencial dentro de um programa de privacidade e proteção de dados para garantir o direito de acesso dos titulares?",
-    "alternativas": [
-      "Coletar dados sem consentimento.",
-      "Enviar e-mails anuais informativos.",
-      "Disponibilizar um canal direto para que os titulares possam exercer seus direitos.",
-      "Realizar auditoria semestral dos dados pessoais."
-    ],
-    "resposta_correta": "Disponibilizar um canal direto para que os titulares possam exercer seus direitos.",
-    "justificativa": "Um canal direto garante que os titulares possam solicitar acesso e exercer seus direitos."
-  },
-  {
-    "id": 12,
-    "pergunta": "Durante a fase de 'gap analysis' em um programa de proteção de dados, o que a organização deve buscar identificar?",
-    "alternativas": [
-      "Todos os processos de tratamento de dados.",
-      "O melhor software de segurança.",
-      "A lacuna entre as práticas atuais de proteção de dados e os requisitos legais, regulatórios e de boas práticas.",
-      "A quantidade de dados coletados sem consentimento."
-    ],
-    "resposta_correta": "A lacuna entre as práticas atuais de proteção de dados e os requisitos legais, regulatórios e de boas práticas.",
-    "justificativa": "O objetivo da gap analysis é identificar pontos fora de conformidade e corrigi-los."
-  },
-  {
-    "id": 13,
-    "pergunta": "Qual é a finalidade do monitoramento contínuo após a conclusão do projeto de adequação à legislação de proteção de dados?",
-    "alternativas": [
-      "Verificar e corrigir falhas rapidamente.",
-      "Avaliar apenas desempenho financeiro.",
-      "Garantir que a empresa permaneça em conformidade com a LGPD e responda rapidamente a novos riscos ou mudanças regulatórias.",
-      "Deletar automaticamente todos os dados após uso."
-    ],
-    "resposta_correta": "Garantir que a empresa permaneça em conformidade com a LGPD e responda rapidamente a novos riscos ou mudanças regulatórias.",
-    "justificativa": "O monitoramento contínuo assegura conformidade permanente e resposta a novos riscos.",
-    "is_lgpd": true
-  },
-  {
-    "id": 14,
-    "pergunta": "Associe cada penalidade administrativa da LGPD ao seu conceito.",
-    "alternativas": [
-      "Proibição do tratamento de dados: impede definitivamente o tratamento.",
-      "Suspensão do tratamento de dados: impede temporariamente o tratamento.",
-      "Multa simples: penalidade financeira de até 2% do faturamento, limitada a R$ 50 milhões.",
-      "Advertência: sanção menos severa aplicada em casos de baixo impacto."
-    ],
-    "resposta_correta": "Proibição do tratamento de dados: impede definitivamente o tratamento.",
-    "justificativa": "A proibição é a penalidade mais extrema, aplicada quando outras medidas não são suficientes.",
-    "is_lgpd": true
-  },
-  {
-    "id": 15,
-    "pergunta": "Associe cada etapa de um projeto de adequação à LGPD ao seu conceito.",
-    "alternativas": [
-      "Monitoramento: etapa contínua que visa garantir a manutenção da conformidade.",
-      "Gap analysis: identificação das divergências e pontos a ajustar.",
-      "Mapeamento: levantamento detalhado de todos os dados pessoais coletados.",
-      "Implementação: adoção das medidas necessárias para corrigir lacunas."
-    ],
-    "resposta_correta": "Monitoramento: etapa contínua que visa garantir a manutenção da conformidade.",
-    "justificativa": "O monitoramento contínuo garante que a empresa permaneça em conformidade com a LGPD.",
-    "is_lgpd": true
-  },
-  {
-    "id": 16,
-    "pergunta": "No modelo de maturidade do COBIT, qual nível descreve processos realizados, documentados e comunicados na organização?",
-    "alternativas": [
-      "Inicial",
-      "Repetível",
-      "Definido",
-      "Gerenciado"
-    ],
-    "resposta_correta": "Definido",
-    "justificativa": "O nível definido indica que o processo está formalizado e comunicado internamente."
-  },
-  {
-    "id": 17,
-    "pergunta": "Na central de serviços ITIL, qual conduta é adequada quando há reincidência de incidentes sem causa raiz identificada?",
-    "alternativas": [
-      "Encaminhar ao gerenciamento de mudanças.",
-      "Manter o reinício como restauração e acionar o gerenciamento de problemas.",
-      "Substituir reinício por análise de causa em cada chamado.",
-      "Registrar ocorrências no gerenciamento de configuração."
-    ],
-    "resposta_correta": "Manter o reinício como restauração e acionar o gerenciamento de problemas.",
-    "justificativa": "O gerenciamento de incidentes restaura rapidamente, enquanto o de problemas elimina a causa raiz."
-  },
-  {
-    "id": 18,
-    "pergunta": "Qual ação inicial é adequada em caso de ataque de ransomware em servidores com dados pessoais?",
-    "alternativas": [
-      "Manter servidores em operação sob monitoramento.",
-      "Desligar imediatamente os servidores afetados.",
-      "Restaurar arquivos da cópia em rede.",
-      "Isolar da rede os servidores afetados e restaurar da cópia desconectada."
-    ],
-    "resposta_correta": "Isolar da rede os servidores afetados e restaurar da cópia desconectada.",
-    "justificativa": "A cópia em rede pode estar comprometida; o isolamento preserva evidências e garante restauração segura."
-  },
-  {
-    "id": 19,
-    "pergunta": "Em um contrato de SLA com 99,5% de disponibilidade mensal, qual mês exige desconto se houve 240 minutos de indisponibilidade e TMA de 33 minutos?",
-    "alternativas": [
-      "Julho",
-      "Agosto",
-      "Setembro",
-      "Nenhum"
-    ],
-    "resposta_correta": "Agosto",
-    "justificativa": "A indisponibilidade superou 216 minutos e o TMA excedeu 30 minutos, descumprindo ambas as metas."
-  },
-  {
-    "id": 20,
-    "pergunta": "No PETI, qual carteira de investimentos é compatível com as regras de seleção (orçamento, contribuição alta obrigatória e saldo aplicado à maior contribuição)?",
-    "alternativas": [
-      "I1, I2 e I4",
-      "I1, I4 e I5",
-      "I1, I3 e I4",
-      "I2, I3 e I4"
-    ],
-    "resposta_correta": "I1, I3 e I4",
-    "justificativa": "As iniciativas de contribuição alta (I1 e I4) são obrigatórias; o saldo restante contempla I3."
-  },
-  {
-    "id": 21,
-    "pergunta": "No ciclo BPM, qual avaliação correta do redesenho que eliminou a triagem manual mas aumentou reclassificações?",
-    "alternativas": [
-      "Tratou a causa do gargalo em sua origem.",
-      "Foi malsucedido, pois aumentou retrabalho.",
-      "Automatizou apenas a distribuição sem efeito no tempo de fila.",
-      "Eliminou o gargalo da triagem, mas transferiu o problema para a classificação."
-    ],
-    "resposta_correta": "Eliminou o gargalo da triagem, mas transferiu o problema para a classificação.",
-    "justificativa": "O tempo de fila caiu, mas o retrabalho aumentou devido à classificação incorreta pelos solicitantes."
-  },
-  {
-    "id": 22,
-    "pergunta": "No COBIT, qual lacuna impede que a gestão de mudanças evolua do nível Definido para Gerenciado?",
-    "alternativas": [
-      "Ausência de documentação e comunicação.",
-      "Ausência de métricas de desempenho e monitoramento contínuo.",
-      "Ausência de automação e melhores práticas.",
-      "Ausência de padronização entre equipes."
-    ],
-    "resposta_correta": "Ausência de métricas de desempenho e monitoramento contínuo.",
-    "justificativa": "O nível Gerenciado exige métricas e monitoramento, inexistentes na gestão de mudanças descrita."
-  },
-  {
-    "id": 23,
-    "pergunta": "No ITIL, qual processo busca identificar e remover erros do ambiente de TI por meio da análise dos incidentes registrados?",
-    "alternativas": [
-      "Gerenciamento de Incidentes",
-      "Gerenciamento de Problemas",
-      "Gerenciamento de Configuração",
-      "Gerenciamento de Mudanças"
-    ],
-    "resposta_correta": "Gerenciamento de Problemas",
-    "justificativa": "O gerenciamento de problemas elimina a causa raiz dos incidentes para garantir estabilidade."
-  },
-  {
-    "id": 24,
-    "pergunta": "Em resposta a incidentes de ransomware, qual medida preserva evidências e garante restauração confiável?",
-    "alternativas": [
-      "Desligar imediatamente os servidores.",
-      "Restaurar da cópia em rede.",
-      "Isolar da rede os servidores afetados e restaurar da cópia desconectada.",
-      "Manter servidores em operação sob monitoramento."
-    ],
-    "resposta_correta": "Isolar da rede os servidores afetados e restaurar da cópia desconectada.",
-    "justificativa": "O isolamento preserva evidências e a cópia desconectada garante integridade dos dados."
-  },
-  {
-    "id": 25,
-    "pergunta": "Em contratos de SLA, qual é a indisponibilidade máxima permitida em minutos para 99,5% de disponibilidade em 30 dias?",
-    "alternativas": [
-      "180 minutos",
-      "200 minutos",
-      "216 minutos",
-      "240 minutos"
-    ],
-    "resposta_correta": "216 minutos",
-    "justificativa": "0,5% de 43.200 minutos equivale a 216 minutos de indisponibilidade permitida."
-  },
-  {
-    "id": 26,
-    "pergunta": "No PETI, qual iniciativa deve ser priorizada obrigatoriamente segundo a regra de contribuição Alta?",
-    "alternativas": [
-      "Automação do fluxo de emissão de laudos",
-      "Substituição das estações administrativas",
-      "Portal de consulta de resultados",
-      "Ferramenta de inteligência comercial"
-    ],
-    "resposta_correta": "Automação do fluxo de emissão de laudos",
-    "justificativa": "Toda iniciativa com contribuição Alta deve ser contemplada, como a automação de laudos."
-  },
-  {
-    "id": 27,
-    "pergunta": "No BPM, qual indicador mostrou redução significativa após o redesenho do processo de atendimento?",
-    "alternativas": [
-      "Tempo médio de fila até a triagem",
-      "Chamados reclassificados",
-      "Tempo médio total de atendimento",
-      "Volume de chamados"
-    ],
-    "resposta_correta": "Tempo médio de fila até a triagem",
-    "justificativa": "O tempo de fila caiu de 6 horas para 0,5 hora após o redesenho."
-  },
-  {
-    "id": 28,
-    "pergunta": "Na LGPD, qual penalidade é considerada menos severa e aplicada em casos de baixo impacto?",
-    "alternativas": [
-      "Proibição do tratamento de dados",
-      "Suspensão do tratamento de dados",
-      "Multa simples",
-      "Advertência"
-    ],
-    "resposta_correta": "Advertência",
-    "justificativa": "A advertência é aplicada como alerta em infrações de baixo impacto.",
-    "is_lgpd": true
-  },
-  {
-    "id": 29,
-    "pergunta": "Qual etapa da adequação à LGPD consiste em levantar todos os dados pessoais coletados, armazenados e processados?",
-    "alternativas": [
-      "Monitoramento",
-      "Gap analysis",
-      "Mapeamento",
-      "Implementação"
-    ],
-    "resposta_correta": "Mapeamento",
-    "justificativa": "O mapeamento detalha o ciclo de vida dos dados pessoais na organização.",
-    "is_lgpd": true
-  },
-  {
-    "id": 30,
-    "pergunta": "Qual etapa da adequação à LGPD envolve corrigir lacunas identificadas e garantir conformidade?",
-    "alternativas": [
-      "Monitoramento",
-      "Gap analysis",
-      "Mapeamento",
-      "Implementação"
-    ],
-    "resposta_correta": "Implementação",
-    "justificativa": "A implementação aplica medidas necessárias para corrigir falhas e atender à LGPD.",
-    "is_lgpd": true
-  },
-  {
-    "id": 31,
-    "pergunta": "No COBIT, qual nível de maturidade descreve processos monitorados com métricas de desempenho?",
-    "alternativas": [
-      "Inicial",
-      "Definido",
-      "Gerenciado",
-      "Otimizado"
-    ],
-    "resposta_correta": "Gerenciado",
-    "justificativa": "O nível Gerenciado exige métricas e monitoramento contínuo das atividades."
-  },
-  {
-    "id": 32,
-    "pergunta": "No ITIL, qual processo tem como objetivo restaurar a operação normal do serviço o mais rápido possível?",
-    "alternativas": [
-      "Gerenciamento de Problemas",
-      "Gerenciamento de Incidentes",
-      "Gerenciamento de Configuração",
-      "Gerenciamento de Mudanças"
-    ],
-    "resposta_correta": "Gerenciamento de Incidentes",
-    "justificativa": "O gerenciamento de incidentes busca restaurar rapidamente a operação normal do serviço."
-  },
-  {
-    "id": 33,
-    "pergunta": "Qual é o documento exigido pela LGPD para operações de tratamento que possam gerar alto risco aos titulares?",
-    "alternativas": [
-      "Política de segurança da informação",
-      "Relatório de impacto à proteção de dados (DPIA)",
-      "Plano de continuidade de negócios",
-      "Manual de boas práticas"
-    ],
-    "resposta_correta": "Relatório de impacto à proteção de dados (DPIA)",
-    "justificativa": "O DPIA avalia riscos e medidas de mitigação em operações de alto risco.",
-    "is_lgpd": true
-  },
-  {
-    "id": 34,
-    "pergunta": "Qual é a principal função do Service Desk no ITIL?",
-    "alternativas": [
-      "Registrar todos os itens de configuração",
-      "Ponto central de contato para clientes reportarem dificuldades",
-      "Autorizar mudanças na infraestrutura",
-      "Remover erros do ambiente de TI"
-    ],
-    "resposta_correta": "Ponto central de contato para clientes reportarem dificuldades",
-    "justificativa": "O Service Desk é o ponto único de contato entre usuários e TI."
-  },
-  {
-    "id": 35,
-    "pergunta": "Na LGPD, qual penalidade impede definitivamente o tratamento de dados pessoais?",
-    "alternativas": [
-      "Advertência",
-      "Multa simples",
-      "Suspensão do tratamento de dados",
-      "Proibição do tratamento de dados"
-    ],
-    "resposta_correta": "Proibição do tratamento de dados",
-    "justificativa": "É a penalidade mais extrema, aplicada quando o tratamento representa risco significativo.",
-    "is_lgpd": true
-  },
-  {
-    "id": 36,
-    "pergunta": "Qual é o objetivo principal da fase de gap analysis em projetos de adequação à LGPD?",
-    "alternativas": [
-      "Definir políticas internas",
-      "Identificar lacunas entre práticas atuais e requisitos legais",
-      "Contratar fornecedores de TI",
-      "Treinar colaboradores"
-    ],
-    "resposta_correta": "Identificar lacunas entre práticas atuais e requisitos legais",
-    "justificativa": "A gap analysis compara práticas atuais com exigências legais e regulatórias.",
-    "is_lgpd": true
-  },
-  {
-    "id": 37,
-    "pergunta": "Qual é a principal responsabilidade do setor de TI em programas de privacidade?",
-    "alternativas": [
-      "Gerenciar contratos",
-      "Auditar finanças",
-      "Proteger dados pessoais com medidas de segurança",
-      "Definir políticas de RH"
-    ],
-    "resposta_correta": "Proteger dados pessoais com medidas de segurança",
-    "justificativa": "O setor de TI deve implementar controles técnicos para proteger os dados."
-  },
-  {
-    "id": 38,
-    "pergunta": "Qual é a penalidade financeira prevista pela LGPD em caso de infrações?",
-    "alternativas": [
-      "Advertência",
-      "Multa simples",
-      "Suspensão do tratamento",
-      "Proibição do tratamento"
-    ],
-    "resposta_correta": "Multa simples",
-    "justificativa": "A multa simples pode chegar a 2% do faturamento, limitada a R$ 50 milhões.",
-    "is_lgpd": true
-  }
+const rawData = [
+  {"id": "A1", "pergunta": "Assinale a alternativa que apresenta uma característica da proteção de dados.", "alternativas": ["Objetividade.", "Disponibilidade.", "Subjetividade.", "Variabilidade."], "resposta_correta": "Objetividade.", "dica": "No material do curso, a proteção de dados é objetiva: são regras e medidas concretas sobre como coletar, usar, guardar e excluir dados. Já a privacidade é mais subjetiva, porque depende do indivíduo."},
+  {"id": "A2", "pergunta": "A discussão sobre a privacidade surgiu a partir de uma ótica:", "alternativas": ["Coletiva.", "Genérica.", "Negativa.", "Positiva."], "resposta_correta": "Negativa.", "dica": "A privacidade nasceu como um direito negativo: o direito de NÃO sofrer interferência, de ser deixado em paz (Warren e Brandeis, 1890). A dimensão positiva, de controlar os próprios dados, veio depois."},
+  {"id": "A3", "pergunta": "O que não é dado pessoal?", "alternativas": ["Informação sigilosa sem capacidade de tornar alguém identificável.", "Informação pessoal que identifique alguém.", "Informação que torne alguém identificável.", "Informação que, em um banco de dados, quando relacionada com outras informações, seja capaz de tornar alguém identificável."], "resposta_correta": "Informação sigilosa sem capacidade de tornar alguém identificável.", "dica": "Dado pessoal é a informação relacionada a pessoa natural identificada ou identificável (art. 5º, I). Se não identifica nem torna ninguém identificável, não é dado pessoal, mesmo sendo sigilosa."},
+  {"id": "A4", "pergunta": "Assinale a alternativa que apresenta exemplos de dados pessoais de um colaborador.", "alternativas": ["Nome, matrícula e número da farda.", "Nome, empresa em que trabalha e faturamento da empresa.", "Faturamento da empresa, meta anual e nome.", "Empresa em que trabalha, número da farda e meta anual da empresa."], "resposta_correta": "Nome, matrícula e número da farda.", "dica": "Nome, matrícula e número da farda estão ligados ao colaborador como pessoa, então são dados pessoais."},
+  {"id": "A5", "pergunta": "Não são dados sensíveis:", "alternativas": ["Dados sigilosos.", "Dados de saúde.", "Opiniões políticas.", "Origem racial ou étnica."], "resposta_correta": "Dados sigilosos.", "dica": "Dado sigiloso não é categoria de dado sensível. Os sensíveis (art. 5º, II) são: origem racial ou étnica, convicção religiosa, opinião política, filiação sindical ou religiosa/filosófica/política, saúde, vida sexual, dado genético ou biométrico."},
+  {"id": "A6", "pergunta": "Sobre proteção de dados no Brasil, assinale a alternativa correta.", "alternativas": ["É um assunto discutido no Brasil desde 1960.", "O país tem apenas uma lei que fala sobre o tema: a Lei Geral de Proteção de Dados.", "É um assunto que vem avançando e teve sua discussão acentuada a partir de 2010.", "O país tem apenas duas leis que falam sobre o tema: a Lei Geral de Proteção de Dados e o Marco Civil da Internet."], "resposta_correta": "É um assunto que vem avançando e teve sua discussão acentuada a partir de 2010.", "dica": "O tema já existia antes, mas ganhou força a partir de 2010: Marco Civil da Internet (2014), LGPD (2018), criação da ANPD e a EC 115/2022, que tornou a proteção de dados direito fundamental."},
+  {"id": "A7", "pergunta": "A respeito das bases legais, é correto afirmar que:", "alternativas": ["São as hipóteses legais que justificam o tratamento de dados por instituições.", "A indicação da base legal só é obrigatória para o tratamento de dados de colaboradores.", "É sempre necessário coletar o consentimento dos titulares.", "O consentimento é uma base legal prioritária."], "resposta_correta": "São as hipóteses legais que justificam o tratamento de dados por instituições.", "dica": "Bases legais são as hipóteses da lei (art. 7º e art. 11) que autorizam o tratamento. Sem base legal, o tratamento é irregular."},
+  {"id": "A8", "pergunta": "Uma empresa recebeu o currículo de um candidato à vaga de trabalho e, utilizando as informações recebidas, passou a disparar e-mail marketing dos serviços prestados por ela. Essa situação viola qual princípio?", "alternativas": ["Segurança.", "Não discriminação.", "Qualidade dos dados.", "Finalidade."], "resposta_correta": "Finalidade.", "dica": "Os dados do currículo foram coletados para recrutamento e usados para marketing. Isso é desvio de finalidade: usar o dado para um propósito diferente do informado."},
+  {"id": "A9", "pergunta": "Um aplicativo de delivery utiliza a localização dos usuários para melhorar as entregas, mas também repassa essas informações a parceiros de marketing para anúncios personalizados sem informar previamente os usuários sobre esse compartilhamento. Essa situação viola qual princípio da LGPD?", "alternativas": ["Transparência.", "Segurança.", "Responsabilização e prestação de contas.", "Qualidade dos dados."], "resposta_correta": "Transparência.", "dica": "O problema é não informar o usuário sobre o compartilhamento com parceiros. Isso fere a transparência: o titular deve saber, de forma clara, o que é feito com seus dados."},
+  {"id": "A10", "pergunta": "Uma clínica médica guarda prontuários em um sistema online, mas não adota medidas de segurança adequadas. Por qual razão podemos inferir uma violação à LGPD?", "alternativas": ["Não houve violação da LGPD nessa situação.", "A clínica não violou o princípio da segurança nem o da prevenção.", "A clínica violou o princípio da segurança ao não adotar medidas técnicas e administrativas para proteger os dados pessoais de acessos não autorizados.", "A clínica não violou o princípio da segurança, mas violou o da prevenção."], "resposta_correta": "A clínica violou o princípio da segurança ao não adotar medidas técnicas e administrativas para proteger os dados pessoais de acessos não autorizados.", "dica": "Não adotar medidas técnicas e administrativas para proteger os dados é violação direta do princípio da segurança."},
+  {"id": "A11", "pergunta": "A LGPD estabelece regras para operações com dados pessoais e protege os titulares. Assinale a alternativa que expressa corretamente um direito do titular.", "alternativas": ["Direito de obter compensação financeira pelo uso dos dados pessoais.", "Direito de exigir a imediata exclusão de dados pessoais, sem exceções.", "Direito de correção de dados incompletos, inexatos ou desatualizados.", "Direito de acesso aos seus dados e dados de terceiros."], "resposta_correta": "Direito de correção de dados incompletos, inexatos ou desatualizados.", "dica": "A correção de dados incompletos, inexatos ou desatualizados é direito do titular (art. 18, III)."},
+  {"id": "A12", "pergunta": "Qual dos seguintes direitos permite que o titular solicite informações sobre o compartilhamento de seus dados com terceiros?", "alternativas": ["Direito à informação.", "Direito de exclusão.", "Direito de correção.", "Direito de acesso."], "resposta_correta": "Direito à informação.", "dica": "O direito à informação (art. 18, VII) garante saber com quais entidades públicas e privadas o controlador compartilhou os dados."},
+  {"id": "A13", "pergunta": "Em quais situações o titular dos dados tem o direito de solicitar a exclusão de seus dados pessoais?", "alternativas": ["Quando desejar mudar de fornecedor de serviços e não desejar que seus dados permaneçam com a organização.", "Quando quiser apenas acessar os dados, mas não quiser que a empresa os mantenha.", "Quando os dados pertencerem a terceiros.", "Quando os dados não forem mais necessários para a finalidade original."], "resposta_correta": "Quando os dados não forem mais necessários para a finalidade original.", "dica": "A eliminação cabe quando os dados são desnecessários, excessivos ou tratados em desconformidade, ou quando o consentimento é revogado. Dado que já cumpriu sua finalidade deve ser eliminado."},
+  {"id": "A14", "pergunta": "Qual é o direito que permite ao titular receber uma cópia de seus dados em um formato estruturado, de uso comum e de fácil leitura?", "alternativas": ["Direito de portabilidade.", "Direito à informação.", "Direito de eliminação.", "Direito de acesso."], "resposta_correta": "Direito de portabilidade.", "dica": "Portabilidade (art. 18, V) permite levar os dados a outro fornecedor, em formato estruturado e de uso comum."},
+  {"id": "A15", "pergunta": "A LGPD concede ao titular o direito de se opor ao tratamento de seus dados pessoais. Em que circunstância esse direito não pode ser reivindicado?", "alternativas": ["Quando o tratamento é baseado no legítimo interesse do controlador.", "Quando o tratamento é feito com base em consentimento.", "Quando o tratamento é realizado para pesquisas ou estudos não obrigatórios.", "Quando o tratamento é realizado para fins de marketing direto."], "resposta_correta": "Quando o tratamento é feito com base em consentimento.", "dica": "A oposição (art. 18, § 2º) vale contra tratamento feito sem consentimento (ex.: legítimo interesse) em descumprimento da lei. Se a base é o consentimento, o caminho é revogar o consentimento, não se opor."},
+  {"id": "A16", "pergunta": "Maria percebeu que uma loja online tem enviado e-mails promocionais sem o seu consentimento e deseja interromper esse tipo de comunicação. Que direito Maria deve exercer?", "alternativas": ["Direito de oposição.", "Direito de acesso.", "Direito de retificação.", "Direito de portabilidade."], "resposta_correta": "Direito de oposição.", "dica": "Maria quer parar um tratamento que considera irregular: é o direito de oposição."},
+  {"id": "A17", "pergunta": "Carlos considera abusivo o tratamento de seus dados por uma empresa, que não respondeu às tentativas de solução. Ele decide acionar a ANPD. Qual direito está exercendo e qual o papel da ANPD?", "alternativas": ["Direito de informação; a ANPD pode pedir que a empresa compartilhe os dados com ele.", "Direito de oposição; a ANPD é responsável por exigir que a empresa apague os dados.", "Direito de acesso; a ANPD pode revisar e divulgar publicamente os dados da empresa.", "Direito de peticionamento; a ANPD poderá investigar a empresa e aplicar sanções se houver irregularidades."], "resposta_correta": "Direito de peticionamento; a ANPD poderá investigar a empresa e aplicar sanções se houver irregularidades.", "dica": "Acionar a ANPD contra o controlador é o direito de peticionamento (art. 18, § 1º). A ANPD pode fiscalizar e aplicar sanções."},
+  {"id": "A18", "pergunta": "Qual das seguintes alternativas é uma das principais funções do DPO em uma organização?", "alternativas": ["Desenvolver aplicativos de proteção de dados.", "Definir a política de privacidade para clientes e parceiros.", "Realizar auditorias financeiras regulares na organização.", "Atuar como ponto de contato entre a empresa, os titulares dos dados e a ANPD."], "resposta_correta": "Atuar como ponto de contato entre a empresa, os titulares dos dados e a ANPD.", "dica": "O encarregado (DPO) é o canal de comunicação entre controlador, titulares e ANPD (art. 5º, VIII e art. 41)."},
+  {"id": "A19", "pergunta": "Quando titulares solicitam informações sobre o tratamento de seus dados pessoais, o DPO deve:", "alternativas": ["Informar os titulares sobre as práticas de tratamento de dados da empresa e garantir o cumprimento de seus direitos.", "Redirecionar a solicitação para o setor de marketing.", "Solicitar autorização judicial antes de responder aos titulares.", "Negar a solicitação, pois a informação é confidencial."], "resposta_correta": "Informar os titulares sobre as práticas de tratamento de dados da empresa e garantir o cumprimento de seus direitos.", "dica": "O DPO recebe as solicitações dos titulares, presta esclarecimentos e garante que os direitos sejam atendidos."},
+  {"id": "A20", "pergunta": "A ANPD tem a responsabilidade de regulamentar, fiscalizar e aplicar a LGPD. Qual ação é diretamente atribuída à ANPD?", "alternativas": ["Coletar dados pessoais diretamente de cidadãos para análise de mercado.", "Aplicar sanções administrativas em casos de violação da LGPD.", "Elaborar políticas de privacidade para empresas privadas.", "Conceder consentimento para o tratamento de dados pessoais."], "resposta_correta": "Aplicar sanções administrativas em casos de violação da LGPD.", "dica": "A ANPD fiscaliza e aplica sanções administrativas (art. 52 e art. 55-J)."},
+  {"id": "A21", "pergunta": "Qual é o prazo máximo para a comunicação de um incidente de segurança à ANPD e aos titulares, segundo a Resolução CD/ANPD nº 15/2024?", "alternativas": ["5 dias úteis.", "1 dia útil.", "10 dias úteis.", "3 dias úteis."], "resposta_correta": "3 dias úteis.", "dica": "Pela Resolução CD/ANPD nº 15/2024, o prazo é de 3 dias úteis a partir do conhecimento de que o incidente afetou dados pessoais."},
+  {"id": "A22", "pergunta": "Em qual das situações a comunicação de um incidente de segurança à ANPD é necessariamente obrigatória?", "alternativas": ["Quando o incidente envolve apenas dados de contato dos titulares.", "Quando o incidente envolve dados sensíveis ou dados financeiros.", "Quando o incidente ocorre em sistemas internos e sem impacto para os titulares.", "Quando o incidente afeta apenas a integridade dos dados."], "resposta_correta": "Quando o incidente envolve dados sensíveis ou dados financeiros.", "dica": "A comunicação é obrigatória quando o incidente pode gerar risco ou dano relevante, por exemplo envolvendo dados sensíveis, financeiros, de crianças, de autenticação ou em larga escala."},
+  {"id": "A23", "pergunta": "Se um incidente de segurança não puder ser comunicado em sua totalidade dentro do prazo estabelecido, qual é o procedimento correto?", "alternativas": ["O controlador pode esperar mais 35 dias para apresentar todas as informações.", "O controlador pode comunicar o incidente de forma preliminar e complementar, dentro de prazos estabelecidos.", "A comunicação deve ser feita em até 10 dias úteis, sem exceções.", "Não é necessário comunicar o incidente se as informações estiverem incompletas."], "resposta_correta": "O controlador pode comunicar o incidente de forma preliminar e complementar, dentro de prazos estabelecidos.", "dica": "O controlador pode fazer uma comunicação preliminar e complementar depois (a Resolução prevê complemento em até 20 dias úteis)."},
+  {"id": "A24", "pergunta": "Em que situação a ANPD pode exigir a divulgação ampla de um incidente de segurança em canais como mídia impressa ou rádio?", "alternativas": ["Quando o controlador não conseguir acessar o sistema da ANPD.", "Quando a comunicação individualizada aos titulares não for possível.", "Quando o incidente envolver apenas dados anônimos.", "Quando o controlador falhar em comunicar o incidente dentro do prazo."], "resposta_correta": "Quando a comunicação individualizada aos titulares não for possível.", "dica": "Se não for possível comunicar cada titular individualmente, a ANPD pode determinar divulgação ampla em mídia, site e outros canais."},
+  {"id": "A25", "pergunta": "Qual das opções é uma das medidas que o controlador deve adotar após um incidente de segurança?", "alternativas": ["Adotar medidas para mitigar os danos aos titulares.", "A comunicação não precisa incluir o número de titulares afetados.", "O controlador pode omitir informações sobre as causas do incidente.", "Fornecer informações ao público sem distinguir dados pessoais afetados."], "resposta_correta": "Adotar medidas para mitigar os danos aos titulares.", "dica": "Após o incidente, o controlador deve adotar medidas para reverter ou mitigar os danos aos titulares."},
+  {"id": "A26", "pergunta": "Por quanto tempo é obrigatório que o controlador mantenha um registro de todos os incidentes de segurança, incluindo os não comunicados à ANPD?", "alternativas": ["Por um prazo mínimo de 5 anos.", "Durante o período em que o incidente estiver em investigação.", "Por um prazo mínimo de 1 ano.", "Até a resolução do incidente."], "resposta_correta": "Por um prazo mínimo de 5 anos.", "dica": "O registro de incidentes, inclusive os não comunicados, deve ser mantido por no mínimo 5 anos (Resolução 15/2024)."},
+  {"id": "A27", "pergunta": "Qual informação deve ser incluída na comunicação do incidente de segurança à ANPD?", "alternativas": ["Apenas a descrição dos dados financeiros afetados.", "A causa principal do incidente, caso identificada.", "Somente as medidas futuras, sem descrição das ações já realizadas.", "Apenas o número total de titulares afetados."], "resposta_correta": "A causa principal do incidente, caso identificada.", "dica": "A comunicação deve trazer, entre outras coisas, a causa do incidente quando identificada, os dados afetados, os titulares, os riscos e as medidas adotadas."},
+  {"id": "A28", "pergunta": "Qual opção descreve corretamente o objetivo da multa prevista pela LGPD em casos de infrações graves?", "alternativas": ["Obter compensação financeira para os titulares dos dados.", "Punir os responsáveis pela infração de forma simbólica.", "Proporcionar uma compensação para a ANPD.", "Reverter os danos causados aos titulares de dados pessoais."], "resposta_correta": "Reverter os danos causados aos titulares de dados pessoais.", "dica": "Gabarito da banca: a multa busca fazer a empresa reverter/remediar os danos causados. Observação: na lei, o valor da multa vai para o Fundo de Defesa de Direitos Difusos, e a indenização do titular se busca na Justiça."},
+  {"id": "A29", "pergunta": "Em caso de infração muito grave à LGPD, a multa pode chegar a 2% do faturamento, limitada a qual valor máximo?", "alternativas": ["R$ 5.000.000,00", "R$ 100.000.000,00", "R$ 50.000.000,00", "R$ 10.000.000,00"], "resposta_correta": "R$ 50.000.000,00", "dica": "Art. 52, II: até 2% do faturamento, limitada a R$ 50 milhões por infração."},
+  {"id": "A30", "pergunta": "Quando a ANPD aplica a sanção de suspensão temporária das atividades de tratamento, o que é exigido da empresa infratora?", "alternativas": ["Interromper imediatamente e temporariamente as atividades de tratamento relacionadas à infração.", "Revisar o plano de resposta, mantendo as atividades normalmente.", "Comprovar que não houve qualquer falha no tratamento de dados.", "Pagar uma multa de valor fixo para retomar as atividades."], "resposta_correta": "Interromper imediatamente e temporariamente as atividades de tratamento relacionadas à infração.", "dica": "Suspensão temporária (art. 52, XI) exige interromper as atividades de tratamento ligadas à infração pelo período determinado."},
+  {"id": "A31", "pergunta": "Qual é o primeiro passo para o desenvolvimento de um programa de privacidade e proteção de dados em uma instituição durante o mapeamento?", "alternativas": ["Definir as sanções internas para infrações.", "Contratar um encarregado de proteção de dados (DPO).", "Identificar os dados pessoais que são coletados e tratados.", "Criar uma política de comunicação de incidentes de segurança."], "resposta_correta": "Identificar os dados pessoais que são coletados e tratados.", "dica": "O mapeamento começa identificando quais dados pessoais a instituição coleta e trata (inventário de dados). Sem isso não dá para fazer o resto."},
+  {"id": "A32", "pergunta": "No contexto de um programa de privacidade, qual é o papel do DPO?", "alternativas": ["Gerenciar todos os contratos de fornecedores.", "Implantar medidas de segurança física para proteger dados.", "Supervisionar a implementação do programa de privacidade e atuar como ponto de contato entre a instituição e a ANPD.", "Auditar as finanças da organização para garantir a conformidade."], "resposta_correta": "Supervisionar a implementação do programa de privacidade e atuar como ponto de contato entre a instituição e a ANPD.", "dica": "O DPO acompanha a implementação do programa e é o ponto de contato com a ANPD e os titulares."},
+  {"id": "A33", "pergunta": "Qual documento é essencial para demonstrar que uma organização está em conformidade com a LGPD?", "alternativas": ["Política de privacidade interna.", "Relatório de auditoria financeira.", "Política de segurança da informação.", "Relatório de impacto à proteção de dados (DPIA)."], "resposta_correta": "Relatório de impacto à proteção de dados (DPIA).", "dica": "O Relatório de Impacto à Proteção de Dados (RIPD/DPIA) descreve os tratamentos, riscos e medidas, e serve para demonstrar conformidade (art. 5º, XVII e art. 38)."},
+  {"id": "A34", "pergunta": "Quais ações devem ser tomadas por uma instituição em caso de violação de dados pessoais?", "alternativas": ["Suspender todas as operações da empresa até novo aviso.", "Informar a ANPD e os titulares afetados, além de adotar medidas corretivas.", "Apenas comunicar os incidentes internamente.", "Apagar imediatamente todos os dados afetados sem notificar os titulares."], "resposta_correta": "Informar a ANPD e os titulares afetados, além de adotar medidas corretivas.", "dica": "Em violação de dados: comunicar ANPD e titulares (art. 48) e adotar medidas corretivas."},
+  {"id": "A35", "pergunta": "A implementação de um programa de privacidade deve ser:", "alternativas": ["Exclusiva do departamento jurídico.", "Focada apenas em ações de treinamento.", "Integrada a todos os setores da organização.", "Somente aplicada em empresas de grande porte."], "resposta_correta": "Integrada a todos os setores da organização.", "dica": "O programa de privacidade envolve toda a organização: TI, RH, marketing, jurídico, atendimento."},
+  {"id": "A36", "pergunta": "Qual é a principal responsabilidade do setor de TI na implementação de um programa de privacidade e proteção de dados?", "alternativas": ["Proteger os dados pessoais por meio de medidas de segurança adequadas.", "Controlar os contratos com fornecedores de dados.", "Realizar auditorias financeiras periódicas.", "Elaborar políticas internas de recursos humanos."], "resposta_correta": "Proteger os dados pessoais por meio de medidas de segurança adequadas.", "dica": "A TI implementa as medidas técnicas de segurança: controle de acesso, criptografia, backup, monitoramento."},
+  {"id": "A37", "pergunta": "Quais medidas devem ser incluídas em um programa de privacidade para garantir o cumprimento da LGPD?", "alternativas": ["Recolher dados apenas para uso interno, sem comunicação aos titulares.", "Adotar práticas transparentes sobre coleta e uso de dados e garantir que os direitos dos titulares sejam respeitados.", "Minimizar o armazenamento de dados sem garantir a anonimização.", "Criar um sistema de votação para aprovar ou rejeitar consentimentos dos titulares."], "resposta_correta": "Adotar práticas transparentes sobre coleta e uso de dados e garantir que os direitos dos titulares sejam respeitados.", "dica": "Transparência na coleta e uso e respeito aos direitos dos titulares são a base de um programa de conformidade."},
+  {"id": "A38", "pergunta": "Qual procedimento é essencial em um programa de privacidade para garantir o direito de acesso dos titulares?", "alternativas": ["Enviar e-mails anuais a todos os titulares informando sobre o tratamento.", "Realizar uma auditoria semestral dos dados pessoais.", "Disponibilizar um canal direto para que os titulares possam exercer seus direitos.", "Coletar dados de todos os usuários, independentemente do consentimento."], "resposta_correta": "Disponibilizar um canal direto para que os titulares possam exercer seus direitos.", "dica": "É preciso ter um canal direto para o titular exercer seus direitos, normalmente ligado ao encarregado."},
+  {"id": "A39", "pergunta": "Durante a fase de \"gap analysis\" em um programa de proteção de dados, o que a organização deve buscar identificar?", "alternativas": ["O melhor software para implementar políticas de segurança.", "Todos os processos de tratamento de dados realizados pela empresa.", "A quantidade de dados pessoais coletados sem o consentimento dos titulares.", "A lacuna entre as práticas atuais de proteção de dados e os requisitos legais, regulatórios e de boas práticas."], "resposta_correta": "A lacuna entre as práticas atuais de proteção de dados e os requisitos legais, regulatórios e de boas práticas.", "dica": "Gap analysis = análise de lacunas: comparar o que a empresa faz hoje com o que a lei e as boas práticas exigem."},
+  {"id": "A40", "pergunta": "Qual é a finalidade do monitoramento contínuo após a conclusão do projeto de adequação à legislação de proteção de dados?", "alternativas": ["Garantir que todos os dados pessoais sejam automaticamente deletados após o uso.", "Garantir que a empresa permaneça em conformidade com a LGPD e responda rapidamente a novos riscos ou mudanças regulatórias.", "Verificar e corrigir rapidamente falhas apenas no processo de coleta e tratamento de dados.", "Avaliar apenas o desempenho financeiro da empresa."], "resposta_correta": "Garantir que a empresa permaneça em conformidade com a LGPD e responda rapidamente a novos riscos ou mudanças regulatórias.", "dica": "Adequação não termina no projeto: o monitoramento contínuo mantém a conformidade e responde a novos riscos e mudanças na regulação."},
+  {"id": "B1", "pergunta": "O conceito formal de “direito de ser deixado em paz” (right to be let alone), um marco fundamental na história da privacidade, foi formalizado no século XIX. Qual foi o principal motivo para a formalização desse conceito?", "alternativas": ["A aprovação da Declaração Universal dos Direitos Humanos, que incluiu o direito à privacidade.", "A necessidade de regulamentar o uso de dados governamentais para fins censitários.", "A reação à invasão da imprensa na vida privada das pessoas, conforme estabelecido por Warren e Brandeis em 1890.", "A crescente preocupação com a vigilância eletrônica e a coleta de dados por empresas de tecnologia.", "O desenvolvimento das primeiras redes de computadores, que levantaram questões sobre a segurança da informação."], "resposta_correta": "A reação à invasão da imprensa na vida privada das pessoas, conforme estabelecido por Warren e Brandeis em 1890.", "dica": "Warren e Brandeis escreveram “The Right to Privacy” em 1890 reagindo à imprensa sensacionalista e às câmeras fotográficas portáteis que expunham a vida privada."},
+  {"id": "B2", "pergunta": "A Declaração Universal dos Direitos Humanos (DUDH), um documento fundamental estabelecido em 1948, aborda a privacidade em um de seus artigos. Qual o teor desse artigo em relação à privacidade?", "alternativas": ["O Art. 5º da DUDH garante a inviolabilidade da intimidade e da vida privada.", "O Art. 12 da DUDH estabelece que ninguém será sujeito à interferência na sua vida privada, família, lar ou correspondência.", "O Art. 8º da DUDH defende o direito ao respeito pela vida privada e familiar.", "A DUDH não menciona explicitamente a privacidade, focando apenas em direitos civis e políticos.", "A DUDH introduziu o conceito de consentimento explícito para o tratamento de dados pessoais."], "resposta_correta": "O Art. 12 da DUDH estabelece que ninguém será sujeito à interferência na sua vida privada, família, lar ou correspondência.", "dica": "O artigo 12 da DUDH protege contra interferências na vida privada, família, lar e correspondência. Dica: DUDH = art. 12."},
+  {"id": "B3", "pergunta": "No contexto da privacidade e proteção de dados, é crucial distinguir entre os conceitos de Privacidade, Proteção de Dados e Segurança de Dados. Qual das alternativas melhor descreve o conceito de “Privacidade de Dados” segundo os materiais?", "alternativas": ["O conjunto de regras e medidas que garantem a segurança e o uso adequado dos dados pessoais, evitando abusos e vazamentos.", "As práticas e tecnologias para proteger dados e sistemas contra ameaças, assegurando confidencialidade, integridade e disponibilidade das informações.", "O direito fundamental à autonomia sobre as próprias informações pessoais e a capacidade de controlar quem as acessa e como são utilizadas, focando nos direitos dos indivíduos e na finalidade da coleta.", "Os meios de proteção que uma organização adota para impedir que terceiros não autorizados acessem seus dados, incluindo controles de acesso e criptografia.", "A capacidade de uma organização de monetizar os dados coletados de seus usuários para obter vantagem econômica."], "resposta_correta": "O direito fundamental à autonomia sobre as próprias informações pessoais e a capacidade de controlar quem as acessa e como são utilizadas, focando nos direitos dos indivíduos e na finalidade da coleta.", "dica": "Privacidade = DIREITO do indivíduo de controlar suas informações. Proteção de dados = REGRAS. Segurança = TECNOLOGIA/medidas técnicas."},
+  {"id": "B4", "pergunta": "Segundo os conceitos fundamentais apresentados, qual das seguintes definições melhor corresponde à “Proteção de Dados”?", "alternativas": ["O direito de um indivíduo de manter suas informações pessoais completamente confidenciais e inacessíveis a terceiros.", "O conjunto de regras e medidas que garantem a segurança e o uso adequado dos dados pessoais, evitando abusos e vazamentos, e se concentrando em como coletar, processar, compartilhar, arquivar e excluir os dados de acordo com a lei.", "As medidas técnicas e organizacionais que uma empresa implementa para proteger seus servidores contra ciberataques.", "O processo de anonimizar dados pessoais para que não possam mais ser atribuídos a um titular identificado ou identificável.", "A capacidade de um titular de dados de revisar e corrigir suas informações pessoais em um banco de dados."], "resposta_correta": "O conjunto de regras e medidas que garantem a segurança e o uso adequado dos dados pessoais, evitando abusos e vazamentos, e se concentrando em como coletar, processar, compartilhar, arquivar e excluir os dados de acordo com a lei.", "dica": "Proteção de dados = conjunto de REGRAS e medidas sobre o ciclo de vida do dado (coletar, processar, compartilhar, arquivar, excluir) conforme a lei."},
+  {"id": "B5", "pergunta": "A Lei Geral de Proteção de Dados (LGPD) foi sancionada com um propósito central bem definido. Qual é esse propósito?", "alternativas": ["Priorizar o desenvolvimento econômico e tecnológico em detrimento da proteção dos direitos individuais.", "Estabelecer um ambiente de segurança jurídica e transparência no uso dos dados pessoais, equilibrando a proteção dos direitos individuais com o desenvolvimento econômico e tecnológico.", "Restringir completamente a coleta e o tratamento de dados pessoais por empresas privadas e órgãos públicos.", "Criar um sistema de punições severas para qualquer tipo de violação de dados, sem considerar o contexto.", "Regulamentar exclusivamente o tratamento de dados sensíveis no território brasileiro."], "resposta_correta": "Estabelecer um ambiente de segurança jurídica e transparência no uso dos dados pessoais, equilibrando a proteção dos direitos individuais com o desenvolvimento econômico e tecnológico.", "dica": "A palavra-chave é EQUILÍBRIO: proteger direitos sem travar o desenvolvimento econômico e tecnológico (art. 2º traz ambos como fundamentos)."},
+  {"id": "B6", "pergunta": "A LGPD estabelece dez princípios que devem ser observados nas atividades de tratamento de dados pessoais. O princípio da “Finalidade” implica em qual das seguintes práticas?", "alternativas": ["Manter os dados precisos a todo o momento, deletando ou atualizando dados errados.", "Apenas coletar dados pessoais para fins legítimos, informando com clareza ao usuário a finalidade da coleta.", "Adotar medidas preventivas para proteção dos dados, evitando danos aos titulares.", "Disponibilizar para o usuário todas as informações sobre a coleta e uso de dados de forma honesta.", "Não utilizar os dados para nenhum fim discriminatório, ilícito ou abusivo."], "resposta_correta": "Apenas coletar dados pessoais para fins legítimos, informando com clareza ao usuário a finalidade da coleta.", "dica": "Finalidade = coletar só para fins legítimos e informar claramente para quê. É a definição exata do slide."},
+  {"id": "B7", "pergunta": "Um dos princípios fundamentais da LGPD é a “Responsabilidade e Prestação de Contas”. Qual a exigência desse princípio para as empresas?", "alternativas": ["Ser capaz de apresentar ao usuário os dados e a forma como são processados ao ser requisitado.", "Manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.", "Adotar os princípios da LGPD e ter condições de provar sua adoção em todos os procedimentos da empresa.", "Informar o usuário de maneira clara e acessível sobre os riscos e direitos sobre seus dados.", "Tomar medidas técnicas e administrativas para proteger os dados de danos, furtos ou perdas."], "resposta_correta": "Adotar os princípios da LGPD e ter condições de provar sua adoção em todos os procedimentos da empresa.", "dica": "Responsabilização = cumprir E PROVAR que cumpre. A palavra-chave é “provar/demonstrar”."},
+  {"id": "B8", "pergunta": "De acordo com a LGPD, “Dado Sensível” é uma categoria especial de dados pessoais que exige proteção adicional. Qual das opções a seguir contém apenas exemplos de dados que são classificados como dados sensíveis?", "alternativas": ["Nome completo, CPF, endereço IP.", "E-mail pessoal, geolocalização, filiação sindical.", "Origem racial ou étnica, convicção religiosa, dados de saúde ou vida sexual.", "Endereço residencial, dados genéticos, número de telefone.", "Opinião política, idade, número de contrato."], "resposta_correta": "Origem racial ou étnica, convicção religiosa, dados de saúde ou vida sexual.", "dica": "Todos os itens da C estão no rol do art. 5º, II. Atenção ao “apenas”: basta um item comum para invalidar a alternativa."},
+  {"id": "B9", "pergunta": "A LGPD define “Dado Anonimizado” como um dado que não pode mais identificar seu titular. Qual a condição para que um dado seja considerado anonimizado?", "alternativas": ["Informação relacionada à pessoa natural identificada ou identificável.", "Informação pessoal sobre origem racial ou étnica.", "Dado relativo a titular que não possa ser identificado, considerando a utilização de meios técnicos razoáveis e disponíveis na ocasião de seu tratamento.", "Conjunto estruturado de dados pessoais, estabelecido em um ou em vários locais.", "Dados pessoais de indivíduos com idade inferior a 18 anos."], "resposta_correta": "Dado relativo a titular que não possa ser identificado, considerando a utilização de meios técnicos razoáveis e disponíveis na ocasião de seu tratamento.", "dica": "Art. 5º, III: anonimizado é o dado que não permite identificar o titular usando meios técnicos razoáveis e disponíveis no momento do tratamento."},
+  {"id": "B10", "pergunta": "A Lei Geral de Proteção de Dados (LGPD) possui um escopo de aplicação abrangente. Segundo a introdução da lei, o que ela abrange em relação ao tratamento de dados pessoais?", "alternativas": ["Apenas operações realizadas por pessoas jurídicas de direito privado em território nacional.", "Qualquer operação de tratamento de dados pessoais realizada por órgãos públicos federais.", "Operações de tratamento de dados pessoais realizadas por pessoas físicas com fins exclusivamente comerciais.", "Qualquer operação de tratamento de dados pessoais realizada no território brasileiro, independentemente de ser executada por pessoa física ou jurídica, de natureza pública ou privada.", "Apenas operações de tratamento de dados pessoais que envolvam transferência internacional de dados."], "resposta_correta": "Qualquer operação de tratamento de dados pessoais realizada no território brasileiro, independentemente de ser executada por pessoa física ou jurídica, de natureza pública ou privada.", "dica": "Art. 1º e 3º: vale para pessoa física ou jurídica, pública ou privada. (As exceções do art. 4º, como uso pessoal ou jornalístico, existem, mas a regra geral é essa.)"},
+  {"id": "B11", "pergunta": "A LGPD estabelece que o tratamento de dados pessoais só pode ocorrer mediante uma das bases legais previstas na lei. Qual base legal permite o tratamento de dados para a execução de um contrato ou de procedimentos preliminares relacionados a um contrato?", "alternativas": ["I - mediante o fornecimento de consentimento pelo titular.", "II - para o cumprimento de obrigação legal ou regulatória pelo controlador.", "III - pela administração pública, para o tratamento e uso compartilhado de dados necessários à execução de políticas públicas previstas em leis e regulamentos ou respaldadas em contratos, convênios ou instrumentos congêneres, observadas as disposições do Capítulo IV desta Lei.", "V - quando necessário para a execução de contrato ou de procedimentos preliminares relacionados a contrato do qual seja parte o titular, a pedido do titular dos dados.", "IX - quando necessário para atender aos interesses legítimos do controlador ou de terceiro, exceto no caso de prevalecerem direitos e liberdades fundamentais do titular que exijam a proteção dos dados pessoais."], "resposta_correta": "V - quando necessário para a execução de contrato ou de procedimentos preliminares relacionados a contrato do qual seja parte o titular, a pedido do titular dos dados.", "dica": "Art. 7º, V: execução de contrato ou procedimentos preliminares do qual o titular seja parte."},
+  {"id": "B12", "pergunta": "Na estrutura da LGPD, o “Controlador” desempenha um papel fundamental. Qual a principal responsabilidade atribuída ao Controlador?", "alternativas": ["Executar as instruções do controlador e implementar medidas de segurança técnicas.", "Atuar como canal de comunicação entre os agentes, titulares e a ANPD.", "Receber reclamações e comunicações dos titulares de dados.", "Definir as finalidades específicas do tratamento, determinar os meios e procedimentos utilizados, e ser o responsável principal pela conformidade com a LGPD.", "Adotar providências e responder à ANPD em caso de incidentes."], "resposta_correta": "Definir as finalidades específicas do tratamento, determinar os meios e procedimentos utilizados, e ser o responsável principal pela conformidade com a LGPD.", "dica": "Controlador DECIDE: define finalidades, meios e é o responsável principal pela conformidade (slide Cap. VI)."},
+  {"id": "B13", "pergunta": "O “Operador” é outro agente de tratamento de dados pessoais na LGPD. Qual é a sua função primária?", "alternativas": ["Tomar as decisões referentes ao tratamento de dados pessoais.", "Assegurar que o tratamento de dados esteja em conformidade com as políticas públicas.", "Realizar o tratamento de dados pessoais em nome do controlador, executando suas instruções e implementando medidas de segurança técnicas.", "Determinar as bases legais para o tratamento de dados sensíveis.", "Peticionar contra o controlador perante a Autoridade Nacional de Proteção de Dados."], "resposta_correta": "Realizar o tratamento de dados pessoais em nome do controlador, executando suas instruções e implementando medidas de segurança técnicas.", "dica": "Operador EXECUTA: trata os dados em nome do controlador, segue instruções e implementa medidas de segurança."},
+  {"id": "B14", "pergunta": "O “Encarregado” ou “DPO” (Data Protection Officer) é uma figura essencial na LGPD. Qual das seguintes funções é atribuída ao Encarregado (DPO)?", "alternativas": ["Decidir sobre a anonimização de dados pessoais sensíveis.", "Definir as políticas de segurança da informação da organização.", "Atuar como canal de comunicação entre os agentes de tratamento, os titulares dos dados e a ANPD.", "Realizar auditorias internas para verificar a conformidade com a LGPD.", "Determinar o prazo de eliminação dos dados pessoais."], "resposta_correta": "Atuar como canal de comunicação entre os agentes de tratamento, os titulares dos dados e a ANPD.", "dica": "Encarregado COMUNICA: canal entre agentes, titulares e ANPD (art. 5º, VIII e art. 41)."},
+  {"id": "B15", "pergunta": "Em relação à responsabilidade solidária, quando o operador responde solidariamente pelos danos causados pelo tratamento de dados?", "alternativas": ["Somente quando não houver violação à legislação de proteção de dados.", "Quando o dano é decorrente de culpa exclusiva do titular dos dados.", "Quando descumprir as obligations da legislação de proteção de dados ou quando não tiver seguido as instruções lícitas do controlador.", "Apenas quando não realizou o tratamento de dados pessoais atribuído.", "Exclusivamente quando o controlador não puder ser identificado."], "resposta_correta": "Quando descumprir as obrigações da legislação de proteção de dados ou quando não tiver seguido as instruções lícitas do controlador.", "dica": "Art. 42, § 1º, I: o operador responde solidariamente quando descumpre a lei ou as instruções lícitas do controlador; nesse caso é equiparado a controlador."},
+  {"id": "B16", "pergunta": "Um dos direitos do titular é obter do controlador a confirmação de existência ou o acesso a seus dados pessoais. Qual é o prazo máximo para o fornecimento de uma declaração clara e completa, indicando a origem, inexistência de registro, critérios e finalidade do tratamento, mediante requisição?", "alternativas": ["Imediatamente, em formato simplificado.", "Em até 5 (cinco) dias úteis.", "Em até 15 (quinze) dias, contado da data do requerimento do titular.", "Em até 30 (trinta) dias, para análise completa.", "O prazo é definido pela Autoridade Nacional caso a caso."], "resposta_correta": "Em até 15 (quinze) dias, contado da data do requerimento do titular.", "dica": "Art. 19: formato simplificado = imediatamente; declaração clara e completa = até 15 dias."},
+  {"id": "B17", "pergunta": "O direito à portabilidade é um dos direitos assegurados ao titular dos dados. O que esse direito permite?", "alternativas": ["A eliminação imediata de todos os dados pessoais tratados pelo controlador.", "A consulta facilitada e gratuita a todos os dados pessoais coletados.", "A portabilidade dos dados a outro fornecedor de serviço ou produto, mediante requisição expressa, de acordo com a regulamentação da autoridade nacional, observados os segredos comercial e industrial.", "A revogação do consentimento para o tratamento de dados a qualquer momento.", "A informação sobre o compartilhamento de dados com entidades públicas ou privadas."], "resposta_correta": "A portabilidade dos dados a outro fornecedor de serviço ou produto, mediante requisição expressa, de acordo com a regulamentação da autoridade nacional, observados os segredos comercial e industrial.", "dica": "Art. 18, V: levar os dados a outro fornecedor, por requisição expressa, respeitando segredos comercial e industrial."},
+  {"id": "B18", "pergunta": "Quando o titular solicita acesso aos seus dados pessoais, como esses dados e informações podem ser fornecidos, a critério do titular, segundo a LGPD?", "alternativas": ["Apenas por meio eletrônico seguro e idôneo.", "Apenas sob forma impressa.", "Por meio eletrônico, seguro e idôneo para esse fim; ou sob forma impressa.", "Apenas presencialmente na sede do controlador.", "Em qualquer formato que o controlador considerar mais conveniente, sem opção para o titular."], "resposta_correta": "Por meio eletrônico, seguro e idôneo para esse fim; ou sob forma impressa.", "dica": "Art. 19, § 2º: a critério do TITULAR, por meio eletrônico seguro e idôneo ou impresso."},
+  {"id": "B19", "pergunta": "Cenário: As empresas “Saúde Total Ltda.” e “Bem-Estar S.A.” decidem lançar um programa integrado. Compartilham dados de clientes e definem conjuntamente as finalidades e elementos essenciais do tratamento. Uma agência externa operacionaliza a comunicação seguindo diretrizes. Como se classificam “Saúde Total” e “Bem-Estar”?", "alternativas": ["A “Saúde Total Ltda.” é a Controladora Principal e a “Bem-Estar S.A.” é a Operadora.", "Ambas são Controladoras Singulares.", "Ambas são Controladoras Conjuntas, pois determinaram em conjunto as finalidades e elementos.", "A “Bem-Estar S.A.” é a Controladora e a “Saúde Total Ltda.” é a Operadora.", "Nenhuma das empresas é Controladora, a agência assume este papel."], "resposta_correta": "Ambas são Controladoras Conjuntas, pois determinaram em conjunto as finalidades e elementos.", "dica": "Guia da ANPD: quem decide JUNTO as finalidades e os elementos essenciais é controlador conjunto. A agência segue diretrizes, então é operadora."},
+  {"id": "B20", "pergunta": "Site com mensagem: “Utilizamos cookies. Ao continuar, você concorda.” A única opção é o botão [OK]. Qual hipótese de tratamento parece incorreta?", "alternativas": ["Execução de contrato.", "Legítimo interesse.", "Cumprimento de obrigação legal.", "Consentimento, pois não é oferecida ao usuário a opção de recusar ou gerenciar os cookies, tornando o aceite obrigatório e não livre.", "Proteção da vida do titular."], "resposta_correta": "Consentimento, pois não é oferecida ao usuário a opção de recusar ou gerenciar os cookies, tornando o aceite obrigatório e não livre.", "dica": "“Você concorda” indica que a base usada é o consentimento. Mas consentimento precisa ser livre, informado e inequívoco (art. 5º, XII). Só ter [OK] não é livre."},
+  {"id": "P1", "pergunta": "Uma loja virtual pede CPF, data de nascimento, renda mensal e religião apenas para cadastrar o e-mail do cliente na newsletter. Qual princípio da LGPD é violado de forma mais direta?", "alternativas": ["Livre acesso.", "Necessidade.", "Não discriminação.", "Precisão.", "Prevenção."], "resposta_correta": "Necessidade.", "dica": "Necessidade = usar apenas os dados essenciais. Para uma newsletter basta o e-mail; o resto é excesso."},
+  {"id": "P2", "pergunta": "Qual definição corresponde ao princípio da Precisão (qualidade dos dados)?", "alternativas": ["Manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.", "Tomar medidas preventivas para proteção dos dados, evitando danos aos titulares.", "Manter os dados precisos a todo momento, deletando ou atualizando dados errados ou imprecisos.", "Ser capaz de apresentar ao usuário os dados e a forma como são processados ao ser requisitado.", "Tomar medidas técnicas e administrativas para proteger os dados de danos, furtos ou perdas."], "resposta_correta": "Manter os dados precisos a todo momento, deletando ou atualizando dados errados ou imprecisos.", "dica": "Precisão = dados CORRETOS e ATUALIZADOS. Na lei o nome é “qualidade dos dados” (art. 6º, V)."},
+  {"id": "P3", "pergunta": "“Ser capaz de apresentar ao usuário os dados e a forma como são processados ao ser requisitado.” Essa definição corresponde a qual princípio?", "alternativas": ["Transparência.", "Adequação.", "Livre acesso.", "Finalidade.", "Responsabilidade e prestação de contas."], "resposta_correta": "Livre acesso.", "dica": "Livre acesso = mostrar ao titular, quando ele pedir, os dados e como são tratados (consulta facilitada e gratuita)."},
+  {"id": "P4", "pergunta": "Segundo o material estudado, qual princípio consiste em “disponibilizar para o usuário todas as informações sobre a coleta e uso de dados de forma honesta”?", "alternativas": ["Transparência.", "Adequação.", "Livre acesso.", "Necessidade.", "Finalidade."], "resposta_correta": "Adequação.", "dica": "No slide do curso, Adequação = informações honestas sobre coleta e uso. Na lei, adequação é a compatibilidade do tratamento com as finalidades informadas."},
+  {"id": "P5", "pergunta": "Um banco usa dados de clientes para negar crédito automaticamente a pessoas de determinada origem étnica. Qual princípio é violado?", "alternativas": ["Segurança.", "Qualidade dos dados.", "Não discriminação.", "Livre acesso.", "Necessidade."], "resposta_correta": "Não discriminação.", "dica": "Não discriminação = não usar dados para fins discriminatórios, ilícitos ou abusivos. Origem étnica ainda é dado sensível."},
+  {"id": "P6", "pergunta": "Uma empresa implementa criptografia, backup diário e controle de acesso por perfil para evitar perda e furto de dados pessoais. Qual princípio está sendo aplicado?", "alternativas": ["Segurança.", "Transparência.", "Finalidade.", "Adequação.", "Não discriminação."], "resposta_correta": "Segurança.", "dica": "Segurança = medidas TÉCNICAS e ADMINISTRATIVAS contra danos, furtos ou perdas."},
+  {"id": "P7", "pergunta": "Antes de lançar um novo aplicativo, uma empresa faz uma avaliação de riscos e elabora o RIPD para antecipar possíveis danos aos titulares. Qual princípio está sendo aplicado de forma mais direta?", "alternativas": ["Segurança.", "Prevenção.", "Precisão.", "Livre acesso.", "Necessidade."], "resposta_correta": "Prevenção.", "dica": "Prevenção = agir ANTES do dano acontecer. Avaliar riscos antes do lançamento é o exemplo típico (privacy by design)."},
+  {"id": "P8", "pergunta": "Durante uma fiscalização, a ANPD pede evidências de conformidade. A empresa apresenta registros das operações, políticas internas, treinamentos e relatórios de impacto. Qual princípio a empresa está atendendo?", "alternativas": ["Transparência.", "Livre acesso.", "Responsabilidade e prestação de contas.", "Adequação.", "Finalidade."], "resposta_correta": "Responsabilidade e prestação de contas.", "dica": "Responsabilidade = adotar os princípios E TER COMO PROVAR. Apresentar evidências é prestar contas."},
+  {"id": "P9", "pergunta": "O cadastro de um cliente está com endereço antigo e ele passa a receber cobranças no local errado. Qual princípio exige que a empresa corrija isso?", "alternativas": ["Precisão (qualidade dos dados).", "Prevenção.", "Necessidade.", "Transparência.", "Não discriminação."], "resposta_correta": "Precisão (qualidade dos dados).", "dica": "Precisão = manter dados exatos e atualizados, corrigindo ou apagando os errados."},
+  {"id": "P10", "pergunta": "Além da boa-fé, quantos princípios o art. 6º da LGPD lista para as atividades de tratamento de dados pessoais?", "alternativas": ["8.", "9.", "10.", "11.", "12."], "resposta_correta": "10.", "dica": "São 10: Finalidade, Adequação, Necessidade, Livre acesso, Qualidade (Precisão), Transparência, Segurança, Prevenção, Não discriminação e Responsabilização."},
+  {"id": "P11", "pergunta": "Qual das alternativas NÃO é um princípio do art. 6º da LGPD?", "alternativas": ["Prevenção.", "Não discriminação.", "Portabilidade.", "Livre acesso.", "Necessidade."], "resposta_correta": "Portabilidade.", "dica": "Portabilidade é um DIREITO do titular (art. 18, V), não um princípio. Cuidado com a confusão entre princípios (art. 6º) e direitos (art. 18)."},
+  {"id": "P12", "pergunta": "Assinale a associação correta entre princípio e definição:", "alternativas": ["Transparência: tomar medidas técnicas e administrativas para proteger os dados.", "Livre acesso: manter os dados precisos, atualizando os errados.", "Necessidade: manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.", "Prevenção: não utilizar os dados para fins discriminatórios ou abusivos.", "Finalidade: adotar os princípios e ter condições de provar sua adoção."], "resposta_correta": "Necessidade: manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.", "dica": "Necessidade = mínimo necessário. Todas as outras trocaram as definições."},
+  {"id": "P13", "pergunta": "Um site explica, em linguagem simples e acessível, quais riscos existem no tratamento dos dados e quais direitos o usuário tem. Qual princípio está sendo cumprido?", "alternativas": ["Adequação.", "Transparência.", "Segurança.", "Finalidade.", "Necessidade."], "resposta_correta": "Transparência.", "dica": "Transparência (slide) = informar de maneira clara e acessível sobre RISCOS e DIREITOS."},
+  {"id": "P14", "pergunta": "Complete: “Art. 6º As atividades de tratamento de dados pessoais deverão observar a ______ e os seguintes princípios.”", "alternativas": ["legalidade", "boa-fé", "moralidade", "eficiência", "publicidade"], "resposta_correta": "boa-fé", "dica": "O caput do art. 6º fala em boa-fé. Aparece no topo do slide."},
+  {"id": "P15", "pergunta": "Uma academia coletou o CPF dos alunos informando que seria só para emitir nota fiscal. Meses depois, passou a usar o CPF para consultar o score de crédito dos alunos. Qual princípio foi violado em primeiro lugar?", "alternativas": ["Finalidade.", "Precisão.", "Livre acesso.", "Segurança.", "Prevenção."], "resposta_correta": "Finalidade.", "dica": "O dado foi usado para um fim diferente do informado: desvio de finalidade."},
+  {"id": "G1", "pergunta": "Um hospital contrata uma empresa de nuvem para armazenar os prontuários dos pacientes, e a empresa de nuvem só executa o que o hospital determina. Como se classificam os envolvidos?", "alternativas": ["Hospital: operador; empresa de nuvem: controladora.", "Hospital: controlador; empresa de nuvem: operadora.", "Ambos são controladores conjuntos.", "Hospital: encarregado; empresa de nuvem: operadora.", "A empresa de nuvem é a encarregada do hospital."], "resposta_correta": "Hospital: controlador; empresa de nuvem: operadora.", "dica": "Quem DECIDE (hospital) é controlador. Quem EXECUTA em nome dele (nuvem) é operador."},
+  {"id": "G2", "pergunta": "Segundo a LGPD, quem são os agentes de tratamento?", "alternativas": ["Controlador, operador e encarregado.", "Controlador e operador.", "Titular e controlador.", "ANPD e controlador.", "Operador e encarregado."], "resposta_correta": "Controlador e operador.", "dica": "Art. 5º, IX: agentes de tratamento = controlador e operador. O encarregado NÃO é agente de tratamento; ele é o canal de comunicação."},
+  {"id": "G3", "pergunta": "Qual das atividades abaixo NÃO é atribuição do encarregado (DPO)?", "alternativas": ["Aceitar reclamações e comunicações dos titulares, prestar esclarecimentos e adotar providências.", "Receber comunicações da ANPD e adotar providências.", "Orientar os funcionários sobre as práticas de proteção de dados.", "Definir as finalidades do tratamento e determinar os meios utilizados.", "Executar as demais atribuições determinadas pelo controlador."], "resposta_correta": "Definir as finalidades do tratamento e determinar os meios utilizados.", "dica": "Definir finalidades e meios é do CONTROLADOR. As demais estão no art. 41, § 2º."},
+  {"id": "G4", "pergunta": "No Capítulo VI da LGPD (Dos Agentes de Tratamento), a Seção I, que vai do art. 37 ao 40, trata de:", "alternativas": ["Do Encarregado pelo tratamento de dados pessoais.", "Do Controlador e do Operador.", "Da Segurança e do Sigilo de Dados.", "Da Autoridade Nacional de Proteção de Dados.", "Dos Direitos do Titular."], "resposta_correta": "Do Controlador e do Operador.", "dica": "Cap. VI: Seção I (arts. 37 a 40) = Controlador e Operador; Seção II (art. 41) = Encarregado."},
+  {"id": "G5", "pergunta": "O encarregado pelo tratamento de dados pessoais é disciplinado em qual artigo da LGPD?", "alternativas": ["Art. 37.", "Art. 41.", "Art. 42.", "Art. 46.", "Art. 52."], "resposta_correta": "Art. 41.", "dica": "Art. 41 = Encarregado. Macete: 37 a 40 controlador/operador, 41 encarregado."},
+  {"id": "G6", "pergunta": "Pela definição do art. 5º, VIII da LGPD, o encarregado é pessoa indicada por quem?", "alternativas": ["Pela ANPD.", "Pelo titular dos dados.", "Pelo controlador e operador.", "Apenas pelo operador.", "Pelo Poder Judiciário."], "resposta_correta": "Pelo controlador e operador.", "dica": "Art. 5º, VIII: pessoa indicada pelo controlador E operador para atuar como canal de comunicação."},
+  {"id": "G7", "pergunta": "No esquema de relacionamento, o Operador A subcontrata o Operador C para parte do serviço. Sobre o Operador C (suboperador), é correto afirmar:", "alternativas": ["Passa a ser controlador, pois não tem contrato com o controlador original.", "Não está sujeito à LGPD, pois não foi contratado pelo controlador.", "Também atua em nome do controlador e deve seguir suas instruções, sendo equiparado a operador para fins da LGPD.", "Responde diretamente ao titular como controlador único.", "Passa a ser fiscalizado apenas pelo Operador A, e não pela ANPD."], "resposta_correta": "Também atua em nome do controlador e deve seguir suas instruções, sendo equiparado a operador para fins da LGPD.", "dica": "Guia da ANPD: o suboperador é contratado pelo operador, mas continua tratando dados em nome do controlador; para a LGPD, é equiparado a operador."},
+  {"id": "G8", "pergunta": "Um funcionário do RH de uma empresa trata dados dos colaboradores seguindo as ordens da empresa. Segundo o guia da ANPD, esse funcionário é:", "alternativas": ["Operador, pois executa o tratamento.", "Controlador, pois tem acesso aos dados.", "Não é agente de tratamento; atua em nome da empresa, que é a controladora.", "Encarregado, pois lida diretamente com dados pessoais.", "Suboperador da empresa."], "resposta_correta": "Não é agente de tratamento; atua em nome da empresa, que é a controladora.", "dica": "Guia da ANPD: empregados subordinados não são operadores. Eles agem como parte do controlador. Operador é sempre pessoa distinta do controlador."},
+  {"id": "G9", "pergunta": "De acordo com o art. 37 da LGPD, quem deve manter registro das operações de tratamento de dados pessoais que realizarem?", "alternativas": ["Apenas o controlador.", "Apenas o encarregado.", "O controlador e o operador.", "A ANPD.", "O titular."], "resposta_correta": "O controlador e o operador.", "dica": "Art. 37: controlador e operador mantêm registro das operações, especialmente quando baseadas em legítimo interesse."},
+  {"id": "G10", "pergunta": "No cenário da “Saúde Total Ltda.” e da “Bem-Estar S.A.”, qual é o papel da agência de publicidade contratada para operacionalizar as campanhas seguindo as diretrizes das empresas?", "alternativas": ["Controladora conjunta.", "Operadora.", "Encarregada.", "Titular.", "Autoridade supervisora."], "resposta_correta": "Operadora.", "dica": "A agência trata dados em nome das controladoras e segue as diretrizes delas: é operadora."},
+  {"id": "G11", "pergunta": "No esquema de relacionamento entre agentes, qual é o papel da ANPD?", "alternativas": ["Controladora dos dados de todas as empresas.", "Autoridade supervisora que fiscaliza controladores e operadores e aplica sanções.", "Operadora que executa o tratamento em nome do governo.", "Encarregada das empresas privadas.", "Representante legal dos titulares em ações judiciais."], "resposta_correta": "Autoridade supervisora que fiscaliza controladores e operadores e aplica sanções.", "dica": "A ANPD fica acima no esquema: supervisiona, regulamenta, fiscaliza e sanciona."},
+  {"id": "G12", "pergunta": "Pelo slide do Capítulo VI, qual das funções abaixo é do OPERADOR?", "alternativas": ["Define as finalidades específicas do tratamento.", "Determina os meios e procedimentos utilizados.", "Segue as diretrizes de tratamento estabelecidas e implementa medidas de segurança técnicas.", "Recebe reclamações e comunicações dos titulares.", "Orienta funcionários sobre práticas de proteção."], "resposta_correta": "Segue as diretrizes de tratamento estabelecidas e implementa medidas de segurança técnicas.", "dica": "Operador: executa instruções do controlador, implementa medidas de segurança técnicas e segue as diretrizes estabelecidas."},
+  {"id": "O1", "pergunta": "Escreva o significado do princípio da FINALIDADE.", "resposta_correta": "Apenas coletar dados pessoais para fins legítimos, informando com clareza ao usuário a finalidade da coleta.", "dica": "As palavras-chave que compõem esta resposta são: legitim, inform, finalidade|proposito|objetivo"},
+  {"id": "O2", "pergunta": "Escreva o significado do princípio da ADEQUAÇÃO (conforme o slide).", "resposta_correta": "Disponibilizar para o usuário todas as informações sobre a coleta e uso de dados de forma honesta. (Na lei: compatibilidade do tratamento com as finalidades informadas.)", "dica": "As palavras-chave que compõem esta resposta são: inform, coleta, uso, honest|compativ"},
+  {"id": "O3", "pergunta": "Escreva o significado do princípio da NECESSIDADE.", "resposta_correta": "Manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.", "dica": "As palavras-chave que compõem esta resposta são: essencia|minimo|necessari, apag|exclu|elimin, relevant"},
+  {"id": "O4", "pergunta": "Escreva o significado do princípio do LIVRE ACESSO.", "resposta_correta": "Ser capaz de apresentar ao usuário os dados e a forma como são processados ao ser requisitado.", "dica": "As palavras-chave que compõem esta resposta são: apresent|mostr|consult, dados, process|tratad, requisit|solicit|pedi"},
+  {"id": "O5", "pergunta": "Escreva o significado do princípio da PRECISÃO (qualidade dos dados).", "resposta_correta": "Manter os dados precisos a todo momento, deletando ou atualizando dados errados ou imprecisos.", "dica": "As palavras-chave que compõem esta resposta são: precis|exat|corret, atualiz, errad|imprecis|delet"},
+  {"id": "O6", "pergunta": "Escreva o significado do princípio da TRANSPARÊNCIA.", "resposta_correta": "O usuário deve ser informado de maneira clara e acessível sobre os riscos e direitos sobre seus dados.", "dica": "As palavras-chave que compõem esta resposta são: clar, acessiv, risco, direito"},
+  {"id": "O7", "pergunta": "Escreva o significado do princípio da SEGURANÇA.", "resposta_correta": "Tomar medidas técnicas e administrativas para proteger os dados de danos, furtos ou perdas.", "dica": "As palavras-chave que compõem esta resposta são: tecnic, administrativ, furto|perda|dano"},
+  {"id": "O8", "pergunta": "Escreva o significado do princípio da PREVENÇÃO.", "resposta_correta": "Tomar medidas preventivas para proteção dos dados, evitando danos aos titulares.", "dica": "As palavras-chave que compõem esta resposta são: prevent|antecip, evit, dano"},
+  {"id": "O9", "pergunta": "Escreva o significado do princípio da NÃO DISCRIMINAÇÃO.", "resposta_correta": "Não utilizar os dados para nenhum fim discriminatório, ilícito ou abusivo.", "dica": "As palavras-chave que compõem esta resposta são: discrimin, ilicit, abusiv"},
+  {"id": "O10", "pergunta": "Escreva o significado do princípio da RESPONSABILIDADE e prestação de contas.", "resposta_correta": "Adotar estes princípios e ter condições de provar sua adoção em todos os procedimentos.", "dica": "As palavras-chave que compõem esta resposta são: adot|cumpr, prov|demonstr|comprov, principio|procediment"},
+  {"id": "O11", "pergunta": "Liste, na ordem do art. 6º, os 10 princípios da LGPD.", "resposta_correta": "1. Finalidade  2. Adequação  3. Necessidade  4. Livre acesso  5. Precisão (qualidade dos dados)  6. Transparência  7. Segurança  8. Prevenção  9. Não discriminação  10. Responsabilidade e prestação de contas.", "dica": "As palavras-chave que compõem esta resposta são: finalidade, adequa, necessidade, livre acesso|acesso, precis|qualidade, transpar, seguran, preven, discrimin, responsab"},
+  {"id": "O12", "pergunta": "Qual princípio é este? “Manter e utilizar apenas os dados essenciais, apagando-os quando deixarem de ser relevantes.”", "resposta_correta": "Necessidade.", "dica": "As palavras-chave que compõem esta resposta são: necessidade"},
+  {"id": "O13", "pergunta": "Qual princípio é este? “O usuário deve ser informado de maneira clara e acessível sobre os riscos e direitos sobre seus dados.”", "resposta_correta": "Transparência.", "dica": "As palavras-chave que compõem esta resposta são: transpar"},
+  {"id": "O14", "pergunta": "Qual princípio é este? “Ser capaz de apresentar ao usuário os dados e a forma como são processados ao ser requisitado.”", "resposta_correta": "Livre acesso.", "dica": "As palavras-chave que compõem esta resposta são: livre acesso|acesso"},
+  {"id": "O15", "pergunta": "Qual princípio é este? “Adotar estes princípios e ter condições de provar sua adoção em todos os procedimentos.”", "resposta_correta": "Responsabilidade e prestação de contas.", "dica": "As palavras-chave que compõem esta resposta são: responsab|prestacao de contas"},
+  {"id": "O16", "pergunta": "Defina CONTROLADOR e cite 3 atribuições dele.", "resposta_correta": "Pessoa natural ou jurídica, de direito público ou privado, a quem competem as decisões referentes ao tratamento de dados pessoais. Atribuições: define as finalidades específicas do tratamento; determina os meios e procedimentos utilizados; é o responsável principal pela conformidade com a LGPD.", "dica": "As palavras-chave que compõem esta resposta são: decis|decid, finalidade, meios|procediment, responsav|conformidade"},
+  {"id": "O17", "pergunta": "Defina OPERADOR e cite 3 atribuições dele.", "resposta_correta": "Pessoa natural ou jurídica, de direito público ou privado, que realiza o tratamento de dados pessoais em nome do controlador. Atribuições: executa as instruções do controlador; implementa medidas de segurança técnicas; segue as diretrizes de tratamento estabelecidas.", "dica": "As palavras-chave que compõem esta resposta são: em nome, controlador, instruc|diretriz, seguranca|tecnic"},
+  {"id": "O18", "pergunta": "Defina ENCARREGADO (DPO) e cite 3 funções dele. Em que artigo está?", "resposta_correta": "Pessoa indicada pelo controlador e operador para atuar como canal de comunicação entre os agentes, os titulares e a ANPD (art. 41). Funções: orienta funcionários sobre práticas de proteção; recebe reclamações e comunicações dos titulares; adota providências e responde à ANPD.", "dica": "As palavras-chave que compõem esta resposta são: canal|comunica, titular, anpd, orient|reclama|provid, 41"},
+  {"id": "O19", "pergunta": "Qual a diferença entre controladores conjuntos e controladores singulares?", "resposta_correta": "Controladores conjuntos decidem juntos as finalidades e os elementos essenciais de um mesmo tratamento (ex.: Saúde Total e Bem-Estar no programa integrado). Controladores singulares decidem sozinhos, cada um sobre o seu próprio tratamento, mesmo que compartilhem dados.", "dica": "As palavras-chave que compõem esta resposta são: junt|conjunt, finalidade|decid, sozinh|individual|propri|cada"},
+  {"id": "O20", "pergunta": "Quem são os agentes de tratamento pela LGPD, e o encarregado é um deles?", "resposta_correta": "Agentes de tratamento são o controlador e o operador (art. 5º, IX). O encarregado NÃO é agente de tratamento: ele é o canal de comunicação.", "dica": "As palavras-chave que compõem esta resposta são: controlador, operador, nao|canal"}
 ];
 
-    // Configurações do Quiz
-    const QUESTIONS_PER_QUIZ = allQuestions.length; // Quantidade de perguntas por tentativa
-    let currentQuizQuestions = [];
-    let currentQuestionIndex = 0;
-    let score = 0;
-    let wrongAnswers = 0;
-    // Elementos do DOM
-    const questionNumberDisplay = document.getElementById('question-number-display');
-    const questionText = document.getElementById('question-text');
-    const optionsContainer = document.getElementById('options-container');
-    const feedbackContainer = document.getElementById('feedback-container');
-    const feedbackText = document.getElementById('feedback-text');
-    const controlsContainer = document.getElementById('controls-container');
-    const nextBtn = document.getElementById('next-btn');
+const DATA = rawData.map(item => {
+    const isClosed = !!item.alternativas; // Verifica se tem array de alternativas
     
-    const quizHeader = document.getElementById('quiz-header');
-    const questionScreen = document.getElementById('question-screen');
-    const resultScreen = document.getElementById('result-screen');
-    const scoreCorrectDisplay = document.getElementById('score-correct');
-    const scoreTotalDisplay = document.getElementById('score-total');
-    const resultMessage = document.getElementById('result-message');
-    const restartBtn = document.getElementById('restart-btn');
-    
-    const realTimeCorrect = document.getElementById('real-time-correct');
-    const realTimeWrong = document.getElementById('real-time-wrong');
-    const statsContainer = document.getElementById('stats-container');
+    // Define o grupo pelo prefixo do ID
+    let group = "b1";
+    if (item.id.startsWith("B")) group = "b2";
+    else if (item.id.startsWith("P")) group = "pr";
+    else if (item.id.startsWith("G")) group = "ag";
+    else if (item.id.startsWith("O")) group = "ab";
 
-    // Função para embaralhar um array (Fisher-Yates)
-    function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // Inicia o Quiz
-    function startQuiz() {
-        // Esconde resultados, mostra painel principal
-        resultScreen.style.display = 'none';
-        quizHeader.style.display = 'flex';
-        statsContainer.style.display = 'flex';        questionScreen.style.display = 'block';
-
-        // Reseta variáveis
-        score = 0;
-        wrongAnswers = 0;
-        currentQuestionIndex = 0;
-        
-        updateStatsDisplay();
-
-        // Seleciona e embaralha perguntas
-        const shuffledAll = shuffleArray([...allQuestions]);
-        
-        // Separa as questões LGPD das demais
-        const lgpdQuestions = shuffledAll.filter(q => q.is_lgpd || q.pergunta.includes("LGPD") || q.pergunta.includes("ANPD"));
-        const otherQuestions = shuffledAll.filter(q => !(q.is_lgpd || q.pergunta.includes("LGPD") || q.pergunta.includes("ANPD")));
-        
-        // Junta novamente colocando as LGPD primeiro
-        currentQuizQuestions = [...lgpdQuestions, ...otherQuestions].slice(0, Math.min(QUESTIONS_PER_QUIZ, allQuestions.length));
-        
-        scoreTotalDisplay.innerText = currentQuizQuestions.length;
-
-        loadQuestion();
+    if (isClosed) {
+        // Questão Fechada (Múltipla Escolha)
+        return {
+            id: item.id,
+            g: group,
+            t: "c",
+            q: item.pergunta,
+            o: item.alternativas,
+            a: item.alternativas.indexOf(item.resposta_correta),
+            e: item.dica // Justificativa que será mostrada no feedback
+        };
+    } else {
+        // Questão Aberta
+        const kwStr = item.dica.replace("As palavras-chave que compõem esta resposta são: ", "").trim();
+        const keywords = kwStr.split(",").map(k => k.trim());
+        return {
+            id: item.id,
+            g: group,
+            t: "o",
+            q: item.pergunta,
+            r: item.resposta_correta,
+            k: keywords
+        };
     }
+});
+
+const GROUPS = {
+    b1: "Treinamento Básico (Módulo 1)",
+    b2: "Treinamento Básico (Módulo 2)",
+    pr: "Os 10 Princípios (Art. 6º)",
+    ag: "Controlador, Operador e DPO",
+    ab: "Questões Abertas (Dissertativas)"
+};
+
+let run = [];
+let pos = 0;
+let score = 0;
+let log = [];
+let modeKey = "";
+
+const store = {
+    get() { try { return JSON.parse(localStorage.getItem("lgpd_erros_v3") || "[]"); } catch(e) { return []; } },
+    set(v) { try { localStorage.setItem("lgpd_erros_v3", JSON.stringify(v)); } catch(e) {} }
+};
+
+const shuffle = (a) => {
+    let arr = [...a];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+};
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const closedQs = DATA.filter(x => x.t === "c");
+
+document.getElementById('global-total-display').innerText = `Total no Banco: ${DATA.length} Questões (87 Fechadas | 20 Abertas)`;
+
+function initSidebar() {
+    const modesContainer = document.getElementById('sidebar-modes');
+    const themesContainer = document.getElementById('sidebar-themes');
+    const reviewContainer = document.getElementById('sidebar-review');
+
+    modesContainer.innerHTML = `
+        <button class="sidebar-btn" style="background-color: var(--bg-purple); color: white; border-color: white;" onclick="start('sim10')">Simulado Rápido (10) <span>Sorteia 10 questões aleatórias</span></button>
+        <button class="sidebar-btn" style="background-color: var(--bg-purple); color: white; border-color: white;" onclick="start('sim30')">Simulado Master (30) <span>Sorteia 30 questões de todos os temas</span></button>
+        <button class="sidebar-btn" onclick="start('allc')">Maratona Fechada <span>Todas as ${closedQs.length} de múltipla escolha</span></button>
+    `;
+
+    let themesHTML = '';
+    for (let key in GROUPS) {
+        let count = DATA.filter(x => x.g === key).length;
+        themesHTML += `<button class="sidebar-btn" onclick="start('g:${key}')">${GROUPS[key]} <span>${count} questões ${key==='ab'?'para redigir e conferir':''}</span></button>`;
+    }
+    themesContainer.innerHTML = themesHTML;
+
+    const errs = store.get();
+    reviewContainer.innerHTML = `
+        <button class="sidebar-btn" onclick="start('err')" ${errs.length === 0 ? 'disabled' : ''}>
+            Refazer Meus Erros <span>${errs.length} questões salvas</span>
+        </button>
+        <button class="sidebar-btn" onclick="showSheet()">Resumo de Estudos <span>Leia antes de testar para fixar a mente</span></button>
+        ${errs.length > 0 ? `<div class="text-right mt-2"><button onclick="clearErrors()" class="text-xs text-red-400 hover:text-red-300 underline">Apagar histórico de erros</button></div>` : ''}
+    `;
+}
+
+function clearErrors() {
+    store.set([]);
+    initSidebar();
+}
+
+function start(m, customList) {
+    modeKey = m;
+    const shuffleOpts = document.getElementById('sh-opts').checked;
     
-    function updateStatsDisplay() {
-        realTimeCorrect.innerText = score;
-        realTimeWrong.innerText = wrongAnswers;
+    // UI Resets
+    document.getElementById('welcome-screen').style.display = 'none';
+    document.getElementById('sheet-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('wrong-summary-container').classList.add('hidden');
+    
+    document.getElementById('quiz-header').style.display = 'flex';
+    document.getElementById('stats-container').style.display = 'flex';
+    document.getElementById('question-screen').style.display = 'block';
+
+    // Seleção de Lista
+    if(customList) { run = customList; }
+    else if(m === "sim10") { run = shuffle(closedQs).slice(0, 10); }
+    else if(m === "sim30") { run = shuffle(closedQs).slice(0, 30); }
+    else if(m === "allc") { run = shuffle(closedQs); }
+    else if(m === "err") { const ids = store.get(); run = shuffle(DATA.filter(x => ids.includes(x.id))); }
+    else if(m.startsWith("g:")) { 
+        const g = m.slice(2); 
+        run = DATA.filter(x => x.g === g); 
+        if(g === "ab") run = shuffle(run); 
     }
 
-    // Carrega a pergunta atual na tela
-    function loadQuestion() {
-        resetState();
-        
-        const currentQuestion = currentQuizQuestions[currentQuestionIndex];
-        
-        const numStr = (currentQuestionIndex + 1).toString().padStart(3, '0');
-        const totalStr = currentQuizQuestions.length.toString().padStart(3, '0');
-        questionNumberDisplay.innerText = `#${numStr} / ${totalStr}`;
-        
-        // Verifica se é uma pergunta sobre LGPD para mudar a cor
-        if (currentQuestion.is_lgpd || currentQuestion.pergunta.includes("LGPD") || currentQuestion.pergunta.includes("ANPD")) {
-            questionText.style.color = "#a21caf"; // Um tom de roxo/magenta para destacar
-            questionText.innerHTML = `<span class="bg-purple-100 text-purple-800 text-xs font-bold px-2 py-1 rounded mb-2 inline-block">Tema: LGPD</span><br>${currentQuestion.pergunta}`;
-        } else {
-            questionText.style.color = "var(--text-black)";
-            questionText.innerText = currentQuestion.pergunta;
-        }
+    // Configuração de View (Embaralhamento interno da questão)
+    run = run.map(x => {
+        if(x.t !== "c") return x;
+        let idx = x.o.map((_, i) => i);
+        if(shuffleOpts) idx = shuffle(idx);
+        return { ...x, view: idx };
+    });
 
-            // Embaralha as alternativas para esta pergunta
-            const shuffledOptions = shuffleArray([...currentQuestion.alternativas]);
+    pos = 0; score = 0; log = [];
+    updateStatsDisplay();
+    renderQuestion();
+}
 
-            // Cria os botões
-            shuffledOptions.forEach(optionText => {
-                const button = document.createElement('button');
-                button.innerText = optionText;
-                button.classList.add('option-btn');
-                
-                // Event listener para seleção
-                button.addEventListener('click', () => selectAnswer(button, optionText, currentQuestion));
-                
-                optionsContainer.appendChild(button);
-            });
-        }
+function updateStatsDisplay() {
+    document.getElementById('real-time-correct').innerText = score;
+    const wrong = log.filter(l => !l.ok).length;
+    document.getElementById('real-time-wrong').innerText = wrong;
+}
 
-        // Reseta a interface para a próxima pergunta
-        function resetState() {
-            controlsContainer.style.display = 'none';
-            feedbackContainer.style.display = 'none';
-            while (optionsContainer.firstChild) {
-                optionsContainer.removeChild(optionsContainer.firstChild);
-            }
-        }
+function renderQuestion() {
+    const x = run[pos];
+    
+    document.getElementById('controls-container').classList.add('hidden');
+    document.getElementById('feedback-container').style.display = 'none';
+    
+    const numStr = (pos + 1).toString().padStart(3, '0');
+    const totalStr = run.length.toString().padStart(3, '0');
+    document.getElementById('question-number-display').innerText = `#${numStr} / ${totalStr}`;
+    
+    // Tag de Tema
+    document.getElementById('question-theme-tag').innerText = `Tema: ${GROUPS[x.g] || "LGPD"}`;
+    document.getElementById('question-text').innerHTML = esc(x.q).replace(/\n/g, '<br>');
 
-        // Lida com a seleção de uma resposta
-    function selectAnswer(selectedButton, selectedText, questionData) {
-        const isCorrect = selectedText === questionData.resposta_correta;
-        
-        if (isCorrect) {
-            selectedButton.classList.add('correct');
-            score++;
-        } else {
-            selectedButton.classList.add('wrong');
-            wrongAnswers++;
-            // Destaca a correta também
-            const buttons = optionsContainer.children;
-            for (let i = 0; i < buttons.length; i++) {
-                if (buttons[i].innerText === questionData.resposta_correta) {
-                    buttons[i].classList.add('correct');
-                }
-            }
-        }
-        
-        updateStatsDisplay();
+    const optsContainer = document.getElementById('options-container');
+    optsContainer.innerHTML = '';
 
-        // Desabilita todos os botões após a escolha
-            const allButtons = optionsContainer.children;
-            for (let i = 0; i < allButtons.length; i++) {
-                allButtons[i].disabled = true;
-            }
-
-            // Mostra justificativa
-            feedbackText.innerText = questionData.justificativa;
-            feedbackContainer.style.display = 'block';
-            
-            // Mostra botão de próximo
-            controlsContainer.style.display = 'block';
-        }
-
-        // Avança para a próxima ou finaliza
-        nextBtn.addEventListener('click', () => {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < currentQuizQuestions.length) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
+    if (x.t === "c") {
+        const L = i => String.fromCharCode(65 + i);
+        x.view.forEach((oi, vi) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="w-6 font-black text-purple-700">${L(vi)})</span><span class="flex-1">${esc(x.o[oi])}</span>`;
+            btn.onclick = () => checkAnswer(btn, oi, vi, x);
+            optsContainer.appendChild(btn);
         });
+    } else {
+        const ta = document.createElement('textarea');
+        ta.className = 'open-answer';
+        ta.id = 'open-answer-input';
+        ta.placeholder = "Escreva sua resposta aqui com suas palavras...";
+        
+        const btn = document.createElement('button');
+        btn.className = 'action-btn w-full mb-4';
+        btn.innerText = "CONFERIR RESPOSTA";
+        btn.onclick = () => checkOpenAnswer(x);
+        
+        optsContainer.appendChild(ta);
+        optsContainer.appendChild(btn);
+    }
+}
 
-        // Mostra a tela final
-    function showResults() {
-        quizHeader.style.display = 'none';
-        statsContainer.style.display = 'none';        questionScreen.style.display = 'none';
-        resultScreen.style.display = 'block';
+function checkAnswer(btn, chosenIndex, viewIndex, x) {
+    const isCorrect = chosenIndex === x.a;
+    
+    const allBtns = document.getElementById('options-container').querySelectorAll('.option-btn');
+    allBtns.forEach(b => b.disabled = true);
+    
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) {
+        allBtns.forEach((b, i) => { if(x.view[i] === x.a) b.classList.add('correct'); });
+    }
 
-        scoreCorrectDisplay.innerText = score;
+    if(isCorrect) score++;
+    log.push({x, ok: isCorrect, chosen: x.o[chosenIndex], why: ""}); // Removida a key "w" antiga
+    
+    let errs = store.get();
+    if(!isCorrect) { if(!errs.includes(x.id)) errs.push(x.id); } 
+    else { errs = errs.filter(id => id !== x.id); }
+    store.set(errs);
+    initSidebar();
 
-            // Mensagem dinâmica baseada no acerto
-            const percentage = (score / currentQuizQuestions.length) * 100;
-            if (percentage === 100) {
-                resultMessage.innerText = "PERFEITO! Você é um mestre dos dados!";
-            } else if (percentage >= 70) {
-                resultMessage.innerText = "MUITO BOM! Consegue acertar todas na próxima?";
-            } else if (percentage >= 40) {
-                resultMessage.innerText = "NA MÉDIA. Que tal tentar mais uma vez?";
-            } else {
-                resultMessage.innerText = "PRECISA PRATICAR MAIS. Não desista!";
-            }
-        }
+    updateStatsDisplay();
+    triggerGamification(isCorrect);
 
-        // Botão de refazer
-        restartBtn.addEventListener('click', startQuiz);
+    const L = i => String.fromCharCode(65 + i);
+    const cv = L(x.view.indexOf(x.a));
+    const yv = L(viewIndex);
+    
+    let fbHtml = `<div class="feedback-title" style="color: ${isCorrect ? '#166534' : '#991b1b'}">${isCorrect ? '🎉 EXCELENTE!' : '❌ ATENÇÃO!'}</div>`;
+    
+    if(!isCorrect) {
+        fbHtml += `<p class="mb-2 text-sm text-gray-700"><b>A alternativa <span class="uppercase">${yv}</span> que você escolheu está incorreta.</b></p>`;
+    }
+    fbHtml += `<p class="font-bold mb-2">Justificativa da resposta correta (<span class="uppercase text-purple-700">${cv}</span>):</p><p class="text-sm bg-gray-100 p-3 rounded border border-gray-300 font-medium">${esc(x.e)}</p>`;
+    
+    document.getElementById('feedback-container').innerHTML = fbHtml;
+}
 
-        // Iniciar ao carregar
-        startQuiz();
+function checkOpenAnswer(x) {
+    const input = document.getElementById('open-answer-input');
+    const text = norm(input.value);
+    
+    const hits = x.k.map(k => ({k: k.split("|")[0], y: k.split("|").some(p => text.includes(p))}));
+    const numHits = hits.filter(h => h.y).length;
 
-    </script>
+    input.disabled = true;
+    document.querySelector('#options-container .action-btn').style.display = 'none';
+
+    let fbHtml = `
+        <div class="feedback-title">Resposta Esperada:</div>
+        <p class="p-4 bg-purple-100 border-2 border-purple-400 rounded-lg mb-4 font-bold text-black">${esc(x.r)}</p>
+        <p class="text-sm font-black uppercase mb-1">Palavras-chave atingidas (${numHits}/${hits.length}):</p>
+        <div class="mb-5">${hits.map(h => `<span class="kw-tag ${h.y?'y':'n'}">${esc(h.k)}</span>`).join("")}</div>
+        <div class="bg-gray-100 p-4 rounded-xl text-center border-2 border-black border-dashed">
+            <p class="font-black mb-3">Seja sincero, você acertou a essência da questão?</p>
+            <div class="flex justify-center gap-3">
+                <button onclick="resolveOpen(true, '${x.id}')" class="bg-green-300 text-green-900 px-5 py-2 rounded-lg font-black border-2 border-green-800 hover:scale-105 transition-transform shadow-[2px_2px_0px_#166534]">SIM, ACERTEI</button>
+                <button onclick="resolveOpen(false, '${x.id}')" class="bg-red-300 text-red-900 px-5 py-2 rounded-lg font-black border-2 border-red-800 hover:scale-105 transition-transform shadow-[2px_2px_0px_#991b1b]">NÃO / FALTOU</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('feedback-container').innerHTML = fbHtml;
+    document.getElementById('feedback-container').style.display = 'block';
+}
+
+function resolveOpen(isCorrect, id) {
+    const x = run[pos];
+    if(isCorrect) score++;
+    log.push({x, ok: isCorrect, chosen: document.getElementById('open-answer-input').value, why: ""});
+    
+    let errs = store.get();
+    if(!isCorrect) { if(!errs.includes(x.id)) errs.push(x.id); } 
+    else { errs = errs.filter(i => i !== x.id); }
+    store.set(errs);
+    initSidebar();
+
+    updateStatsDisplay();
+    triggerGamification(isCorrect);
+    
+    const btns = document.getElementById('feedback-container').querySelectorAll('button');
+    btns.forEach(b => b.style.display = 'none');
+}
+
+function triggerGamification(isCorrect) {
+    const overlay = document.getElementById('gami-overlay');
+    const circle = document.getElementById('gami-circle');
+    const img = document.getElementById('gami-img');
+
+    circle.className = 'gami-circle';
+    
+    if (isCorrect) {
+        circle.classList.add('gami-happy');
+        img.src = 'julio_rindo.png'; 
+    } else {
+        circle.classList.add('gami-sad');
+        img.src = 'julio_chorando.png';
+    }
+
+    overlay.classList.add('active');
+
+    setTimeout(() => {
+        overlay.classList.remove('active');
+        document.getElementById('feedback-container').style.display = 'block';
+        document.getElementById('controls-container').classList.remove('hidden');
+    }, 1500);
+}
+
+document.getElementById('next-btn').onclick = () => {
+    pos++;
+    if(pos < run.length) { renderQuestion(); } 
+    else { showResults(); }
+};
+
+function showResults() {
+    document.getElementById('quiz-header').style.display = 'none';
+    document.getElementById('stats-container').style.display = 'none';
+    document.getElementById('question-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+
+    const pct = Math.round((score / run.length) * 100);
+    document.getElementById('score-correct').innerText = score;
+    document.getElementById('score-total').innerText = run.length;
+
+    let msg = "Revise o resumo na lateral e refaça seus erros.";
+    if(pct === 100) msg = "PERFEITO! Você dominou o assunto LGPD!";
+    else if(pct >= 80) msg = "QUASE LÁ! Ótimo desempenho. Refaça seus erros e ficará 100%.";
+    document.getElementById('result-message').innerText = `${pct}% de acertos. ${msg}`;
+
+    const wrongLogs = log.filter(l => !l.ok);
+    let actionsHtml = `<button onclick="start('${modeKey}')" class="action-btn">Nova Rodada</button>`;
+    
+    if(wrongLogs.length > 0) {
+        actionsHtml += `<button onclick="retryWrongs()" class="action-btn bg-white text-black">Refazer os ${wrongLogs.length} erros</button>`;
+        
+        const wrongListEl = document.getElementById('wrong-summary-list');
+        wrongListEl.innerHTML = wrongLogs.map(l => `
+            <div class="border-b border-gray-300 pb-3 last:border-0">
+                <p class="font-black text-purple-800 text-xs mb-1">Questão ${l.x.id}</p>
+                <p class="mb-1">${esc(l.x.q)}</p>
+                <p class="text-red-700 bg-red-100 p-1 rounded inline-block"><span class="font-black">Sua marcação:</span> ${l.chosen ? esc(l.chosen) : '(Vazio)'}</p><br>
+                <p class="text-green-800 bg-green-100 p-1 rounded mt-1 inline-block"><span class="font-black">Gabarito:</span> ${esc(l.x.t === 'c' ? l.x.o[l.x.a] : l.x.r)}</p>
+            </div>
+        `).join("");
+        document.getElementById('wrong-summary-container').classList.remove('hidden');
+    } else {
+        document.getElementById('wrong-summary-container').classList.add('hidden');
+    }
+    
+    document.getElementById('result-actions').innerHTML = actionsHtml;
+}
+
+function retryWrongs() {
+    const wrongLogs = log.filter(l => !l.ok);
+    const retryList = shuffle(wrongLogs.map(l => { const {view, ...rest} = l.x; return rest; }));
+    start(modeKey, retryList);
+}
+
+function showSheet() {
+    document.getElementById('welcome-screen').style.display = 'none';
+    document.getElementById('question-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'none';
+    document.getElementById('quiz-header').style.display = 'none';
+    document.getElementById('stats-container').style.display = 'none';
+    document.getElementById('sheet-screen').style.display = 'block';
+
+    const P = [
+        ["Finalidade","Coletar apenas para fins legítimos e informados."],
+        ["Adequação","Compatibilidade do tratamento com as finalidades informadas de forma honesta."],
+        ["Necessidade","Manter e utilizar apenas os dados essenciais."],
+        ["Livre acesso","Apresentar dados ao usuário de forma fácil quando requisitado."],
+        ["Precisão (Qualidade)","Manter os dados exatos e atualizados."],
+        ["Transparência","Informar de maneira clara e acessível sobre os riscos e direitos."],
+        ["Segurança","Tomar medidas técnicas e administrativas contra danos/invasões."],
+        ["Prevenção","Tomar medidas preventivas, agindo antes do dano ocorrer."],
+        ["Não discriminação","Não usar os dados para fins abusivos, ilícitos ou discriminatórios."],
+        ["Responsabilidade","Adotar princípios e ter como provar essa adoção (prestação de contas)."]
+    ];
+
+    let html = `<div class="bg-white text-black p-5 rounded-xl border-4 border-black mb-6 shadow-[6px_6px_0px_rgba(0,0,0,0.3)]">
+        <h3 class="font-black text-2xl mb-4 text-purple-800 border-b-2 border-purple-200 pb-2">Art. 6º: Os 10 Princípios</h3>
+        <ul class="list-none space-y-3">`;
+    P.forEach((p, i) => html += `<li class="flex items-start gap-3"><span class="font-black text-lg text-purple-500 w-6">${i+1}.</span> <div><b class="text-black bg-yellow-200 px-1 rounded">${p[0]}</b> <br> ${p[1]}</div></li>`);
+    html += `</ul></div>`;
+
+    html += `<div class="bg-white text-black p-5 rounded-xl border-4 border-black mb-4 shadow-[6px_6px_0px_rgba(0,0,0,0.3)]">
+        <h3 class="font-black text-2xl mb-4 text-purple-800 border-b-2 border-purple-200 pb-2">O Tripé (Controlador, Operador e DPO)</h3>
+        <div class="space-y-4">
+            <p><b class="text-xl bg-purple-200 px-1 rounded block w-max">Controlador: DECIDE</b><br>Define finalidades, determina os meios e procedimentos e é o responsável principal pela conformidade.</p>
+            <p><b class="text-xl bg-purple-200 px-1 rounded block w-max">Operador: EXECUTA</b><br>Realiza o tratamento em nome do controlador seguindo diretrizes e implementando a segurança técnica.</p>
+            <p><b class="text-xl bg-purple-200 px-1 rounded block w-max">Encarregado (DPO): COMUNICA</b><br>O DPO <b>NÃO</b> é agente de tratamento. Ele atua como canal de comunicação entre os agentes, os titulares e a ANPD, e orienta funcionários.</p>
+        </div>
+    </div>`;
+
+    document.getElementById('sheet-content').innerHTML = html;
+}
+
+initSidebar();
+
+</script>
 </body>
 </html>
