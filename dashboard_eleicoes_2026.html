@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eleições 2026 - Painel Analítico</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- html2pdf para exportação -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Design System Baseado na Imagem de Referência */
+        :root {
+            /* Cores Primárias (Sidebar e Destaques) */
+            --primary-blue: #1A73E8;
+            /* Azul da Sidebar */
+            --primary-dark: #1557B0;
+            --primary-light: #4285F4;
+
+            /* Backgrounds e Superfícies */
+            --bg-body: #F0F4F8;
+            /* Fundo cinza bem claro */
+            --bg-surface: #FFFFFF;
+            /* Fundo dos cards */
+            --bg-sidebar: #1E66D1;
+            /* Azul específico da sidebar na imagem */
+
+            /* Texto */
+            --text-main: #1F2937;
+            /* Quase preto */
+            --text-muted: #6B7280;
+            /* Cinza para legendas */
+            --text-light: #F9FAFB;
+            /* Texto no escuro */
+
+            /* Cores Semânticas (Partidos/Candidatos) - Ajustadas para visualização analítica */
+            --color-pl: #1976D2;
+            /* Azul moderado (sem ser gritante) */
+            --color-pt: #D32F2F;
+            /* Vermelho moderado */
+            --color-neutral: #9CA3AF;
+            /* Cinza para abstenções/brancos/nulos */
+
+            /* Estrutura */
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+            font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Tipografia de Storytelling */
+        .story-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+
+        .story-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .highlight-text {
+            font-weight: 700;
+        }
+
+        /* Layout Principal */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 24px 32px;
+            max-width: calc(100vw - 260px);
+        }
+
+        /* Sidebar Componentes */
+        .sidebar-header {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-menu {
+            padding: 24px 12px;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Perfil User Card (Rodapé Sidebar) */
+        .profile-card {
+            margin: 16px;
+            padding: 16px;
+            background-color: rgba(0, 0, 0, 0.15);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-info h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+        }
+
+        .profile-info p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2px;
+        }
+
+        /* Header Principal */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+
+        /* Cards e Grids */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background-color: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Hero Card (Bem-vindo, similar à imagem) */
+        .hero-card {
+            grid-column: span 12;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 16px 24px;
+            border-radius: var(--radius-md);
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-stat-box .label {
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-stat-box .value {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+        /* KPI Cards Secundários */
+        .kpi-card {
+            grid-column: span 3;
+            padding: 20px;
+        }
+
+        @media (max-width: 1400px) {
+            .kpi-card {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .kpi-card {
+                grid-column: span 12;
+            }
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .kpi-icon {
+            padding: 10px;
+            border-radius: var(--radius-md);
+            background-color: var(--bg-body);
+            color: var(--primary-blue);
+        }
+
+        .kpi-trend {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .trend-up {
+            background: #E6F4EA;
+            color: #137333;
+        }
+
+        .trend-down {
+            background: #FCE8E6;
+            color: #C5221F;
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .kpi-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Charts Containers */
+        .chart-card-large {
+            grid-column: span 8;
+        }
+
+        .chart-card-small {
+            grid-column: span 4;
+        }
+
+        @media (max-width: 1200px) {
+
+            .chart-card-large,
+            .chart-card-small {
+                grid-column: span 12;
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        /* Controle de Abas */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Relatórios Específicos & Insights Executivos */
+        .report-insight {
+            border: 1px solid #E2E8F0;
+            background: #FFFFFF;
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .report-insight.alert {
+            border-color: #FECACA;
+            background: #FEF2F2;
+        }
+
+        /* Tabela Customizada (Clean) */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            border-bottom: 1px solid #E5E7EB;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 16px;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #F3F4F6;
+            color: var(--text-main);
+        }
+
+        tbody tr:hover {
+            background-color: #F9FAFB;
+        }
+
+        .pill-pl {
+            background-color: rgba(25, 118, 210, 0.1);
+            color: var(--color-pl);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        .pill-pt {
+            background-color: rgba(211, 47, 47, 0.1);
+            color: var(--color-pt);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+
+        /* Utilities */
+        .text-pl {
+            color: var(--color-pl);
+        }
+
+        .text-pt {
+            color: var(--color-pt);
+        }
+
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* --- ESTABILIDADE DE TELA & PREVENÇÃO TOTAL DE TREMORES --- */
+        html {
+            overflow-y: scroll;
+            /* Força calha de rolagem sempre estável no browser */
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+        }
+
+        /* Hover dos estados suave e sem recálculo de escala do SVG */
+        .state-path {
+            stroke: #FFFFFF;
+            stroke-width: 1.2;
+            cursor: pointer;
+            transition: filter 0.15s ease, stroke-width 0.15s ease;
+        }
+
+        .state-path:hover {
+            stroke-width: 2.5;
+            stroke: #FFFFFF;
+            filter: brightness(1.25) drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+        }
+
+        .state-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 9px;
+            font-weight: 700;
+            fill: #FFFFFF;
+            pointer-events: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+            text-anchor: middle;
+            dominant-baseline: central;
+        }
+
+        .df-indicator {
+            stroke: #FFFFFF;
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .df-indicator:hover {
+            filter: brightness(1.3);
+            r: 6.5;
+        }
+
+        /* Tooltip Seguro: contain layout para não disparar scrollbars */
+        #map-tooltip {
+            position: fixed;
+            display: none;
+            pointer-events: none;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(10px);
+            color: #FFFFFF;
+            padding: 14px 18px;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 240px;
+            max-width: 240px;
+            contain: layout paint;
+            transition: opacity 0.1s ease;
+        }
+
+        /* Card lateral de estado com tamanho fixo estável (não encolhe nem estica) */
+        #state-detail-box {
+            height: 255px !important;
+            min-height: 255px !important;
+            max-height: 255px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* --- DESIGN EDITORIAL E ESPAÇOSO DOS RELATÓRIOS --- */
+        .reports-container {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            padding-bottom: 40px;
+        }
+
+        .report-section-card {
+            background-color: var(--bg-surface);
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: box-shadow 0.2s ease;
+        }
+
+        .report-section-card:hover {
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.07);
+        }
+
+        .report-header-banner {
+            background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+            border-radius: 20px;
+            padding: 36px 40px;
+            color: #FFFFFF;
+            margin-bottom: 36px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+        }
+
+        .report-kpi-card {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .report-action-box {
+            background: #F0FDF4;
+            border: 1px solid #BBF7D0;
+            border-radius: 14px;
+            padding: 22px 26px;
+            color: #166534;
+        }
+
+        .report-action-box.alert-box {
+            background: #FEF2F2;
+            border-color: #FECACA;
+            color: #991B1B;
+        }
+
+        .report-action-box.strategy-box {
+            background: #FAF5FF;
+            border-color: #E9D5FF;
+            color: #6B21A8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="ph-fill ph-chart-polar" style="font-size: 28px;"></i>
+            <span>TSE Analytics</span>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="switchTab('visao-geral')">
+                <i class="ph ph-squares-four" style="font-size: 20px;"></i>
+                Visão Geral
+            </div>
+            <div class="nav-item" onclick="switchTab('geolocalizacao')">
+                <i class="ph ph-map-pin" style="font-size: 20px;"></i>
+                Geolocalização
+            </div>
+            <div class="nav-item" onclick="switchTab('demografia')">
+                <i class="ph ph-users" style="font-size: 20px;"></i>
+                Demografia
+            </div>
+            <div class="nav-item" onclick="switchTab('relatorios')">
+                <i class="ph ph-file-text" style="font-size: 20px;"></i>
+                Relatórios
+            </div>
+        </nav>
+
+        <!-- Card de Perfil Exigido -->
+        <div class="profile-card">
+            <img src="https://clareia1.vercel.app/leo345.png" alt="Prof. Leônidas Leandro" class="profile-avatar"
+                onerror="this.src='https://ui-avatars.com/api/?name=Leonidas+Leandro&background=random'">
+            <div class="profile-info">
+                <h4>Prof. Leônidas Leandro</h4>
+                <p>Analista de Dados & Designer</p>
+                <p><i class="ph ph-phone"></i> (81) 98291-1207</p>
+                <p><i class="ph ph-instagram-logo"></i> @prof.tenebroso</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="top-header" id="export-header">
+            <div class="header-title">
+                <h1>Painel Executivo: 1º Turno 2026</h1>
+                <p>Apuração consolidada TSE. Última atualização: 05 de Outubro, 10:23.</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="exportToPDF()"
+                    class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition shadow-sm"
+                    id="btn-export">
+                    <i class="ph ph-download-simple"></i> <span id="export-text">Exportar PDF</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="pdf-content">
+            <!-- ABA 1: VISÃO GERAL (Dashboard Original) -->
+            <div id="visao-geral" class="tab-content active">
+                <div class="dashboard-grid">
+
+                    <!-- Hero Card: Resumo da Disputa -->
+                    <div class="hero-card">
+                        <div class="flex-between">
+                            <div>
+                                <h2 class="text-2xl font-bold">Apuração 1º Turno: Disputa Presidencial</h2>
+                                <p class="text-white/80 mt-1">99,9% das seções totalizadas.</p>
+                            </div>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="hero-stat-box">
+                                <div class="label"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-blue-300 inline-block shadow-sm"></span>
+                                    Flávio Bolsonaro (PL)</div>
+                                <div class="value">47,03%</div>
+                                <div class="text-sm mt-1">56.104.503 votos</div>
+                            </div>
+                            <div class="hero-stat-box">
+                                <div class="label"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block shadow-sm"></span> Lula
+                                    (PT)</div>
+                                <div class="value">45,16%</div>
+                                <div class="text-sm mt-1">53.879.538 votos</div>
+                            </div>
+                            <div class="hero-stat-box">
+                                <div class="label"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-emerald-300 inline-block shadow-sm"></span>
+                                    Diferença</div>
+                                <div class="value">1,87 p.p.</div>
+                                <div class="text-sm mt-1 text-green-300 font-medium">Vantagem PL</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI: Votos Válidos -->
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon"><i class="ph-fill ph-check-circle"></i></div>
+                            <span class="kpi-trend trend-up">Brancos/Nulos: 4,7%</span>
+                        </div>
+                        <div class="kpi-value">119,3 mi</div>
+                        <div class="kpi-label">Votos Válidos (95,2%)</div>
+                    </div>
+
+                    <!-- KPI: Abstenção -->
+                    <div class="card kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon"><i class="ph-fill ph-warning-circle"></i></div>
+                            <span class="kpi-trend trend-down">Alerta</span>
+                        </div>
+                        <div class="kpi-value">33,4 mi</div>
+                        <div class="kpi-label">Abstenções (21,08%)</div>
+                    </div>
+
+                    <!-- Espaço em branco para manter o grid alinhado com 12 colunas -->
+                    <div class="card kpi-card hidden md:block opacity-0"></div>
+                    <div class="card kpi-card hidden md:block opacity-0"></div>
+
+                    <!-- Charts Containers -->
+                    <div class="card chart-card-large">
+                        <h3 class="story-title">Desempenho Histórico: 2022 vs 2026</h3>
+                        <p class="story-subtitle">Flávio supera o teto de Jair Bolsonaro em 2022 (+3,8 p.p.), enquanto
+                            Lula retrai (-3,2 p.p.).</p>
+                        <div class="chart-container">
+                            <canvas id="historicalChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card chart-card-small">
+                        <h3 class="story-title">Perfil de Renda</h3>
+                        <p class="story-subtitle">Estimativa (Datafolha)</p>
+                        <div class="chart-container">
+                            <canvas id="incomeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- MAPA INTERATIVO DO BRASIL: 1º TURNO 2026 -->
+                    <div class="card col-span-12" style="grid-column: span 12;">
+                        <div
+                            class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-4 border-b border-gray-100">
+                            <div>
+                                <h3 class="story-title flex items-center gap-2 text-lg">
+                                    <i class="ph-duotone ph-map-pin-line text-blue-600 text-2xl"></i>
+                                    Mapa Geoeleitoral do 1º Turno: Divisão dos Estados
+                                </h3>
+                                <p class="story-subtitle mb-0">Distribuição federativa das vitórias nos 26 estados e no
+                                    Distrito Federal. Passe o cursor para auditar a votação da UF.</p>
+                            </div>
+
+                            <!-- Filtros Interativos do Mapa -->
+                            <div class="flex flex-wrap gap-2 text-xs font-semibold" id="mapFilterGroup">
+                                <button onclick="filterMap('all', this)"
+                                    class="map-filter-btn px-3 py-1.5 rounded-lg border bg-blue-600 text-white border-blue-600 transition shadow-sm">Todos
+                                    (27 UFs)</button>
+                                <button onclick="filterMap('flavio', this)"
+                                    class="map-filter-btn px-3 py-1.5 rounded-lg border bg-white text-gray-700 hover:bg-gray-50 border-gray-200 transition">Vitórias
+                                    Flávio (14)</button>
+                                <button onclick="filterMap('lula', this)"
+                                    class="map-filter-btn px-3 py-1.5 rounded-lg border bg-white text-gray-700 hover:bg-gray-50 border-gray-200 transition">Vitórias
+                                    Lula (13)</button>
+                                <button onclick="filterMap('swing', this)"
+                                    class="map-filter-btn px-3 py-1.5 rounded-lg border bg-white text-gray-700 hover:bg-gray-50 border-gray-200 transition">Apertados
+                                    (&lt; 5% dif.)</button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                            <!-- Visualizador SVG do Brasil -->
+                            <div
+                                class="lg:col-span-7 bg-slate-50/70 rounded-2xl p-5 border border-slate-200/80 flex flex-col items-center justify-center relative shadow-inner">
+                                <div id="map-svg-wrapper"
+                                    class="w-full flex justify-center items-center overflow-hidden"
+                                    style="min-height: 460px;">
+                                    <!-- Renderizado dinamicamente via JS -->
+                                </div>
+
+                                <!-- Barra de Legenda do Mapa -->
+                                <div
+                                    class="w-full flex flex-wrap items-center justify-between gap-4 mt-4 pt-3 border-t border-slate-200 text-xs">
+                                    <div class="flex items-center gap-5">
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="w-3.5 h-3.5 rounded-md bg-[#1976D2] shadow-sm inline-block"></span>
+                                            <span class="font-semibold text-gray-700">Flávio Bolsonaro (PL)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="w-3.5 h-3.5 rounded-md bg-[#D32F2F] shadow-sm inline-block"></span>
+                                            <span class="font-semibold text-gray-700">Lula (PT)</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-gray-500 font-medium">
+                                        <i class="ph ph-cursor text-sm text-blue-600"></i>
+                                        <span>Hover no estado para detalhar votos</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Coluna Lateral de Legenda & Estatísticas Analíticas -->
+                            <div class="lg:col-span-5 flex flex-col gap-4">
+                                <!-- Card de Estado Selecionado (Hover Dinâmico) -->
+                                <div id="state-detail-box"
+                                    class="p-5 rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50/60 via-white to-white shadow-sm transition-all duration-300">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <span class="text-[11px] font-bold uppercase tracking-wider text-blue-600"
+                                                id="detail-region">Região Sudeste</span>
+                                            <h4 class="text-xl font-bold text-gray-900" id="detail-name">São Paulo (SP)
+                                            </h4>
+                                            <p class="text-xs text-gray-500" id="detail-voters">34.122.892 eleitores
+                                                aptos</p>
+                                        </div>
+                                        <span class="px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800"
+                                            id="detail-status">Vitória PL</span>
+                                    </div>
+
+                                    <div class="space-y-3.5 mt-4 pt-3 border-t border-gray-100">
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1.5 font-medium">
+                                                <span class="text-gray-700 flex items-center gap-1.5">
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-[#1976D2]"></span> Flávio
+                                                    Bolsonaro (PL)
+                                                </span>
+                                                <span class="font-bold text-[#1976D2]" id="detail-flavio">51,98% (17,7
+                                                    mi votos)</span>
+                                            </div>
+                                            <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                                <div id="detail-flavio-bar"
+                                                    class="bg-[#1976D2] h-2 rounded-full transition-all duration-300"
+                                                    style="width: 51.98%"></div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <div class="flex justify-between text-xs mb-1.5 font-medium">
+                                                <span class="text-gray-700 flex items-center gap-1.5">
+                                                    <span class="w-2.5 h-2.5 rounded-full bg-[#D32F2F]"></span> Lula
+                                                    (PT)
+                                                </span>
+                                                <span class="font-bold text-[#D32F2F]" id="detail-lula">38,14% (13,0 mi
+                                                    votos)</span>
+                                            </div>
+                                            <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                                                <div id="detail-lula-bar"
+                                                    class="bg-[#D32F2F] h-2 rounded-full transition-all duration-300"
+                                                    style="width: 38.14%"></div>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="flex justify-between items-center pt-2 border-t border-gray-100 text-xs">
+                                            <span class="text-gray-500 font-medium">Margem de Diferença:</span>
+                                            <span class="font-bold text-gray-900" id="detail-margin">+13,84 p.p.
+                                                (PL)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Placar Federativo -->
+                                <div class="p-5 rounded-2xl border border-gray-200 bg-white shadow-sm">
+                                    <h5
+                                        class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3 flex items-center justify-between">
+                                        <span>Placar Federativo das 27 UFs</span>
+                                        <span class="text-gray-400 font-normal">TSE Consolidado</span>
+                                    </h5>
+
+                                    <div class="grid grid-cols-2 gap-3 mb-4">
+                                        <div class="p-3.5 rounded-xl bg-blue-50/60 border border-blue-100">
+                                            <div class="text-xs font-semibold text-blue-700">Flávio Bolsonaro</div>
+                                            <div class="text-2xl font-bold text-blue-900 mt-0.5">14 <span
+                                                    class="text-xs font-normal text-blue-600">UFs (51,9%)</span></div>
+                                            <div class="text-[11px] text-blue-700/80 mt-1 font-medium">98,1 mi eleitores
+                                                nos estados</div>
+                                        </div>
+                                        <div class="p-3.5 rounded-xl bg-red-50/60 border border-red-100">
+                                            <div class="text-xs font-semibold text-red-700">Lula</div>
+                                            <div class="text-2xl font-bold text-red-900 mt-0.5">13 <span
+                                                    class="text-xs font-normal text-red-600">UFs (48,1%)</span></div>
+                                            <div class="text-[11px] text-red-700/80 mt-1 font-medium">60,6 mi eleitores
+                                                nos estados</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Consolidação Regional -->
+                                    <div class="space-y-2 text-xs">
+                                        <div class="flex justify-between items-center py-1.5 border-b border-gray-100">
+                                            <span class="text-gray-600 font-medium">Região Sul (3 UFs):</span>
+                                            <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">PL 3 x
+                                                0 PT (100%)</span>
+                                        </div>
+                                        <div class="flex justify-between items-center py-1.5 border-b border-gray-100">
+                                            <span class="text-gray-600 font-medium">Região Sudeste (4 UFs):</span>
+                                            <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">PL 4 x
+                                                0 PT (100%)</span>
+                                        </div>
+                                        <div class="flex justify-between items-center py-1.5 border-b border-gray-100">
+                                            <span class="text-gray-600 font-medium">Região Centro-Oeste (4 UFs):</span>
+                                            <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">PL 4 x
+                                                0 PT (100%)</span>
+                                        </div>
+                                        <div class="flex justify-between items-center py-1.5 border-b border-gray-100">
+                                            <span class="text-gray-600 font-medium">Região Norte (7 UFs):</span>
+                                            <span class="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">PL
+                                                4 x 3 PT (Disputa)</span>
+                                        </div>
+                                        <div class="flex justify-between items-center py-1.5">
+                                            <span class="text-gray-600 font-medium">Região Nordeste (9 UFs):</span>
+                                            <span class="font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded">PT 9 x 0
+                                                PL (100%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Estados -->
+                    <div class="card col-span-12" style="grid-column: span 12;">
+                        <div class="flex-between mb-4 flex-wrap gap-4">
+                            <div>
+                                <h3 class="story-title">Resultados por Unidade da Federação</h3>
+                                <p class="story-subtitle mb-0">Desempenho regional consolidado.</p>
+                            </div>
+                            <div class="relative">
+                                <i class="ph ph-magnifying-glass absolute left-3 top-2.5 text-gray-400"></i>
+                                <input type="text" id="searchInput" placeholder="Buscar estado..."
+                                    class="pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 w-full sm:w-auto">
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="stateTable">
+                                <thead>
+                                    <tr>
+                                        <th>Estado (UF)</th>
+                                        <th>Eleitores Aptos</th>
+                                        <th>Flávio Bolsonaro (PL)</th>
+                                        <th>Lula (PT)</th>
+                                        <th>Status Local</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Preenchido via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 2: GEOLOCALIZAÇÃO -->
+            <div id="geolocalizacao" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="card col-span-12" style="grid-column: span 12;">
+                        <h2 class="text-xl font-bold mb-2">Análise Geoespacial do Voto</h2>
+                        <p class="text-sm text-gray-500 mb-6">A polarização cristalizou-se em divisões regionais claras.
+                            O avanço do PL no Sudeste contrasta com a resiliência histórica do PT no Nordeste.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="story-title">Fortalezas do PL (Cinturão do Agronegócio e Sul/Sudeste)</h3>
+                                <p class="story-subtitle">Desempenho acima da média nacional focado em estados com forte
+                                    matriz agropecuária e industrial.</p>
+                                <ul class="space-y-3 mt-4" id="pl-strongholds">
+                                    <!-- JS Preenche -->
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="story-title">Bastiões do PT (Nordeste)</h3>
+                                <p class="story-subtitle">Hegemonia mantida na região Nordeste, garantindo a
+                                    competitividade nacional no 1º turno.</p>
+                                <ul class="space-y-3 mt-4" id="pt-strongholds">
+                                    <!-- JS Preenche -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 p-4 rounded-xl border border-blue-200 bg-blue-50/40 flex items-start gap-3">
+                            <i class="ph-bold ph-lightbulb text-blue-600 text-xl flex-shrink-0 mt-0.5"></i>
+                            <div class="text-sm text-gray-700">
+                                <strong class="text-gray-900">Insight Estratégico para o 2º Turno:</strong> Os "Swing
+                                States" (Estados-pêndulo) como Minas Gerais, onde a diferença é menor que 5 pontos
+                                percentuais (Flávio 48,75% vs Lula 42,66%), serão os campos de batalha decisivos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 3: DEMOGRAFIA -->
+            <div id="demografia" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="card col-span-12" style="grid-column: span 12;">
+                        <h2 class="text-xl font-bold mb-2">Estrutura do Eleitorado (TSE 2026)</h2>
+                        <p class="text-sm text-gray-500 mb-6">Mudanças estruturais no perfil dos 158,7 milhões de
+                            eleitores aptos impactam as estratégias de campanha.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Card Idade -->
+                            <div class="p-6 border border-gray-100 rounded-xl bg-gray-50">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <i class="ph-fill ph-hourglass-high text-2xl text-blue-600"></i>
+                                    <h4 class="font-bold">Envelhecimento</h4>
+                                </div>
+                                <div class="text-3xl font-bold mb-1">37,4 mi</div>
+                                <p class="text-sm text-gray-600">Eleitores com 60 anos ou mais.</p>
+                                <div
+                                    class="mt-4 text-xs font-semibold text-green-700 bg-green-100 p-2 rounded inline-block">
+                                    <i class="ph-bold ph-trend-up"></i> +14% (vs 2022)
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Correspondem agora a 23,6% do eleitorado total.
+                                </p>
+                            </div>
+
+                            <!-- Card Jovens -->
+                            <div class="p-6 border border-gray-100 rounded-xl bg-gray-50">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <i class="ph-fill ph-student text-2xl text-red-500"></i>
+                                    <h4 class="font-bold">Queda Jovem</h4>
+                                </div>
+                                <p class="text-sm text-gray-600">O eleitorado entre 16 e 18 anos apresentou retração
+                                    significativa de alistamento.</p>
+                                <div
+                                    class="mt-4 text-xs font-semibold text-red-700 bg-red-100 p-2 rounded inline-block">
+                                    <i class="ph-bold ph-trend-down"></i> -14,5% (vs 2022)
+                                </div>
+                            </div>
+
+                            <!-- Card Exterior -->
+                            <div class="p-6 border border-gray-100 rounded-xl bg-gray-50">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <i class="ph-fill ph-globe-hemisphere-west text-2xl text-indigo-500"></i>
+                                    <h4 class="font-bold">Voto no Exterior</h4>
+                                </div>
+                                <div class="text-3xl font-bold mb-1">918.876</div>
+                                <p class="text-sm text-gray-600">Brasileiros registrados para votar fora do país.</p>
+                                <div
+                                    class="mt-4 text-xs font-semibold text-green-700 bg-green-100 p-2 rounded inline-block">
+                                    <i class="ph-bold ph-trend-up"></i> +31,8% (vs 2022)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="story-title text-sm uppercase tracking-wider mb-3">Gênero</h3>
+                            <div class="w-full bg-blue-100 rounded-full h-8 flex overflow-hidden">
+                                <div class="bg-purple-500 h-full flex items-center justify-center text-xs font-bold text-white"
+                                    style="width: 52.84%">Mulheres: 52,84%</div>
+                                <div class="bg-blue-500 h-full flex items-center justify-center text-xs font-bold text-white"
+                                    style="width: 47.16%">Homens: 47,16%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ABA 4: RELATÓRIOS EXECUTIVOS & CONJUNTURA (AREJADO & BEM ESPAÇADO) -->
+            <div id="relatorios" class="tab-content">
+                <div class="reports-container max-w-7xl mx-auto">
+
+                    <!-- BANNER HEADER EDITORIAL ESPAÇOSO -->
+                    <div class="report-header-banner">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                            <div>
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span
+                                        class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold uppercase tracking-wider border border-blue-400/30">
+                                        <i class="ph-bold ph-shield-check"></i> Documento Oficial de Análise
+                                    </span>
+                                    <span class="text-xs text-slate-400">• Outubro de 2026 • 1º Turno Consolidado</span>
+                                </div>
+                                <h2 class="text-3xl font-extrabold tracking-tight text-white mb-2">Relatórios de
+                                    Inteligência Eleitoral & Estratégia</h2>
+                                <p class="text-slate-300 text-sm max-w-3xl leading-relaxed">
+                                    Auditoria e avaliação analítica das urnas sob a ótica do comportamento do eleitor,
+                                    logística institucional do TSE e projeções determinantes para o 2º Turno.
+                                </p>
+                            </div>
+                            <div class="flex flex-col items-start md:items-end gap-2 text-right">
+                                <div class="text-xs text-slate-400">Responsável Técnico</div>
+                                <div class="text-base font-bold text-white flex items-center gap-2">
+                                    <i class="ph-fill ph-user-circle text-xl text-blue-400"></i> Prof. Leônidas Leandro
+                                </div>
+                                <div class="text-xs text-blue-300">Analista de Dados & Designer</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SESSÃO 1: ABSTENÇÃO RECORD E DESENGAJAMENTO CÍVICO -->
+                    <section class="report-section-card">
+                        <!-- Cabeçalho da Sessão com Espaço Amplo -->
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 text-2xl flex-shrink-0 shadow-sm">
+                                    <i class="ph-bold ph-warning-circle"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span
+                                            class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-rose-100 text-rose-800 uppercase tracking-wider">Alerta
+                                            Máximo</span>
+                                        <span class="text-xs text-gray-400">Relatório 01/03</span>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900">Abstenção Recorde e Desengajamento do
+                                        Eleitorado</h3>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-gray-400 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 self-start sm:self-auto">
+                                Tempo de leitura: 3 min
+                            </span>
+                        </div>
+
+                        <!-- Métricas Espaçosas em Cartões Altos -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Abstenção
+                                        Nacional</span>
+                                    <div class="text-4xl font-extrabold text-rose-600 mt-2 mb-1">21,08%</div>
+                                    <p class="text-xs text-gray-500">Taxa sobre o eleitorado apto</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-rose-700 bg-rose-50/70 p-2 rounded-lg">
+                                    33.472.000 eleitores ausentes
+                                </div>
+                            </div>
+
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Recorde em
+                                        São Paulo</span>
+                                    <div class="text-4xl font-extrabold text-gray-900 mt-2 mb-1">22,54%</div>
+                                    <p class="text-xs text-gray-500">Maior colégio eleitoral do país</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-gray-700 bg-gray-100 p-2 rounded-lg">
+                                    Maior índice da série desde 2014
+                                </div>
+                            </div>
+
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Brancos e
+                                        Nulos</span>
+                                    <div class="text-4xl font-extrabold text-gray-900 mt-2 mb-1">4,76%</div>
+                                    <p class="text-xs text-gray-500">5.980.000 votos desconsiderados</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-blue-700 bg-blue-50/70 p-2 rounded-lg">
+                                    Soma não-voto: 25,84% do total
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Texto Analítico Formatado com Linhas Arejadas -->
+                        <div class="space-y-5 text-gray-700 leading-relaxed text-base mb-8">
+                            <p>
+                                <strong>Diagnóstico de Comportamento Eleitoral:</strong> O contingente de 33,4 milhões
+                                de cidadãos que optaram pela abstenção supera amplamente a votação total de todos os
+                                candidatos da terceira via somados, e representa um volume <strong>15 vezes maior que a
+                                    diferença de votos</strong> entre Flávio Bolsonaro e Lula (2,22 milhões).
+                            </p>
+                            <p>
+                                <strong>Perfil da Abstenção:</strong> Os dados de geolocalização e demografia do TSE
+                                comprovam que o não comparecimento foi acentuadamente maior nas periferias urbanas de
+                                capitais do Sudeste e Sul, e em eleitores com renda familiar de até 2 salários mínimos.
+                                O custo de oportunidade da locomoção, a sensação de desamparo econômico e a aversão ao
+                                clima de polarização foram os maiores indutores da taxa.
+                            </p>
+                        </div>
+
+                        <!-- Bloco de Ação / Diretriz Prática -->
+                        <div class="report-action-box alert-box">
+                            <div class="flex items-start gap-3">
+                                <i class="ph-bold ph-compass text-2xl flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-bold text-base mb-1">Diretriz Estratégica para as Campanhas no 2º
+                                        Turno</h4>
+                                    <p class="text-sm leading-relaxed">
+                                        A decisão da eleição não está na persuasão dos eleitores convictos do
+                                        adversário, mas sim na <strong>repescagem do eleitor abstêmio</strong>.
+                                        Campanhas que investirem em transporte no dia da votação (passe livre integral)
+                                        e que conseguirem diminuir a apatia nas periferias metropolitanas de São Paulo,
+                                        Rio e Minas Gerais têm a chave matemática para vencer.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- SESSÃO 2: LOGÍSTICA ELEITORAL, BIOMETRIA & URNAS -->
+                    <section class="report-section-card">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 text-2xl flex-shrink-0 shadow-sm">
+                                    <i class="ph-bold ph-fingerprint"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span
+                                            class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-blue-100 text-blue-800 uppercase tracking-wider">Logística
+                                            & Integridade</span>
+                                        <span class="text-xs text-gray-400">Relatório 02/03</span>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900">Segurança das Urnas, Biometria e
+                                        Logística de Votação</h3>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-gray-400 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 self-start sm:self-auto">
+                                Tempo de leitura: 3 min
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Cadastro
+                                        Biométrico</span>
+                                    <div class="text-4xl font-extrabold text-blue-700 mt-2 mb-1">17,4 mi</div>
+                                    <p class="text-xs text-gray-500">Eleitores sem biometria coletada</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-blue-700 bg-blue-50/70 p-2 rounded-lg">
+                                    Apenas ~11% do total do eleitorado
+                                </div>
+                            </div>
+
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Regra de
+                                        Acesso à Urna</span>
+                                    <div class="text-4xl font-extrabold text-emerald-600 mt-2 mb-1">Doc. Foto</div>
+                                    <p class="text-xs text-gray-500">RG, CNH, Passaporte ou Trabalho</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-emerald-800 bg-emerald-50/70 p-2 rounded-lg">
+                                    Voto 100% garantido para regulares
+                                </div>
+                            </div>
+
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Substituição
+                                        de Urnas</span>
+                                    <div class="text-4xl font-extrabold text-gray-900 mt-2 mb-1">&lt; 0,3%</div>
+                                    <p class="text-xs text-gray-500">Apenas incidentes técnicos menores</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-gray-700 bg-gray-100 p-2 rounded-lg">
+                                    Zero seção com votação manual de papel
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-5 text-gray-700 leading-relaxed text-base mb-8">
+                            <p>
+                                <strong>Desmistificação da Exigência Biométrica:</strong> Durante a manhã do primeiro
+                                turno, correntes em redes sociais geraram dúvida sobre a obrigatoriedade da
+                                identificação digital. A presidência do TSE esclareceu formalmente: nenhum eleitor
+                                regular deixou de votar por não ter cadastro biométrico. A apresentação de qualquer
+                                documento oficial com fotografia garante plenamente o exercício do voto.
+                            </p>
+                            <p>
+                                <strong>Agilidade Operacional no 2º Turno:</strong> Com a simplificação da cédula
+                                eletrônica (que conterá apenas dois dígitos para Presidente da República), a estimativa
+                                é que o tempo médio em cabine caia de 1 minuto e 12 segundos para meros <strong>18
+                                    segundos por eleitor</strong>, liquidando qualquer fila registrada no 1º turno.
+                            </p>
+                        </div>
+
+                        <div class="report-action-box">
+                            <div class="flex items-start gap-3">
+                                <i class="ph-bold ph-check-circle text-2xl flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-bold text-base mb-1">Orientação Cívica Institucional</h4>
+                                    <p class="text-sm leading-relaxed">
+                                        Recomenda-se aos eleitores que baixem e atualizem o aplicativo
+                                        <strong>e-Título</strong> com antecedência para localizar sua seção eleitoral
+                                        com exatidão. O fechamento das urnas às 17h (horário de Brasília) permitirá que
+                                        a totalização ultrapasse 90% antes das 19h30 no 2º turno.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- SESSÃO 3: PERSPECTIVAS DO 2º TURNO E OS SWING STATES -->
+                    <section class="report-section-card">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-8 border-b border-gray-100">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 text-2xl flex-shrink-0 shadow-sm">
+                                    <i class="ph-bold ph-target"></i>
+                                </div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span
+                                            class="px-2.5 py-0.5 rounded-md text-xs font-bold bg-purple-100 text-purple-800 uppercase tracking-wider">Cenários
+                                            de Coalizão</span>
+                                        <span class="text-xs text-gray-400">Relatório 03/03</span>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-900">Perspectivas para o 2º Turno: A Batalha
+                                        pelo Centro e Swing States</h3>
+                                </div>
+                            </div>
+                            <span
+                                class="text-xs font-medium text-gray-400 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100 self-start sm:self-auto">
+                                Tempo de leitura: 4 min
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Diferença
+                                        Nacional</span>
+                                    <div class="text-4xl font-extrabold text-purple-700 mt-2 mb-1">1,87 p.p.</div>
+                                    <p class="text-xs text-gray-500">2.224.965 votos de distância</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-purple-800 bg-purple-50/70 p-2 rounded-lg">
+                                    Margem aberta mais estreita desde 2014
+                                </div>
+                            </div>
+
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Minas Gerais
+                                        (Termômetro)</span>
+                                    <div class="text-4xl font-extrabold text-blue-700 mt-2 mb-1">48,7% x 42,6%</div>
+                                    <p class="text-xs text-gray-500">Flávio lidera por 6,09 p.p.</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-blue-800 bg-blue-50/70 p-2 rounded-lg">
+                                    Campo de batalha decisivo para a vitória
+                                </div>
+                            </div>
+
+                            <div class="report-kpi-card">
+                                <div>
+                                    <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Vantagem em
+                                        São Paulo</span>
+                                    <div class="text-4xl font-extrabold text-blue-700 mt-2 mb-1">+13,84 p.p.</div>
+                                    <p class="text-xs text-gray-500">Flávio 51,98% x Lula 38,14%</p>
+                                </div>
+                                <div
+                                    class="mt-4 pt-3 border-t border-gray-200/60 text-xs font-semibold text-blue-800 bg-blue-50/70 p-2 rounded-lg">
+                                    PL construiu colchão de 4,7 mi votos em SP
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-5 text-gray-700 leading-relaxed text-base mb-8">
+                            <p>
+                                <strong>A Geografia da Decisão:</strong> O mapa do 1º turno consolidou blocos
+                                continentais homogêneos: Flávio venceu em 100% dos estados do Sul, Sudeste e
+                                Centro-Oeste (14 UFs no total), enquanto Lula venceu com margem acachapante em 100% dos
+                                estados do Nordeste (9 UFs) e liderou em estados chave do Norte (PA, AM e AP).
+                            </p>
+                            <p>
+                                <strong>O Fiel da Balança:</strong> Historicamente, nenhum presidente brasileiro venceu
+                                a eleição sem conquistar o estado de Minas Gerais. O resultado de 48,75% a 42,66% em
+                                favor de Flávio em território mineiro impõe ao Partido dos Trabalhadores a necessidade
+                                urgente de virar votos no interior de Minas ou expandir a participação no Nordeste para
+                                compensar a desvantagem no Sudeste.
+                            </p>
+                        </div>
+
+                        <div class="report-action-box strategy-box">
+                            <div class="flex items-start gap-3">
+                                <i class="ph-bold ph-scales text-2xl flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h4 class="font-bold text-base mb-1">Cenário de Coalizão e Apoios Políticos</h4>
+                                    <p class="text-sm leading-relaxed">
+                                        Os votos da terceira via e de candidatos de centro somam cerca de 7,8% do
+                                        eleitorado. As conversas de bastidores com governadores reeleitos ou eleitos no
+                                        1º turno (em especial em estados populosos como São Paulo, Rio de Janeiro, Minas
+                                        Gerais e Paraná) ditarão a distribuição de tempo no horário eleitoral de rádio e
+                                        TV e os acenos à governabilidade no Congresso Nacional.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- TOOLTIP DINÂMICO DO MAPA DO BRASIL -->
+    <div id="map-tooltip">
+        <div class="flex items-center justify-between gap-3 mb-1.5">
+            <span class="text-xs font-bold text-blue-300" id="tt-uf">UF</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded font-bold" id="tt-winner-badge">Vencedor</span>
+        </div>
+        <div class="text-sm font-bold text-white mb-2" id="tt-state-name">Nome do Estado</div>
+        <div class="space-y-1.5 text-xs">
+            <div class="flex justify-between items-center">
+                <span class="text-blue-400 font-medium flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> Flávio (PL):
+                </span>
+                <span class="font-bold text-white" id="tt-flavio">0%</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-red-400 font-medium flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full bg-red-500"></span> Lula (PT):
+                </span>
+                <span class="font-bold text-white" id="tt-lula">0%</span>
+            </div>
+            <div class="pt-1.5 mt-1 border-t border-white/10 flex justify-between text-[11px] text-gray-300">
+                <span>Aptos:</span>
+                <span class="font-semibold text-white" id="tt-eleitores">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DADOS CONSOLIDADOS DO 1º TURNO 2026 (TSE)
+        const eleicoesData = [
+            { "uf": "SP", "nome": "São Paulo", "flavio": 51.98, "lula": 38.14, "eleitores": 34122892, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "RJ", "nome": "Rio de Janeiro", "flavio": 53.26, "lula": 39.19, "eleitores": 12857648, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "MG", "nome": "Minas Gerais", "flavio": 48.75, "lula": 42.66, "eleitores": 16372372, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "ES", "nome": "Espírito Santo", "flavio": 54.77, "lula": 37.77, "eleitores": 2991650, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "BA", "nome": "Bahia", "flavio": 29.19, "lula": 65.34, "eleitores": 11312752, "vencedor": "Lula" },
+            { "uf": "PE", "nome": "Pernambuco", "flavio": 31.5, "lula": 62.94, "eleitores": 7223450, "vencedor": "Lula" },
+            { "uf": "CE", "nome": "Ceará", "flavio": 32.13, "lula": 62.22, "eleitores": 6996545, "vencedor": "Lula" },
+            { "uf": "MA", "nome": "Maranhão", "flavio": 31.67, "lula": 63.14, "eleitores": 5183115, "vencedor": "Lula" },
+            { "uf": "PB", "nome": "Paraíba", "flavio": 33.11, "lula": 61.26, "eleitores": 3248531, "vencedor": "Lula" },
+            { "uf": "RN", "nome": "Rio Grande do Norte", "flavio": 34.76, "lula": 59.73, "eleitores": 2659825, "vencedor": "Lula" },
+            { "uf": "AL", "nome": "Alagoas", "flavio": 39.62, "lula": 55.68, "eleitores": 2442126, "vencedor": "Lula" },
+            { "uf": "PI", "nome": "Piauí", "flavio": 24.39, "lula": 70.61, "eleitores": 2704758, "vencedor": "Lula" },
+            { "uf": "SE", "nome": "Sergipe", "flavio": 30.78, "lula": 62.54, "eleitores": 1740135, "vencedor": "Lula" },
+            { "uf": "PR", "nome": "Paraná", "flavio": 59.93, "lula": 31.17, "eleitores": 8613657, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "SC", "nome": "Santa Catarina", "flavio": 66.67, "lula": 25.02, "eleitores": 5734651, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "RS", "nome": "Rio Grande do Sul", "flavio": 55.66, "lula": 35.7, "eleitores": 8522545, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "AM", "nome": "Amazonas", "flavio": 46.11, "lula": 46.9, "eleitores": 2798611, "vencedor": "Lula" },
+            { "uf": "PA", "nome": "Pará", "flavio": 45.5, "lula": 48.74, "eleitores": 6262397, "vencedor": "Lula" },
+            { "uf": "AC", "nome": "Acre", "flavio": 64.55, "lula": 28.73, "eleitores": 613742, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "RO", "nome": "Rondônia", "flavio": 67.46, "lula": 25.89, "eleitores": 1265893, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "RR", "nome": "Roraima", "flavio": 71.18, "lula": 22.72, "eleitores": 401521, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "AP", "nome": "Amapá", "flavio": 45.6, "lula": 45.79, "eleitores": 576988, "vencedor": "Lula" },
+            { "uf": "TO", "nome": "Tocantins", "flavio": 50.44, "lula": 43.42, "eleitores": 1182023, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "GO", "nome": "Goiás", "flavio": 53.79, "lula": 30.85, "eleitores": 5080590, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "MT", "nome": "Mato Grosso", "flavio": 65.26, "lula": 29.06, "eleitores": 2637801, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "MS", "nome": "Mato Grosso do Sul", "flavio": 58.63, "lula": 34.66, "eleitores": 2024430, "vencedor": "Flávio Bolsonaro" },
+            { "uf": "DF", "nome": "Distrito Federal", "flavio": 51.31, "lula": 38.11, "eleitores": 2258320, "vencedor": "Flávio Bolsonaro" }
+        ];
+
+        // DADOS VETORIAIS DOS 27 ESTADOS (SVG PATHS & CENTRÓIDES)
+        const brazilStatesSvgData = { "AC": { "nome": "Acre", "d": "M37.2,200.8 L50.1,206.8 L81.5,214.0 L103.9,226.1 L132.6,239.3 L126.9,244.1 L122.0,245.5 L118.3,248.8 L117.9,250.2 L115.5,249.3 L113.1,249.7 L110.6,253.7 L106.4,255.9 L104.1,256.3 L103.5,254.3 L94.4,253.3 L90.1,254.0 L87.4,253.2 L82.2,255.3 L79.2,253.4 L78.0,254.3 L78.0,237.7 L79.2,236.9 L78.3,234.0 L79.8,232.1 L78.4,232.3 L69.9,239.8 L56.7,240.2 L57.1,237.4 L55.4,236.7 L55.7,234.8 L54.3,233.1 L49.4,231.9 L42.5,231.9 L45.4,229.1 L46.3,226.0 L43.7,222.0 L41.5,220.7 L41.7,218.7 L38.1,216.9 L36.9,212.3 L34.9,210.7 L36.1,208.9 L32.0,205.8 L32.9,204.5 L32.3,202.8 L33.6,203.3 L35.9,202.2 L34.5,199.5 L37.2,200.8 Z", "cx": 70, "cy": 205 }, "AL": { "nome": "Alagoas", "d": "M558.8,223.7 L562.8,224.6 L562.7,225.8 L555.7,235.5 L547.8,244.1 L546.2,247.3 L545.3,246.0 L543.8,246.1 L543.0,243.9 L539.1,242.2 L538.0,239.9 L527.1,235.1 L521.4,232.0 L520.9,230.8 L524.4,228.2 L527.4,224.1 L528.3,226.0 L531.1,225.7 L534.6,229.5 L536.4,229.5 L538.5,231.5 L539.6,229.9 L543.3,230.9 L545.5,229.1 L548.4,228.5 L547.9,227.6 L550.6,224.9 L554.3,224.0 L555.0,225.0 L558.8,223.7 Z", "cx": 558, "cy": 238 }, "AM": { "nome": "Amazonas", "d": "M123.1,70.7 L123.7,72.8 L125.4,73.2 L126.2,74.9 L126.3,82.8 L129.5,81.9 L136.9,88.6 L140.0,88.6 L142.9,86.1 L146.9,85.1 L148.1,86.8 L146.8,89.1 L147.5,90.1 L149.1,89.3 L150.4,86.1 L152.4,86.3 L153.5,83.0 L154.6,83.6 L157.5,80.8 L158.4,82.0 L163.1,77.8 L163.8,78.1 L163.1,79.6 L164.0,80.1 L164.4,78.6 L167.3,76.5 L167.7,72.1 L168.6,71.4 L173.1,70.8 L173.8,69.6 L176.5,69.2 L177.2,68.1 L180.3,68.7 L181.9,70.9 L186.3,71.9 L184.9,76.9 L187.2,79.1 L189.8,85.5 L188.6,92.1 L189.8,93.9 L190.1,98.0 L193.4,103.9 L191.7,106.5 L191.9,108.4 L190.4,109.5 L189.3,108.9 L188.9,110.0 L195.4,115.0 L197.3,118.9 L200.9,119.5 L203.1,121.5 L201.1,118.9 L202.2,114.3 L201.6,112.5 L203.2,108.6 L206.5,107.2 L206.6,106.3 L210.7,107.1 L213.0,111.4 L214.1,111.9 L219.0,109.5 L217.8,106.5 L222.8,95.6 L238.4,95.6 L238.7,104.1 L240.7,105.4 L241.0,108.8 L244.7,111.7 L244.8,113.8 L246.2,115.4 L248.4,116.6 L250.4,114.9 L251.2,119.0 L258.9,123.6 L262.1,123.5 L263.8,126.2 L267.9,127.8 L267.5,129.8 L268.7,130.5 L270.8,129.4 L272.3,129.9 L276.6,127.8 L271.6,133.4 L272.5,133.9 L247.0,190.5 L244.1,193.7 L244.7,196.7 L247.8,199.8 L248.8,203.0 L247.7,204.4 L247.9,206.7 L245.4,209.8 L246.7,213.9 L244.9,219.0 L244.7,222.0 L246.2,222.2 L245.2,223.0 L201.6,223.3 L199.8,221.7 L198.2,222.4 L197.8,224.1 L196.1,224.4 L195.5,223.3 L194.2,223.3 L193.4,220.4 L191.3,220.6 L190.9,217.5 L189.6,216.8 L188.7,217.4 L186.5,213.3 L184.4,211.8 L173.8,211.6 L171.7,216.6 L169.3,216.7 L169.6,220.2 L168.2,222.1 L166.8,222.2 L166.5,225.6 L157.1,226.1 L156.0,226.7 L155.8,229.7 L153.6,232.2 L152.4,232.2 L151.5,229.8 L148.8,230.6 L149.0,232.7 L146.7,232.0 L144.1,234.4 L141.6,232.0 L135.6,231.9 L135.9,233.2 L134.4,235.1 L130.2,237.6 L103.9,226.1 L81.5,214.0 L50.1,206.8 L34.5,199.5 L36.7,194.6 L43.6,190.9 L44.0,189.6 L42.1,185.9 L42.2,184.3 L46.0,179.0 L47.0,172.1 L48.0,171.3 L50.5,170.5 L54.1,167.0 L57.4,165.8 L60.8,162.9 L64.4,162.3 L64.6,163.2 L65.9,162.0 L68.5,162.1 L69.2,161.1 L73.6,161.1 L75.5,158.2 L77.2,158.5 L77.6,157.5 L78.0,158.4 L82.1,157.7 L82.4,159.8 L83.8,160.8 L85.0,159.4 L85.9,160.6 L87.0,159.9 L94.8,115.2 L94.4,113.4 L91.6,109.8 L92.5,108.3 L91.8,106.4 L85.7,101.9 L85.9,91.4 L89.1,91.2 L90.9,89.8 L91.9,90.4 L93.6,88.9 L95.3,90.6 L98.6,90.1 L97.6,88.9 L98.3,86.9 L96.6,84.3 L90.8,84.1 L90.5,83.4 L88.6,84.0 L88.7,75.0 L92.6,74.0 L94.8,75.0 L111.7,74.9 L110.2,73.5 L111.0,71.6 L112.0,71.3 L114.7,73.5 L117.0,70.5 L119.1,70.8 L122.0,67.6 L122.8,68.2 L123.1,70.7 Z", "cx": 160, "cy": 140 }, "AP": { "nome": "Amapá", "d": "M343.9,42.8 L345.3,44.4 L345.2,51.5 L346.2,56.4 L350.4,69.1 L353.9,68.3 L356.8,73.9 L361.1,75.3 L361.5,82.5 L358.8,89.4 L354.4,90.5 L350.9,96.7 L343.4,100.9 L337.1,110.3 L336.7,114.3 L335.3,115.6 L332.9,115.1 L331.7,116.7 L331.0,115.4 L326.9,114.1 L327.2,111.6 L325.3,111.3 L325.5,107.6 L323.9,107.5 L323.3,103.5 L319.9,101.2 L316.6,93.9 L317.6,89.6 L313.4,86.2 L313.2,81.8 L311.7,82.2 L311.7,80.4 L310.1,80.4 L310.1,79.4 L307.4,79.7 L305.2,77.9 L304.2,78.3 L303.4,76.2 L301.1,74.7 L295.2,74.2 L294.2,70.2 L294.9,68.2 L293.4,65.1 L296.0,64.8 L296.3,66.5 L299.4,68.1 L305.7,67.8 L308.5,65.7 L308.8,66.7 L311.6,67.5 L314.4,66.1 L315.8,67.3 L315.4,68.7 L317.7,68.0 L319.8,68.7 L325.1,63.8 L328.1,54.6 L330.1,52.7 L333.7,45.9 L337.5,42.3 L338.9,36.9 L342.9,40.2 L343.9,42.8 Z", "cx": 350, "cy": 60 }, "BA": { "nome": "Bahia", "d": "M506.5,220.0 L507.3,222.0 L513.2,223.2 L515.0,225.8 L516.6,223.6 L517.7,224.2 L517.6,226.2 L520.1,226.5 L519.8,228.1 L521.4,232.0 L524.2,233.2 L524.2,239.1 L526.5,240.2 L527.8,244.9 L526.1,246.2 L526.7,250.0 L524.2,251.0 L521.3,250.2 L521.0,253.1 L524.5,257.1 L524.5,259.9 L526.7,261.6 L530.8,262.0 L533.2,260.6 L523.5,277.4 L519.4,281.8 L517.5,282.7 L515.7,281.5 L511.0,286.5 L512.0,291.6 L510.5,293.0 L511.5,295.8 L509.6,306.6 L512.4,322.8 L510.2,328.4 L507.6,341.3 L508.6,348.6 L502.7,354.3 L501.3,357.9 L493.8,352.7 L493.2,351.9 L494.4,350.9 L493.7,349.2 L488.3,344.6 L490.1,337.3 L493.0,337.5 L493.3,336.2 L492.1,335.9 L493.0,332.9 L494.6,333.0 L498.8,326.4 L498.0,324.8 L494.5,323.5 L493.7,322.0 L491.7,322.3 L490.5,321.3 L489.1,322.0 L485.7,319.8 L484.8,320.5 L483.7,319.9 L481.2,321.6 L478.6,321.2 L478.3,317.8 L472.2,312.1 L468.2,313.3 L467.1,311.9 L465.8,312.5 L463.4,311.6 L456.6,306.6 L453.4,305.8 L448.5,308.1 L443.7,305.8 L445.1,301.4 L439.2,299.9 L434.4,301.4 L427.3,307.2 L425.6,307.1 L422.2,310.1 L420.7,309.9 L418.6,312.3 L415.4,312.7 L413.7,314.4 L413.1,313.4 L415.2,310.2 L414.0,308.3 L415.1,304.2 L414.5,302.5 L416.0,301.6 L411.1,298.0 L411.9,296.8 L411.1,295.8 L411.2,292.2 L412.5,290.8 L411.5,290.5 L411.4,288.6 L414.2,286.5 L411.1,287.4 L410.4,286.8 L410.3,283.9 L413.2,281.4 L410.6,281.8 L410.9,276.7 L412.6,275.2 L411.3,275.4 L409.9,273.2 L409.3,269.0 L412.4,267.0 L409.6,266.6 L410.4,263.2 L413.6,263.3 L408.2,261.6 L406.3,258.4 L410.9,253.0 L411.9,249.4 L417.1,246.4 L418.9,243.9 L418.5,242.4 L420.2,241.8 L423.0,246.5 L422.5,249.0 L425.0,251.8 L429.4,253.3 L434.2,249.1 L435.2,249.4 L437.5,248.0 L440.3,249.2 L441.7,246.1 L443.2,246.2 L445.3,241.4 L446.7,240.3 L446.1,239.0 L446.8,238.0 L445.0,236.9 L444.2,233.9 L449.1,229.9 L452.0,232.1 L456.2,231.9 L456.5,233.4 L459.0,234.8 L459.6,233.6 L462.7,233.1 L466.1,230.2 L471.7,229.5 L473.2,226.3 L475.7,225.6 L477.9,222.0 L481.6,222.0 L482.8,223.9 L484.2,223.8 L485.8,227.5 L487.7,228.4 L486.2,232.5 L488.3,232.9 L492.2,231.1 L493.4,227.0 L495.1,227.7 L497.4,226.8 L498.5,225.2 L498.3,223.8 L501.3,223.1 L501.0,221.4 L504.9,219.6 L506.5,220.0 Z", "cx": 465, "cy": 275 }, "CE": { "nome": "Ceará", "d": "M496.6,139.3 L507.0,144.7 L515.0,151.1 L517.7,151.5 L524.0,159.1 L527.3,161.3 L529.7,164.5 L533.4,165.5 L534.4,167.4 L529.1,168.7 L525.5,176.8 L523.0,179.2 L523.5,180.0 L521.9,183.1 L520.0,185.1 L518.0,185.1 L516.3,187.8 L515.9,189.3 L517.1,189.6 L515.0,193.7 L515.8,194.9 L513.7,196.7 L513.7,197.9 L515.0,198.6 L514.8,200.6 L516.9,202.1 L515.2,205.9 L511.3,208.6 L511.0,209.9 L509.2,210.0 L508.6,208.1 L506.3,207.3 L506.1,205.6 L501.4,202.3 L493.4,204.1 L492.4,203.2 L489.3,203.5 L491.7,195.2 L486.8,193.1 L484.4,184.4 L484.2,172.3 L481.3,170.4 L479.7,167.9 L480.8,165.1 L479.8,163.7 L481.9,158.1 L481.6,156.2 L479.7,156.2 L480.1,154.8 L479.0,153.2 L479.9,151.6 L478.5,151.2 L478.1,149.6 L479.0,148.5 L477.3,146.8 L479.6,142.8 L478.7,140.5 L490.0,138.5 L496.6,139.3 Z", "cx": 510, "cy": 160 }, "ES": { "nome": "Espírito Santo", "d": "M486.9,393.1 L483.7,399.6 L481.9,398.4 L479.3,398.7 L473.3,397.0 L473.4,393.5 L471.1,391.9 L472.2,387.9 L471.4,386.4 L472.8,384.1 L477.9,383.8 L478.9,380.5 L480.6,379.6 L480.8,376.6 L482.6,375.1 L482.5,374.0 L483.8,373.8 L484.4,371.4 L483.9,369.1 L482.2,367.8 L482.9,366.7 L479.8,365.0 L480.0,364.2 L484.3,364.5 L483.9,362.7 L482.4,361.9 L482.8,359.4 L480.6,359.2 L481.0,357.3 L482.4,355.3 L484.6,354.5 L486.3,355.2 L484.7,352.6 L487.2,353.3 L489.6,351.5 L493.8,352.7 L501.4,357.7 L500.2,364.9 L501.1,371.4 L499.4,376.2 L497.0,377.5 L494.9,380.5 L494.1,384.2 L492.8,385.2 L491.0,390.1 L488.2,393.0 L488.0,392.3 L486.9,393.1 Z", "cx": 500, "cy": 395 }, "GO": { "nome": "Goiás", "d": "M357.9,274.2 L355.9,278.0 L356.0,280.3 L361.2,282.0 L368.7,286.4 L369.1,283.5 L372.1,279.6 L374.1,281.9 L375.8,279.8 L379.2,283.4 L379.4,287.0 L380.4,284.3 L381.4,286.6 L385.0,284.6 L385.1,286.8 L386.5,285.8 L387.9,287.0 L389.8,286.9 L391.8,289.1 L392.4,284.0 L395.2,286.6 L401.4,284.4 L404.5,282.1 L408.5,282.1 L409.0,280.0 L409.8,282.4 L413.2,281.4 L410.3,283.9 L410.9,287.4 L414.2,286.5 L411.4,288.6 L411.5,290.5 L412.5,290.8 L411.2,292.2 L411.1,295.8 L411.9,296.8 L411.1,298.0 L416.0,301.6 L414.5,302.5 L414.6,307.8 L413.5,309.8 L410.8,309.7 L410.3,308.1 L407.9,306.5 L407.0,307.7 L407.9,311.4 L406.2,312.0 L403.0,310.9 L402.1,311.5 L401.9,313.9 L403.3,315.3 L401.8,318.5 L403.1,319.5 L403.6,323.2 L399.1,323.8 L396.7,325.3 L395.9,323.1 L396.8,319.1 L395.4,317.8 L384.7,317.8 L383.6,325.5 L396.9,325.7 L394.8,331.9 L397.7,334.2 L399.3,338.6 L396.3,341.2 L395.0,343.8 L394.1,343.6 L393.7,345.3 L397.4,347.5 L396.0,350.6 L397.2,353.8 L388.0,360.0 L383.8,357.7 L383.1,358.4 L379.7,357.6 L376.2,358.3 L374.6,357.3 L372.7,358.9 L370.9,358.8 L368.5,362.0 L366.4,360.0 L363.0,362.0 L359.8,361.4 L359.0,362.5 L355.8,362.8 L353.1,366.2 L352.7,368.5 L350.8,369.1 L348.9,371.2 L348.5,374.1 L345.2,371.4 L337.4,369.0 L330.2,364.9 L328.1,364.7 L326.6,362.7 L320.2,362.0 L319.5,360.6 L322.3,357.9 L317.6,357.4 L317.1,354.1 L318.1,352.8 L315.8,349.0 L315.6,346.4 L316.0,343.1 L318.3,339.9 L318.9,336.9 L321.9,335.2 L322.6,333.1 L324.1,332.3 L323.4,329.1 L325.2,328.5 L325.5,326.8 L328.2,325.8 L329.2,323.3 L334.3,322.3 L336.8,317.5 L337.5,313.2 L339.0,311.7 L341.8,310.3 L343.1,311.2 L345.2,309.5 L346.9,304.0 L346.7,300.7 L347.5,298.2 L348.6,297.9 L348.1,292.8 L351.7,286.9 L351.7,283.4 L352.9,282.2 L353.5,278.4 L357.9,274.2 Z", "cx": 380, "cy": 330 }, "MA": { "nome": "Maranhão", "d": "M400.6,225.9 L402.3,224.0 L402.2,220.4 L403.7,217.7 L407.3,216.5 L408.4,213.0 L406.5,210.6 L400.5,212.8 L394.2,204.1 L393.0,204.1 L394.4,203.1 L394.2,202.1 L392.2,202.2 L390.9,200.8 L393.8,197.6 L395.9,187.7 L394.2,177.2 L389.5,175.1 L389.0,173.4 L385.0,173.4 L382.4,172.1 L380.0,172.6 L379.1,174.5 L377.1,174.7 L390.3,163.9 L392.7,163.5 L396.0,159.1 L396.7,156.3 L399.9,153.6 L400.6,149.5 L405.5,142.9 L405.5,139.9 L406.9,139.3 L405.7,137.3 L409.1,134.9 L408.8,130.8 L410.9,129.6 L411.9,125.1 L410.3,124.2 L412.7,122.9 L412.3,120.1 L413.3,118.1 L412.7,116.5 L415.2,114.0 L415.5,116.7 L416.9,114.0 L416.0,115.9 L416.6,115.5 L416.7,117.4 L417.3,115.7 L416.9,117.4 L417.6,117.3 L418.4,115.3 L419.1,115.3 L418.2,116.7 L419.2,118.2 L418.6,119.1 L420.5,117.0 L420.4,117.7 L421.2,117.1 L420.9,118.3 L421.6,117.5 L421.3,119.2 L422.8,117.5 L421.7,119.5 L422.4,121.0 L422.3,119.7 L422.7,119.2 L422.9,120.2 L424.1,117.9 L424.4,119.3 L423.1,120.2 L423.3,121.1 L424.4,120.3 L423.6,123.8 L424.2,121.8 L425.0,122.1 L426.4,119.9 L426.7,120.8 L427.0,118.5 L427.4,120.7 L429.2,120.7 L430.9,119.3 L429.8,122.0 L430.9,121.5 L431.2,122.7 L432.6,121.2 L432.3,122.0 L432.8,121.3 L433.3,122.2 L431.4,122.8 L431.3,123.9 L432.6,123.8 L431.0,124.9 L434.0,123.9 L433.4,125.5 L434.3,124.6 L434.2,125.5 L434.9,125.2 L433.9,126.0 L435.4,126.7 L435.3,129.5 L436.7,130.5 L437.2,132.2 L436.5,133.3 L437.6,134.5 L441.8,133.1 L440.7,134.0 L442.7,134.3 L442.4,135.5 L444.1,133.0 L445.6,132.7 L447.4,130.6 L449.1,132.7 L450.6,132.1 L453.2,132.7 L462.9,137.5 L466.3,136.9 L468.8,137.2 L469.1,138.2 L471.9,137.6 L471.3,139.8 L472.2,141.1 L470.3,144.2 L467.9,145.3 L466.7,147.7 L462.6,147.9 L460.2,151.1 L459.5,154.4 L455.9,159.0 L456.3,161.0 L457.8,162.4 L456.5,166.8 L458.5,172.3 L458.2,174.6 L454.4,178.7 L454.8,184.6 L458.1,188.6 L456.9,193.3 L455.8,194.5 L450.0,195.7 L446.0,193.7 L441.6,194.6 L437.9,199.6 L434.4,201.2 L432.7,203.5 L430.9,203.0 L429.5,204.6 L422.2,207.4 L418.0,220.6 L414.8,225.1 L416.2,231.0 L417.7,232.9 L415.5,243.9 L414.4,242.7 L409.7,242.6 L408.0,237.8 L405.9,236.4 L407.4,234.0 L407.1,233.0 L405.6,231.7 L404.3,231.9 L402.1,227.1 L400.1,227.0 L400.6,225.9 Z M428.8,118.2 L428.9,117.3 L430.6,118.1 L428.7,119.1 L428.0,118.1 L428.8,118.2 Z M419.2,117.6 L420.0,115.0 L419.8,118.3 L418.9,118.5 L419.2,117.6 Z M431.1,120.8 L431.7,120.2 L431.1,120.8 Z M431.5,120.8 L431.8,119.8 L431.5,120.8 Z M419.1,116.1 L419.1,117.1 L419.1,116.1 Z M421.0,116.1 L420.3,116.8 L421.0,116.1 Z M427.2,119.3 L427.5,118.6 L427.2,119.3 Z M427.9,118.9 L427.8,118.2 L427.9,118.9 Z", "cx": 415, "cy": 145 }, "MG": { "nome": "Minas Gerais", "d": "M439.2,300.1 L445.1,301.4 L443.7,305.8 L448.5,308.1 L453.4,305.8 L456.6,306.6 L463.4,311.6 L465.8,312.5 L467.1,311.9 L468.2,313.3 L472.2,312.1 L478.3,317.8 L478.6,321.2 L481.2,321.6 L483.7,319.9 L484.8,320.5 L485.7,319.8 L486.3,320.8 L487.1,320.1 L489.1,322.0 L490.5,321.3 L491.7,322.3 L493.7,322.0 L494.5,323.5 L498.0,324.8 L498.8,326.4 L494.6,333.0 L493.0,332.9 L492.1,335.9 L493.3,336.2 L493.0,337.5 L490.2,337.2 L489.0,339.8 L489.3,342.9 L488.3,344.6 L493.7,349.2 L494.4,350.9 L493.2,351.9 L493.8,352.7 L489.6,351.5 L487.2,353.3 L484.7,352.6 L486.3,355.2 L484.6,354.5 L482.4,355.3 L481.0,357.3 L480.6,359.2 L482.8,359.4 L482.4,361.9 L483.9,362.7 L484.3,364.5 L480.0,364.2 L479.8,365.0 L482.9,366.7 L482.2,367.4 L484.1,369.8 L483.9,373.6 L482.5,374.0 L482.6,375.1 L480.8,376.6 L480.6,379.6 L478.9,380.5 L477.9,383.8 L472.8,384.1 L471.5,385.8 L472.1,390.3 L469.8,394.4 L467.4,394.9 L468.4,395.8 L466.6,397.8 L466.0,402.2 L464.4,404.0 L465.7,405.4 L454.8,410.7 L452.4,409.5 L448.1,410.6 L445.3,410.3 L438.9,413.1 L435.9,413.0 L433.1,414.7 L427.2,416.2 L423.0,418.6 L422.0,417.7 L419.3,418.5 L419.4,417.5 L418.6,417.5 L418.9,418.6 L417.2,419.6 L418.5,419.6 L418.7,420.9 L417.6,421.5 L416.3,421.7 L416.0,420.9 L412.9,422.4 L412.8,421.5 L410.0,422.1 L410.2,420.1 L408.2,419.2 L409.4,418.7 L409.2,417.0 L405.6,415.2 L404.9,413.7 L406.5,411.3 L404.9,410.5 L406.4,409.5 L405.3,407.1 L407.7,403.9 L407.8,401.9 L405.6,400.4 L400.9,401.2 L399.1,395.0 L397.8,393.7 L399.7,390.3 L399.0,388.5 L397.1,387.5 L397.6,383.5 L394.7,380.7 L392.4,381.9 L391.4,380.9 L389.3,381.1 L388.8,382.9 L387.7,381.7 L385.9,383.2 L384.1,381.6 L384.0,383.2 L376.1,383.5 L375.1,387.4 L374.1,386.7 L373.8,383.5 L372.8,383.4 L370.7,385.5 L369.5,382.6 L370.3,380.8 L367.7,380.9 L366.2,379.9 L361.5,380.4 L355.2,379.3 L353.6,378.1 L346.4,382.4 L345.7,377.4 L347.4,375.2 L346.9,373.9 L348.7,374.0 L348.1,373.0 L348.9,371.2 L350.8,369.1 L352.7,368.5 L353.1,366.2 L355.8,362.8 L359.0,362.5 L359.8,361.4 L363.0,362.0 L366.4,360.0 L368.5,362.0 L370.9,358.8 L372.7,358.9 L374.6,357.3 L376.2,358.3 L379.7,357.6 L383.1,358.4 L383.8,357.7 L388.0,360.0 L397.2,353.8 L396.0,350.6 L397.4,347.5 L396.6,346.3 L394.3,346.3 L393.7,344.4 L399.3,338.6 L397.7,334.2 L394.8,331.9 L396.7,328.1 L397.0,325.0 L399.1,323.8 L403.6,323.2 L403.1,319.5 L401.8,318.5 L403.3,315.3 L401.9,313.9 L402.2,311.4 L407.9,311.4 L407.0,307.7 L408.3,306.6 L410.3,308.1 L410.8,309.7 L414.7,309.3 L415.1,311.3 L413.1,313.4 L414.0,314.4 L415.4,312.7 L418.6,312.3 L420.7,309.9 L422.2,310.1 L425.6,307.1 L427.3,307.2 L434.4,301.4 L439.2,300.1 Z", "cx": 430, "cy": 370 }, "MS": { "nome": "Mato Grosso do Sul", "d": "M307.1,351.9 L309.6,353.2 L318.0,353.5 L317.1,354.1 L318.1,357.8 L319.7,357.2 L322.3,357.9 L319.5,360.6 L320.2,362.0 L325.4,362.3 L332.5,366.8 L345.6,371.7 L347.4,375.0 L345.7,377.4 L346.3,382.5 L345.4,384.7 L341.7,386.2 L338.3,390.1 L337.9,394.3 L334.4,397.2 L334.5,400.2 L333.1,402.4 L331.6,402.5 L331.6,405.4 L327.1,411.4 L310.7,422.8 L309.0,427.9 L305.6,430.0 L303.6,437.3 L301.4,438.6 L299.4,436.2 L296.2,434.9 L292.5,437.1 L286.9,437.5 L285.8,436.7 L285.7,433.6 L284.3,432.3 L284.5,426.2 L283.5,425.6 L282.6,421.4 L283.2,418.6 L280.0,413.4 L275.1,413.3 L272.6,410.4 L271.1,410.7 L269.3,413.1 L268.4,412.5 L266.5,413.6 L264.4,412.5 L259.2,412.6 L256.4,411.9 L255.9,410.7 L253.3,411.5 L250.7,410.7 L251.8,407.7 L251.0,407.2 L251.4,405.7 L252.2,405.0 L251.1,402.7 L252.6,400.1 L251.7,399.2 L252.7,398.4 L253.1,394.5 L251.6,393.8 L252.6,392.8 L251.2,392.3 L252.5,391.6 L251.7,390.5 L250.8,391.1 L250.7,387.3 L248.3,383.6 L252.6,380.8 L248.8,377.8 L253.6,367.6 L254.8,367.2 L253.8,365.7 L256.7,356.4 L258.1,356.2 L256.5,354.9 L253.4,346.8 L254.6,346.6 L255.0,349.0 L258.1,351.6 L263.7,349.2 L268.0,343.3 L271.9,343.6 L276.4,341.3 L282.9,343.7 L284.5,345.7 L289.9,348.1 L293.6,347.7 L297.4,345.5 L301.2,348.2 L304.3,347.6 L304.8,345.8 L309.3,342.1 L309.4,348.2 L306.9,349.5 L305.9,351.3 L307.1,351.9 Z", "cx": 290, "cy": 395 }, "MT": { "nome": "Mato Grosso", "d": "M218.3,286.7 L219.4,283.7 L222.1,281.1 L222.3,277.1 L226.4,273.2 L224.8,271.9 L223.5,267.2 L221.8,266.2 L221.7,262.7 L224.4,259.9 L223.6,256.1 L219.2,255.1 L218.5,255.9 L217.0,254.2 L202.1,254.1 L203.1,251.5 L203.3,246.1 L201.4,242.4 L202.7,238.3 L201.7,236.3 L203.1,235.0 L201.0,229.9 L202.4,229.6 L202.0,227.4 L203.2,225.0 L201.6,223.3 L244.9,223.2 L246.2,222.2 L244.7,222.0 L246.7,213.9 L245.4,209.8 L247.9,206.7 L247.7,204.4 L248.7,202.9 L251.0,205.5 L253.0,211.7 L255.5,215.1 L254.9,217.9 L256.2,222.7 L261.7,225.1 L263.8,227.5 L263.5,228.7 L266.8,229.6 L267.6,231.8 L357.0,238.0 L351.8,249.5 L351.7,255.3 L349.9,260.5 L349.9,261.9 L351.1,262.8 L350.2,264.8 L351.3,266.8 L350.7,271.3 L351.6,274.5 L350.4,277.0 L351.5,280.0 L353.2,280.9 L351.7,283.4 L351.7,286.9 L348.1,292.8 L348.6,297.9 L347.5,298.2 L346.7,300.7 L346.9,304.0 L345.2,309.5 L343.1,311.2 L341.8,310.3 L339.0,311.7 L337.5,313.2 L336.8,317.5 L334.3,322.3 L329.2,323.3 L328.2,325.8 L325.5,326.8 L325.2,328.5 L323.4,329.1 L323.3,330.4 L324.4,331.4 L324.0,332.6 L322.6,333.1 L321.9,335.2 L318.9,336.9 L318.3,339.9 L316.0,343.1 L315.6,348.6 L318.0,353.5 L309.6,353.2 L306.0,351.9 L307.3,348.8 L309.4,348.2 L309.3,342.1 L304.8,345.8 L304.2,347.6 L300.8,348.2 L298.8,345.8 L297.4,345.5 L293.6,347.7 L289.9,348.1 L284.5,345.7 L282.9,343.7 L276.4,341.3 L271.9,343.6 L268.0,343.3 L263.7,349.2 L258.1,351.6 L255.0,349.0 L254.4,346.4 L252.2,345.2 L250.0,345.8 L245.2,341.5 L244.2,334.7 L246.1,331.7 L246.2,328.5 L244.8,329.3 L220.9,328.5 L220.0,317.4 L215.6,312.2 L219.9,312.1 L219.6,305.4 L216.6,299.3 L218.1,296.4 L216.6,294.6 L216.9,293.7 L213.5,292.1 L218.0,288.9 L218.3,286.7 Z", "cx": 275, "cy": 275 }, "PA": { "nome": "Pará", "d": "M401.7,109.6 L401.7,111.4 L403.2,109.6 L403.1,111.5 L403.6,111.0 L404.0,112.0 L404.3,110.8 L404.5,112.3 L406.0,110.4 L405.5,113.0 L406.8,113.0 L407.2,112.0 L407.4,113.1 L408.9,111.4 L407.9,113.0 L408.9,114.3 L409.4,113.2 L410.6,114.6 L411.1,112.2 L412.2,111.9 L411.0,115.8 L412.4,113.3 L412.4,115.6 L413.8,113.6 L412.5,117.3 L413.3,118.1 L412.3,120.1 L412.7,122.9 L410.3,124.2 L411.9,125.1 L410.9,129.6 L408.8,130.8 L409.1,134.9 L405.7,137.3 L406.9,139.3 L405.5,139.9 L405.5,142.9 L400.6,149.5 L399.9,153.6 L396.7,156.3 L396.0,159.1 L393.1,163.0 L391.8,164.2 L390.3,163.9 L377.1,174.7 L379.3,175.7 L382.1,175.3 L385.5,178.2 L385.0,179.8 L383.4,180.4 L384.2,183.1 L382.8,183.9 L383.4,185.3 L381.5,186.3 L382.2,189.2 L380.6,188.8 L379.0,190.2 L378.3,193.2 L370.9,196.9 L371.2,201.3 L368.5,205.6 L369.3,207.6 L371.7,209.3 L370.8,214.8 L365.6,223.9 L363.5,224.8 L359.5,230.2 L357.0,238.0 L267.7,231.9 L266.8,229.6 L263.5,228.7 L263.8,227.5 L261.7,225.1 L256.2,222.7 L254.9,217.9 L255.5,215.1 L253.0,211.7 L252.0,207.5 L248.3,202.4 L247.8,199.8 L244.7,196.7 L244.1,193.7 L247.0,190.5 L272.5,133.9 L271.6,133.4 L276.6,127.8 L272.3,129.9 L270.8,129.4 L268.7,130.5 L267.5,129.8 L267.9,127.8 L263.8,126.2 L262.1,123.5 L258.9,123.6 L251.2,119.0 L250.4,114.9 L248.4,116.6 L244.8,113.8 L244.7,111.7 L241.0,108.8 L240.7,105.5 L238.7,104.1 L238.4,82.0 L239.4,82.8 L241.0,81.0 L243.8,81.4 L243.7,78.7 L245.4,78.6 L246.2,76.8 L250.6,78.1 L250.8,75.9 L253.7,74.9 L257.0,75.3 L260.1,71.1 L261.2,72.0 L263.1,70.7 L264.1,72.3 L267.2,73.2 L268.1,72.1 L271.8,71.7 L278.6,73.3 L279.3,70.5 L276.1,67.3 L276.8,65.8 L277.7,66.3 L278.3,63.7 L281.8,65.4 L286.4,65.2 L287.3,63.8 L292.3,62.9 L294.9,68.2 L294.2,70.2 L295.2,74.2 L301.1,74.7 L303.4,76.2 L304.2,78.3 L305.2,77.9 L307.4,79.7 L310.1,79.4 L310.1,80.4 L311.7,80.4 L311.7,82.2 L313.2,81.8 L313.4,86.2 L317.6,89.6 L316.6,93.9 L319.9,101.2 L323.3,103.5 L323.9,107.5 L325.5,107.6 L325.3,111.3 L327.2,111.6 L326.9,114.1 L331.0,115.4 L331.3,116.6 L332.9,115.1 L335.3,115.6 L336.7,114.3 L337.1,110.3 L343.4,100.9 L350.9,96.7 L354.1,90.8 L357.9,89.3 L358.8,89.4 L359.5,91.2 L359.2,94.5 L364.5,94.1 L368.3,99.1 L374.7,102.5 L381.8,102.9 L382.1,104.4 L380.9,106.3 L387.5,109.2 L388.8,107.1 L389.6,108.9 L389.9,107.2 L390.6,108.3 L391.4,106.8 L392.5,109.2 L393.7,107.8 L394.4,110.1 L395.0,107.6 L395.3,108.5 L396.7,107.7 L398.2,108.3 L397.7,109.2 L398.9,108.7 L398.7,110.2 L399.9,108.6 L400.3,110.6 L400.5,109.6 L401.7,109.6 Z M409.3,112.7 L408.8,113.2 L409.3,112.7 Z", "cx": 335, "cy": 140 }, "PB": { "nome": "Paraíba", "d": "M534.7,184.3 L535.7,186.0 L532.7,188.7 L531.2,193.9 L534.0,193.6 L534.6,195.5 L537.8,193.9 L538.4,195.0 L540.1,194.2 L541.5,195.6 L541.7,197.7 L544.6,195.3 L544.3,192.3 L545.6,192.7 L544.3,190.2 L546.1,188.0 L547.7,188.2 L548.1,190.0 L550.4,189.6 L551.8,190.7 L556.2,190.1 L562.9,191.7 L565.6,190.7 L568.0,200.1 L567.6,205.7 L565.7,205.5 L564.1,203.5 L558.6,204.2 L557.9,207.2 L551.5,209.4 L548.6,208.7 L547.9,209.7 L545.7,209.4 L545.4,210.9 L543.2,211.3 L542.9,213.6 L538.0,216.3 L535.6,214.4 L535.2,211.5 L533.0,211.7 L535.8,208.9 L535.5,206.1 L538.1,204.7 L537.5,203.4 L534.7,201.8 L531.0,203.1 L527.7,207.2 L526.1,207.2 L523.1,209.7 L521.9,208.9 L520.2,209.6 L519.3,207.5 L516.0,208.6 L514.3,206.5 L516.9,202.1 L514.8,200.6 L515.0,198.6 L513.7,197.9 L513.7,196.7 L515.8,194.9 L515.0,193.7 L517.1,189.6 L515.9,189.3 L517.9,188.5 L517.5,189.5 L522.6,191.2 L527.5,187.9 L527.6,186.6 L534.7,184.3 Z", "cx": 552, "cy": 198 }, "PE": { "nome": "Pernambuco", "d": "M535.4,202.3 L538.1,204.7 L535.5,206.1 L535.8,208.9 L533.0,211.7 L535.2,211.5 L535.6,214.4 L538.0,216.3 L542.9,213.6 L543.2,211.3 L545.4,210.9 L545.7,209.4 L547.9,209.7 L548.6,208.7 L551.5,209.4 L557.9,207.2 L558.6,204.2 L564.1,203.5 L565.7,205.5 L567.4,205.6 L567.4,212.1 L563.1,224.9 L558.8,223.5 L555.0,225.0 L554.4,224.0 L552.9,224.1 L549.8,225.5 L550.0,226.4 L547.9,227.6 L548.4,228.5 L545.5,229.1 L543.3,230.9 L539.6,229.9 L538.5,231.5 L536.4,229.5 L534.6,229.5 L531.1,225.7 L528.3,226.0 L527.4,224.1 L524.4,228.2 L520.9,230.8 L520.1,226.5 L517.6,226.2 L517.6,224.0 L516.4,223.8 L515.4,226.0 L513.2,223.2 L507.4,222.1 L506.6,220.0 L505.2,219.6 L501.0,221.4 L501.0,223.3 L498.3,223.8 L498.5,225.2 L497.4,226.8 L495.1,227.7 L493.4,227.0 L492.2,231.1 L488.3,232.9 L486.2,232.5 L487.7,228.4 L485.6,227.3 L484.2,223.8 L482.8,223.9 L481.6,222.0 L478.2,222.0 L483.1,217.7 L484.1,218.3 L484.6,217.1 L485.4,217.4 L486.1,215.6 L488.7,214.0 L489.4,209.7 L487.6,208.7 L488.0,206.5 L487.1,204.6 L489.3,203.5 L492.4,203.2 L493.4,204.1 L501.4,202.3 L506.1,205.6 L506.3,207.3 L508.6,208.1 L509.2,210.0 L511.0,209.9 L511.3,208.6 L514.4,206.7 L516.0,208.6 L519.3,207.5 L520.2,209.6 L521.9,208.9 L523.1,209.7 L526.1,207.2 L527.7,207.2 L531.0,203.1 L534.1,201.8 L535.4,202.3 Z M600.7,153.4 L599.8,153.9 L600.7,153.4 Z", "cx": 535, "cy": 218 }, "PI": { "nome": "Piauí", "d": "M473.0,138.8 L475.0,140.2 L478.7,140.5 L479.6,141.6 L477.3,146.8 L479.0,148.5 L478.1,149.6 L478.5,151.2 L479.9,151.6 L479.0,153.2 L480.1,154.8 L479.7,156.2 L481.6,156.2 L481.9,158.1 L479.8,163.7 L480.8,165.1 L479.7,167.9 L481.3,170.4 L484.2,172.3 L484.4,184.4 L486.8,193.1 L491.7,195.2 L489.3,203.5 L487.1,204.6 L488.0,206.5 L487.6,208.7 L489.4,209.7 L488.7,214.0 L484.1,218.3 L483.1,217.7 L480.2,221.1 L477.9,222.0 L475.7,225.6 L473.2,226.3 L471.7,229.5 L466.1,230.2 L462.7,233.1 L459.6,233.6 L459.0,234.8 L456.5,233.4 L456.2,231.9 L452.0,232.1 L449.1,229.9 L444.2,233.9 L445.0,236.9 L446.8,238.0 L446.1,239.0 L446.7,240.3 L445.3,241.4 L443.2,246.2 L441.7,246.1 L440.3,249.2 L437.5,248.0 L435.2,249.4 L434.2,249.1 L429.4,253.3 L425.0,251.8 L422.5,249.0 L423.0,246.5 L420.5,241.9 L418.5,242.4 L417.6,244.0 L415.4,243.3 L416.4,241.8 L417.7,232.9 L416.2,231.0 L414.8,225.1 L418.0,220.6 L421.6,208.5 L423.8,206.1 L429.5,204.6 L430.9,203.0 L432.7,203.5 L434.4,201.2 L437.9,199.6 L441.4,194.7 L446.0,193.7 L450.0,195.7 L455.8,194.5 L456.9,193.3 L458.1,188.6 L454.8,184.6 L454.4,178.7 L458.2,174.6 L458.5,172.3 L456.5,166.8 L457.8,162.4 L456.3,161.0 L455.9,159.0 L459.5,154.4 L460.2,151.1 L462.6,147.9 L466.7,147.7 L467.6,145.5 L469.5,145.0 L471.9,141.9 L471.5,138.4 L473.0,138.8 Z", "cx": 445, "cy": 200 }, "PR": { "nome": "Paraná", "d": "M331.8,416.9 L338.7,419.2 L342.8,418.8 L347.9,420.6 L349.9,422.9 L351.0,422.0 L357.5,422.8 L360.2,422.0 L361.3,424.2 L363.8,425.0 L366.0,429.5 L365.1,430.7 L366.2,433.4 L365.4,435.5 L371.0,442.4 L369.4,445.4 L369.5,447.0 L379.4,447.0 L380.6,448.0 L379.2,451.7 L379.8,452.8 L381.8,451.4 L382.8,452.7 L384.0,451.4 L384.8,454.5 L387.1,454.9 L381.4,460.9 L379.3,465.4 L371.3,465.8 L366.1,469.1 L360.8,465.9 L360.4,466.6 L357.7,466.1 L357.6,466.9 L356.6,466.2 L355.6,467.7 L352.2,465.8 L350.2,469.2 L347.7,469.8 L345.2,469.0 L343.0,470.3 L342.3,471.7 L343.2,474.4 L340.7,475.9 L339.4,474.0 L334.4,474.2 L330.2,472.0 L324.5,471.6 L322.6,470.6 L317.8,471.3 L315.2,469.2 L311.5,469.9 L307.6,465.3 L306.8,460.4 L304.3,459.5 L304.0,460.4 L304.0,458.6 L302.5,459.3 L302.9,459.9 L300.2,460.0 L299.5,461.5 L297.2,460.0 L296.9,458.0 L299.5,453.9 L299.3,450.9 L301.8,442.7 L300.7,439.4 L304.0,436.8 L305.6,430.0 L309.0,427.9 L310.7,422.8 L319.4,417.4 L323.1,418.2 L324.7,417.4 L325.8,418.3 L329.3,418.0 L329.6,418.9 L331.0,416.7 L331.8,416.9 Z", "cx": 340, "cy": 465 }, "RJ": { "nome": "Rio de Janeiro", "d": "M435.1,427.6 L432.2,428.7 L430.1,427.0 L431.1,423.5 L435.3,421.3 L438.4,421.1 L439.9,418.9 L436.8,417.5 L435.2,418.4 L433.4,418.0 L431.3,414.8 L436.2,412.9 L438.9,413.1 L445.3,410.3 L448.1,410.6 L452.4,409.5 L454.8,410.7 L465.7,405.4 L464.4,404.0 L466.0,402.2 L466.6,397.8 L468.4,395.8 L467.4,394.9 L469.8,394.4 L471.2,392.0 L473.4,393.5 L473.3,397.0 L479.3,398.7 L481.9,398.4 L483.7,399.6 L482.1,402.5 L483.0,403.9 L483.3,409.4 L473.7,413.6 L470.0,416.9 L469.7,419.5 L471.3,420.0 L469.0,422.1 L469.3,423.4 L462.4,422.5 L455.1,423.2 L453.9,422.6 L455.4,419.8 L454.6,418.9 L451.8,420.7 L453.6,422.2 L453.3,423.3 L448.2,424.5 L446.0,424.3 L447.8,424.0 L444.3,422.1 L441.5,422.6 L439.5,424.2 L438.7,423.4 L437.2,423.8 L437.6,422.5 L436.5,422.6 L436.2,423.8 L432.7,424.6 L432.4,426.8 L433.3,426.1 L433.1,427.6 L434.4,426.7 L435.1,427.6 Z M450.9,423.4 L451.7,423.6 L450.9,423.4 Z M438.9,424.7 L440.8,425.9 L437.3,426.7 L436.9,425.9 L438.9,424.7 Z M444.5,424.3 L441.9,424.6 L444.5,424.3 Z M453.3,420.4 L453.4,421.1 L452.2,420.8 L453.3,420.4 Z M443.3,422.6 L443.9,422.4 L443.3,422.6 Z", "cx": 465, "cy": 435 }, "RN": { "nome": "Rio Grande do Norte", "d": "M535.8,168.8 L538.4,168.6 L542.1,171.1 L551.9,170.3 L558.5,172.0 L561.6,176.5 L565.6,190.7 L562.9,191.7 L556.2,190.1 L551.8,190.7 L550.4,189.6 L548.1,190.0 L547.7,188.2 L546.1,188.0 L544.3,190.2 L545.6,192.7 L544.3,192.3 L544.6,195.3 L541.7,197.7 L541.5,195.6 L540.1,194.2 L538.4,195.0 L537.8,193.9 L534.6,195.5 L534.0,193.6 L531.2,193.9 L531.2,191.6 L532.4,191.1 L532.9,188.4 L535.6,186.3 L535.5,184.5 L527.6,186.6 L527.5,187.9 L522.6,191.2 L517.5,189.5 L517.9,188.5 L516.3,188.7 L518.0,185.1 L520.4,184.8 L522.5,182.3 L523.5,180.0 L523.0,179.2 L525.5,176.8 L529.1,168.7 L534.4,167.4 L535.8,168.8 Z", "cx": 545, "cy": 175 }, "RO": { "nome": "Rondônia", "d": "M134.9,238.5 L133.3,238.9 L130.2,237.6 L134.4,235.1 L135.9,233.2 L135.6,231.9 L141.6,232.0 L144.1,234.4 L146.7,232.0 L149.0,232.7 L148.8,230.6 L151.5,229.8 L152.4,232.2 L153.6,232.2 L155.8,229.7 L156.0,226.7 L157.1,226.1 L166.6,225.5 L166.6,222.5 L168.2,222.1 L169.6,220.2 L169.3,216.7 L171.7,216.6 L173.8,211.6 L184.1,211.7 L186.5,213.3 L188.7,217.4 L189.6,216.8 L190.9,217.5 L191.3,220.5 L193.4,220.4 L194.2,223.3 L197.2,224.4 L198.2,222.4 L199.8,221.7 L203.2,225.0 L202.0,227.4 L202.4,229.6 L201.0,229.9 L203.1,235.0 L201.7,236.3 L202.7,238.3 L201.4,242.4 L203.3,246.1 L203.1,251.5 L202.1,254.1 L217.0,254.2 L218.5,255.9 L219.2,255.1 L223.5,255.9 L224.4,259.9 L221.7,262.7 L221.8,266.2 L223.5,267.2 L224.8,271.9 L226.4,273.2 L222.3,277.1 L222.2,280.8 L219.4,283.7 L218.0,288.9 L214.6,290.6 L213.6,292.3 L209.4,289.4 L198.1,290.3 L193.6,284.1 L190.6,284.4 L187.0,282.0 L185.3,282.6 L183.7,280.5 L182.1,280.2 L180.1,277.1 L178.2,278.0 L171.5,274.5 L169.2,275.9 L165.4,274.8 L164.6,275.5 L161.7,273.5 L161.6,271.6 L158.8,270.9 L158.9,269.6 L158.2,270.6 L158.1,269.8 L157.1,270.1 L157.1,268.6 L154.5,268.3 L153.7,264.4 L152.4,265.0 L151.3,264.3 L152.0,261.8 L150.7,261.4 L150.9,258.9 L150.0,257.9 L151.5,254.1 L149.0,247.0 L150.9,243.3 L150.3,239.6 L151.0,238.0 L149.8,236.0 L148.8,235.6 L147.3,238.0 L144.3,236.5 L144.0,237.3 L142.3,236.8 L134.9,238.5 Z", "cx": 175, "cy": 240 }, "RR": { "nome": "Roraima", "d": "M224.4,54.9 L223.4,61.4 L224.7,66.0 L227.1,67.2 L226.7,73.0 L227.9,72.9 L227.5,74.5 L229.6,75.0 L233.5,79.7 L238.5,81.5 L238.4,95.6 L222.8,95.6 L217.8,106.5 L219.1,109.3 L216.7,110.1 L216.0,111.6 L213.0,111.4 L210.7,107.1 L208.4,106.3 L206.6,106.3 L206.4,107.2 L203.7,108.2 L202.2,109.9 L201.0,117.6 L203.0,121.6 L200.9,119.5 L197.3,118.9 L195.4,115.0 L188.9,110.0 L189.3,108.9 L190.4,109.5 L191.9,108.4 L191.7,106.5 L193.4,103.9 L190.1,98.0 L189.8,93.9 L188.6,92.1 L188.6,89.5 L189.7,88.2 L189.5,84.0 L188.7,83.9 L187.2,79.1 L184.9,76.9 L186.3,71.9 L181.9,70.9 L180.3,68.7 L177.3,68.3 L176.7,64.9 L172.6,65.7 L167.8,64.1 L168.7,60.2 L165.4,55.4 L165.1,51.2 L166.0,49.1 L164.6,47.1 L161.9,45.8 L157.3,39.5 L159.0,39.4 L160.9,41.5 L166.3,41.1 L169.1,44.8 L170.5,43.6 L172.9,44.2 L172.9,42.7 L175.4,45.1 L176.4,43.2 L179.4,43.6 L179.2,45.2 L180.8,45.8 L182.8,48.4 L184.5,46.6 L185.9,47.3 L185.1,44.4 L185.7,42.4 L188.3,42.6 L188.4,41.4 L189.9,40.3 L193.9,41.8 L196.1,40.4 L196.9,41.4 L199.0,39.4 L202.0,39.3 L202.6,37.2 L205.6,36.4 L205.2,35.4 L209.7,35.6 L211.0,32.8 L213.1,32.2 L215.2,29.8 L213.4,25.7 L217.3,26.2 L220.4,25.0 L223.3,27.6 L223.4,29.0 L222.9,33.0 L221.1,35.7 L226.1,36.3 L227.7,37.6 L227.0,40.3 L228.5,41.0 L228.1,41.9 L229.9,43.7 L227.8,47.1 L225.1,48.9 L225.9,52.0 L224.4,54.9 Z", "cx": 220, "cy": 55 }, "RS": { "nome": "Rio Grande do Sul", "d": "M332.1,544.3 L331.2,544.0 L331.7,545.8 L329.9,546.5 L329.2,548.2 L331.8,550.8 L331.3,552.6 L328.5,555.4 L324.1,566.1 L313.3,575.0 L311.7,573.1 L312.0,572.0 L312.9,572.5 L313.1,566.6 L314.6,565.2 L315.5,565.9 L317.3,561.5 L318.0,562.1 L319.3,560.7 L320.5,562.9 L322.4,562.5 L324.7,557.8 L323.2,554.8 L324.2,552.4 L322.6,552.7 L321.8,554.2 L321.5,555.1 L322.8,555.8 L319.6,557.2 L318.0,559.6 L313.7,558.6 L310.2,555.7 L308.8,551.4 L305.7,549.2 L304.0,549.3 L299.1,545.4 L297.3,542.7 L293.9,542.5 L291.6,540.0 L290.7,540.9 L288.4,539.9 L286.9,536.8 L283.8,533.9 L279.8,537.2 L277.9,537.4 L277.7,533.2 L266.9,523.6 L263.4,523.4 L261.3,526.2 L257.1,526.2 L255.5,524.8 L259.6,522.2 L260.5,519.6 L264.7,517.0 L268.3,513.1 L269.9,509.7 L272.3,509.0 L274.1,505.1 L278.0,502.4 L277.8,501.1 L279.5,500.7 L279.7,499.0 L282.1,500.0 L282.5,498.6 L281.1,497.4 L283.3,495.6 L284.0,496.2 L285.6,495.3 L289.0,491.9 L291.2,491.9 L290.6,490.8 L292.5,490.7 L294.2,487.3 L296.0,488.0 L297.3,486.3 L298.1,487.0 L299.7,485.6 L301.5,486.1 L303.0,483.4 L304.3,484.0 L307.1,481.7 L309.9,482.1 L310.2,483.0 L312.3,482.7 L312.1,481.8 L313.9,481.1 L315.0,481.7 L314.8,482.9 L318.0,482.1 L318.6,481.0 L319.3,483.0 L319.7,482.1 L323.1,483.8 L326.6,482.9 L327.6,484.1 L329.2,483.5 L329.8,484.5 L330.4,483.7 L333.4,485.2 L332.6,485.5 L334.2,487.2 L337.7,486.7 L338.6,488.1 L339.7,487.7 L340.5,489.1 L341.1,488.6 L345.2,491.6 L351.5,499.5 L356.7,500.0 L357.9,501.0 L358.3,500.0 L358.7,500.8 L363.3,500.4 L364.3,502.7 L360.9,504.2 L361.1,507.7 L359.9,509.1 L360.7,509.2 L357.8,511.5 L359.5,513.0 L358.5,511.7 L360.8,510.9 L364.0,512.6 L359.8,518.9 L355.5,529.2 L349.5,537.8 L342.9,544.2 L334.3,549.7 L331.6,552.5 L332.5,549.5 L331.4,548.0 L334.7,548.5 L335.6,547.6 L334.5,547.5 L337.3,547.1 L339.7,544.3 L340.4,545.0 L340.5,543.0 L341.4,543.7 L343.1,542.7 L344.2,540.2 L344.1,537.2 L346.6,536.8 L346.8,534.8 L350.4,532.7 L350.1,527.3 L351.5,527.7 L351.5,526.8 L351.9,527.8 L351.1,528.4 L352.2,528.9 L352.7,526.0 L351.9,524.9 L351.0,525.0 L350.8,526.3 L347.4,526.8 L347.3,528.3 L345.6,527.7 L346.0,526.0 L343.0,524.8 L343.2,522.8 L342.3,522.2 L342.4,526.4 L345.1,527.5 L344.4,528.8 L343.9,527.9 L342.8,528.7 L342.3,532.7 L342.0,531.3 L341.1,531.4 L341.3,534.5 L339.6,535.0 L340.3,537.5 L337.9,538.2 L337.9,540.0 L333.8,540.6 L332.2,546.0 L332.1,544.3 Z M342.3,532.7 L342.4,533.7 L342.3,532.7 Z", "cx": 325, "cy": 550 }, "SC": { "nome": "Santa Catarina", "d": "M309.2,473.7 L310.2,469.3 L312.2,470.0 L315.2,469.2 L317.8,471.3 L322.6,470.6 L324.5,471.6 L330.2,472.0 L334.4,474.2 L339.4,474.0 L340.7,475.9 L343.2,474.4 L342.3,471.7 L343.0,470.3 L345.2,469.0 L347.7,469.8 L350.2,469.2 L352.2,465.8 L355.6,467.7 L356.6,466.2 L357.6,466.9 L357.7,466.1 L360.4,466.6 L360.8,465.9 L366.1,469.1 L371.3,465.8 L378.6,465.1 L379.5,468.1 L380.7,468.8 L378.1,476.0 L379.4,476.8 L378.6,478.5 L379.6,480.0 L379.2,481.6 L381.0,481.9 L379.0,483.4 L380.2,484.6 L378.5,486.7 L379.6,488.2 L378.6,488.9 L379.6,492.4 L377.2,501.1 L369.7,506.4 L364.0,512.6 L360.6,510.8 L358.5,511.7 L359.2,512.9 L358.0,510.9 L358.8,511.4 L358.7,510.3 L360.6,509.7 L360.9,508.8 L359.9,509.1 L361.1,507.7 L360.9,504.2 L361.7,504.4 L363.0,502.6 L364.3,502.8 L363.3,500.4 L358.7,500.8 L358.3,500.0 L357.9,501.0 L356.7,500.0 L351.5,499.5 L345.2,491.6 L341.1,488.6 L340.5,489.1 L339.7,487.7 L338.6,488.1 L337.7,486.7 L334.2,487.2 L332.6,485.5 L333.4,485.2 L330.4,483.7 L329.8,484.5 L329.2,483.5 L327.6,484.1 L326.6,482.9 L323.1,483.8 L319.7,482.1 L319.3,483.0 L318.6,481.0 L318.0,482.1 L314.8,482.9 L315.0,481.7 L313.9,481.1 L312.1,481.8 L312.3,482.7 L307.6,482.2 L309.8,479.0 L308.7,475.8 L309.2,473.7 Z M381.8,485.3 L382.5,486.2 L380.9,490.7 L379.6,491.6 L379.9,486.3 L381.8,485.3 Z", "cx": 355, "cy": 505 }, "SE": { "nome": "Sergipe", "d": "M524.7,233.7 L538.0,239.9 L539.1,242.2 L543.0,243.9 L543.8,246.1 L545.3,246.0 L546.1,247.3 L539.8,250.7 L533.3,260.6 L530.8,262.0 L528.3,262.3 L524.5,259.9 L524.5,257.1 L523.2,256.5 L520.9,252.6 L521.3,250.2 L524.2,251.0 L526.7,250.0 L526.1,246.2 L527.8,244.9 L526.5,240.2 L524.2,239.1 L523.6,234.2 L524.7,233.7 Z", "cx": 542, "cy": 256 }, "SP": { "nome": "São Paulo", "d": "M412.9,435.6 L412.3,437.4 L410.8,438.2 L409.5,437.1 L409.3,438.0 L401.9,441.5 L400.9,443.4 L389.6,451.3 L388.6,453.9 L386.0,456.0 L387.1,454.9 L384.8,454.5 L384.0,451.4 L382.8,452.7 L381.8,451.4 L380.2,453.1 L379.4,452.4 L380.6,448.0 L379.4,447.0 L369.5,447.0 L369.4,445.4 L371.0,442.4 L365.4,435.5 L366.2,433.4 L365.1,430.7 L366.0,429.5 L364.4,425.8 L361.3,424.2 L360.2,422.0 L357.5,422.8 L351.0,422.0 L349.9,422.9 L347.9,420.6 L342.8,418.8 L336.5,418.8 L331.2,416.7 L329.6,418.9 L329.3,418.0 L325.8,418.3 L324.7,417.4 L323.1,418.2 L319.4,417.4 L317.8,418.7 L317.5,417.8 L327.1,411.4 L331.6,405.4 L331.6,402.5 L333.1,402.4 L334.5,400.2 L334.4,397.2 L337.9,394.3 L338.3,390.1 L341.7,386.2 L345.4,384.7 L346.8,381.7 L352.2,378.6 L353.6,378.1 L355.2,379.3 L361.5,380.4 L366.2,379.9 L367.7,380.9 L370.1,380.6 L369.5,382.6 L370.5,385.2 L371.3,385.6 L372.8,383.4 L373.8,383.5 L374.1,386.7 L375.1,387.4 L376.1,383.5 L384.0,383.2 L384.1,381.6 L385.9,383.2 L387.7,381.7 L388.8,382.9 L389.3,381.1 L391.4,380.9 L392.4,381.9 L394.6,380.6 L397.9,384.3 L397.1,387.5 L399.0,388.5 L399.8,390.5 L397.8,393.7 L399.1,395.0 L400.9,401.2 L405.6,400.4 L407.8,401.9 L407.7,403.9 L405.3,407.1 L406.4,409.5 L404.9,410.5 L406.5,411.3 L404.9,413.7 L405.6,415.2 L409.2,417.0 L409.4,418.7 L408.2,419.2 L410.2,420.1 L409.8,422.0 L412.8,421.5 L412.9,422.4 L416.0,420.9 L416.3,421.7 L417.6,421.5 L418.7,420.9 L418.5,419.6 L417.2,419.6 L418.9,418.6 L418.6,417.5 L419.4,417.5 L419.3,418.5 L422.0,417.7 L423.0,418.6 L431.0,415.1 L433.4,418.0 L435.2,418.4 L436.8,417.5 L439.9,418.9 L438.4,421.1 L435.3,421.3 L431.3,423.2 L429.9,426.6 L432.2,428.7 L429.7,428.2 L427.6,429.4 L428.2,430.0 L427.3,430.8 L426.1,430.4 L425.5,431.7 L422.9,432.3 L422.9,435.0 L416.9,434.2 L412.9,435.6 Z M424.0,436.4 L422.6,436.7 L422.1,436.0 L423.9,433.6 L425.3,434.4 L424.5,435.7 L425.4,436.2 L425.0,437.1 L424.0,436.4 Z", "cx": 390, "cy": 425 }, "TO": { "nome": "Tocantins", "d": "M400.6,225.9 L400.1,227.0 L402.1,227.1 L404.3,231.9 L405.6,231.7 L407.1,233.0 L407.4,234.0 L405.9,236.4 L408.0,237.8 L409.7,242.6 L414.4,242.7 L414.7,243.9 L417.6,244.0 L418.9,242.6 L417.1,246.4 L411.9,249.4 L410.9,253.0 L406.3,258.4 L408.2,261.6 L413.6,263.1 L410.4,263.2 L409.6,266.6 L412.4,267.0 L409.3,269.0 L409.9,273.2 L411.3,275.4 L412.6,275.2 L410.9,276.7 L410.6,281.8 L413.1,281.5 L409.8,282.4 L409.0,280.0 L408.5,282.1 L404.5,282.1 L401.4,284.4 L395.2,286.6 L392.4,284.0 L391.8,289.1 L389.8,286.9 L387.9,287.0 L386.5,285.8 L385.1,286.8 L385.0,284.6 L381.4,286.6 L380.4,284.3 L379.4,287.0 L379.2,283.4 L375.7,279.8 L374.1,281.9 L372.1,279.6 L370.5,280.9 L368.7,286.4 L361.2,282.0 L356.0,280.3 L355.9,278.0 L358.1,274.0 L355.0,276.1 L353.1,280.6 L351.5,280.0 L350.4,277.0 L351.6,274.5 L350.7,271.3 L351.3,266.8 L350.2,264.8 L351.1,262.8 L349.9,260.7 L351.7,255.3 L351.8,249.5 L354.3,245.3 L354.7,242.1 L358.6,234.5 L359.5,230.2 L363.5,224.8 L365.6,223.9 L369.8,217.4 L371.7,209.3 L369.3,207.6 L368.5,205.6 L371.2,201.3 L370.9,196.9 L378.3,193.2 L378.6,191.0 L380.5,188.9 L382.2,189.2 L381.5,186.3 L383.4,185.3 L382.8,183.9 L384.2,183.1 L383.4,180.4 L385.5,178.7 L382.1,175.3 L379.3,175.7 L377.1,174.7 L379.1,174.5 L380.0,172.6 L382.4,172.1 L385.0,173.4 L389.0,173.4 L389.5,175.1 L394.2,177.2 L395.9,187.7 L393.8,197.6 L390.9,200.8 L392.2,202.2 L394.2,202.1 L394.4,203.1 L393.0,204.1 L394.2,204.1 L400.5,212.8 L406.5,210.6 L408.4,213.0 L407.3,216.5 L403.7,217.7 L402.2,220.4 L402.3,224.0 L400.6,225.9 Z", "cx": 395, "cy": 230 }, "DF": { "nome": "Distrito Federal", "d": "M396.8,325.3 L383.6,325.5 L384.7,317.8 L395.4,317.8 L396.8,319.1 L395.9,324.5 L396.8,325.3 Z", "cx": 405, "cy": 335 } };
+
+        // Regiões dos Estados Brasileiros
+        const stateRegions = {
+            'AC': 'Norte', 'AM': 'Norte', 'AP': 'Norte', 'PA': 'Norte', 'RO': 'Norte', 'RR': 'Norte', 'TO': 'Norte',
+            'AL': 'Nordeste', 'BA': 'Nordeste', 'CE': 'Nordeste', 'MA': 'Nordeste', 'PB': 'Nordeste', 'PE': 'Nordeste', 'PI': 'Nordeste', 'RN': 'Nordeste', 'SE': 'Nordeste',
+            'DF': 'Centro-Oeste', 'GO': 'Centro-Oeste', 'MS': 'Centro-Oeste', 'MT': 'Centro-Oeste',
+            'ES': 'Sudeste', 'MG': 'Sudeste', 'RJ': 'Sudeste', 'SP': 'Sudeste',
+            'PR': 'Sul', 'RS': 'Sul', 'SC': 'Sul'
+        };
+
+        // Instâncias Globais dos Gráficos
+        let historicalChartInstance = null;
+        let incomeChartInstance = null;
+
+        // Função utilitária para formatar números no padrão BR reduzido (ex: 34,1 mi)
+        const formatNumber = (num) => {
+            if (num === null || num === undefined) return '0';
+            if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.', ',') + ' mi';
+            if (num >= 1000) return (num / 1000).toFixed(1).replace('.', ',') + ' mil';
+            return num.toString();
+        };
+
+        // Alternância de Abas com ajuste de resize nos gráficos
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+
+            const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(
+                item => item.getAttribute('onclick') && item.getAttribute('onclick').includes(tabId)
+            );
+            if (activeNav) activeNav.classList.add('active');
+
+            // Garante que os gráficos Chart.js atualizem seu tamanho se a aba for reaberta
+            if (tabId === 'visao-geral') {
+                if (historicalChartInstance) historicalChartInstance.resize();
+                if (incomeChartInstance) incomeChartInstance.resize();
+            }
+        }
+
+        // Função de Exportação para PDF
+        function exportToPDF() {
+            const btn = document.getElementById('btn-export');
+            if (!btn) return;
+            const icon = btn.querySelector('i');
+            const text = document.getElementById('export-text');
+
+            if (icon) {
+                icon.classList.remove('ph-download-simple');
+                icon.classList.add('ph-spinner', 'animate-spin');
+            }
+            if (text) text.innerText = 'Gerando...';
+
+            const element = document.getElementById('pdf-content');
+            const opt = {
+                margin: 10,
+                filename: 'relatorio_eleicoes_2026_tse.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            const activeTabEl = document.querySelector('.tab-content.active');
+            const originalTab = activeTabEl ? activeTabEl.id : 'visao-geral';
+
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.style.display = 'block';
+                el.style.animation = 'none';
+            });
+
+            if (historicalChartInstance) historicalChartInstance.resize();
+            if (incomeChartInstance) incomeChartInstance.resize();
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.querySelectorAll('.tab-content').forEach(el => {
+                    el.style.display = '';
+                    el.style.animation = '';
+                });
+                switchTab(originalTab);
+
+                if (icon) {
+                    icon.classList.remove('ph-spinner', 'animate-spin');
+                    icon.classList.add('ph-download-simple');
+                }
+                if (text) text.innerText = 'Exportar PDF';
+            });
+        }
+
+        // Renderização Dinâmica do Mapa do Brasil SVG
+        function renderBrazilMap(filter = 'all') {
+            const wrapper = document.getElementById('map-svg-wrapper');
+            if (!wrapper) return;
+
+            let svgHtml = `<svg id="brazilSvg" viewBox="0 0 600 620" class="w-full h-auto max-h-[500px]" style="filter: drop-shadow(0 4px 10px rgba(0,0,0,0.06));">`;
+
+            eleicoesData.forEach(st => {
+                const ufData = brazilStatesSvgData[st.uf];
+                if (!ufData) return;
+
+                const isFlavioWinner = st.flavio > st.lula;
+                const isSwing = Math.abs(st.flavio - st.lula) < 5.0;
+
+                let isFilteredOut = false;
+                if (filter === 'flavio' && !isFlavioWinner) isFilteredOut = true;
+                if (filter === 'lula' && isFlavioWinner) isFilteredOut = true;
+                if (filter === 'swing' && !isSwing) isFilteredOut = true;
+
+                const baseColor = isFlavioWinner ? '#1976D2' : '#D32F2F';
+                const fillColor = isFilteredOut ? '#CBD5E1' : baseColor;
+                const opacity = isFilteredOut ? '0.35' : '1';
+
+                svgHtml += `
+                    <path id="state-${st.uf}" 
+                          d="${ufData.d}" 
+                          class="state-path" 
+                          data-uf="${st.uf}"
+                          fill="${fillColor}" 
+                          style="opacity: ${opacity};"
+                          onmouseenter="handleStateHover('${st.uf}', event)"
+                          onmousemove="handleStateMouseMove(event)"
+                          onmouseleave="handleStateMouseLeave()"
+                          onclick="selectState('${st.uf}')">
+                    </path>
+                `;
+
+                if (ufData.cx && ufData.cy && !isFilteredOut) {
+                    svgHtml += `
+                        <text x="${ufData.cx}" y="${ufData.cy}" class="state-label">
+                            ${st.uf}
+                        </text>
+                    `;
+                }
+            });
+
+            // Marcador especial clicável para o DF
+            const dfData = brazilStatesSvgData['DF'];
+            if (dfData && dfData.cx && dfData.cy) {
+                const dfState = eleicoesData.find(s => s.uf === 'DF');
+                const dfColor = (dfState && dfState.flavio > dfState.lula) ? '#1976D2' : '#D32F2F';
+                svgHtml += `
+                    <circle cx="${dfData.cx}" cy="${dfData.cy}" r="4.5" class="df-indicator"
+                            data-uf="DF"
+                            fill="${dfColor}"
+                            onmouseenter="handleStateHover('DF', event)"
+                            onmousemove="handleStateMouseMove(event)"
+                            onmouseleave="handleStateMouseLeave()"
+                            onclick="selectState('DF')">
+                    </circle>
+                `;
+            }
+
+            svgHtml += `</svg>`;
+            wrapper.innerHTML = svgHtml;
+        }
+
+        // Hover e Tooltip no Mapa
+        function handleStateHover(uf, event) {
+            const state = eleicoesData.find(s => s.uf === uf);
+            if (!state) return;
+
+            const isPlWinner = state.flavio > state.lula;
+            const tooltip = document.getElementById('map-tooltip');
+            if (tooltip) {
+                const ttUf = document.getElementById('tt-uf');
+                if (ttUf) ttUf.innerText = state.uf;
+
+                const badge = document.getElementById('tt-winner-badge');
+                if (badge) {
+                    badge.innerText = isPlWinner ? 'Vitória PL' : 'Vitória PT';
+                    badge.className = `text-[10px] px-1.5 py-0.5 rounded font-bold ${isPlWinner ? 'bg-blue-500 text-white' : 'bg-red-500 text-white'}`;
+                }
+
+                const ttName = document.getElementById('tt-state-name');
+                if (ttName) ttName.innerText = `${state.nome} (${state.uf})`;
+
+                const flavioVotes = Math.round((state.eleitores * (state.flavio / 100)) * 0.79);
+                const lulaVotes = Math.round((state.eleitores * (state.lula / 100)) * 0.79);
+
+                const ttFlavio = document.getElementById('tt-flavio');
+                if (ttFlavio) ttFlavio.innerText = `${state.flavio.toFixed(1)}% (${formatNumber(flavioVotes)})`;
+
+                const ttLula = document.getElementById('tt-lula');
+                if (ttLula) ttLula.innerText = `${state.lula.toFixed(1)}% (${formatNumber(lulaVotes)})`;
+
+                const ttEleitores = document.getElementById('tt-eleitores');
+                if (ttEleitores) ttEleitores.innerText = state.eleitores.toLocaleString('pt-BR');
+
+                tooltip.style.display = 'block';
+                positionTooltip(event);
+            }
+
+            updateStateDetailCard(state);
+        }
+
+        function handleStateMouseMove(event) {
+            positionTooltip(event);
+        }
+
+        function positionTooltip(event) {
+            const tooltip = document.getElementById('map-tooltip');
+            if (tooltip && tooltip.style.display === 'block') {
+                const ttW = 240;
+                const ttH = 150;
+                let posX = event.clientX + 18;
+                let posY = event.clientY - 10;
+
+                // Não ultrapassar a borda direita da janela
+                if (posX + ttW > window.innerWidth - 15) {
+                    posX = event.clientX - ttW - 18;
+                }
+                // Não ultrapassar a borda inferior da janela
+                if (posY + ttH > window.innerHeight - 15) {
+                    posY = window.innerHeight - ttH - 15;
+                }
+                if (posY < 10) posY = 10;
+                if (posX < 10) posX = 10;
+
+                tooltip.style.left = posX + 'px';
+                tooltip.style.top = posY + 'px';
+            }
+        }
+
+        function handleStateMouseLeave() {
+            const tooltip = document.getElementById('map-tooltip');
+            if (tooltip) tooltip.style.display = 'none';
+        }
+
+        function selectState(uf) {
+            const state = eleicoesData.find(s => s.uf === uf);
+            if (state) updateStateDetailCard(state);
+        }
+
+        function updateStateDetailCard(state) {
+            const isPlWinner = state.flavio > state.lula;
+            const region = stateRegions[state.uf] || 'Brasil';
+            const margin = Math.abs(state.flavio - state.lula).toFixed(2);
+
+            const regionEl = document.getElementById('detail-region');
+            const nameEl = document.getElementById('detail-name');
+            const votersEl = document.getElementById('detail-voters');
+            const statusEl = document.getElementById('detail-status');
+            const flavioEl = document.getElementById('detail-flavio');
+            const lulaEl = document.getElementById('detail-lula');
+            const flavioBar = document.getElementById('detail-flavio-bar');
+            const lulaBar = document.getElementById('detail-lula-bar');
+            const marginEl = document.getElementById('detail-margin');
+
+            if (regionEl) regionEl.innerText = `Região ${region}`;
+            if (nameEl) nameEl.innerText = `${state.nome} (${state.uf})`;
+            if (votersEl) votersEl.innerText = `${state.eleitores.toLocaleString('pt-BR')} eleitores aptos`;
+
+            if (statusEl) {
+                statusEl.innerText = isPlWinner ? 'Vitória PL' : 'Vitória PT';
+                statusEl.className = isPlWinner
+                    ? 'px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800'
+                    : 'px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-800';
+            }
+
+            const flavioVotes = Math.round((state.eleitores * (state.flavio / 100)) * 0.79);
+            const lulaVotes = Math.round((state.eleitores * (state.lula / 100)) * 0.79);
+
+            if (flavioEl) flavioEl.innerText = `${state.flavio.toFixed(1)}% (${formatNumber(flavioVotes)} votos)`;
+            if (lulaEl) lulaEl.innerText = `${state.lula.toFixed(1)}% (${formatNumber(lulaVotes)} votos)`;
+            if (flavioBar) flavioBar.style.width = state.flavio + '%';
+            if (lulaBar) lulaBar.style.width = state.lula + '%';
+            if (marginEl) marginEl.innerHTML = `<strong>+${margin} p.p.</strong> (${isPlWinner ? 'Flávio' : 'Lula'})`;
+        }
+
+        // Filtro dos Botões do Mapa
+        function filterMap(filterType, btn) {
+            document.querySelectorAll('.map-filter-btn').forEach(b => {
+                b.className = 'map-filter-btn px-3 py-1.5 rounded-lg border bg-white text-gray-700 hover:bg-gray-50 border-gray-200 transition';
+            });
+            if (btn) {
+                btn.className = 'map-filter-btn px-3 py-1.5 rounded-lg border bg-blue-600 text-white border-blue-600 transition shadow-sm';
+            }
+            renderBrazilMap(filterType);
+        }
+
+        // Renderização da Tabela de Estados
+        function renderTable(data) {
+            const tbody = document.querySelector('#stateTable tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            const sortedData = [...data].sort((a, b) => b.eleitores - a.eleitores);
+            sortedData.forEach(state => {
+                const tr = document.createElement('tr');
+                const flavioBarWidth = state.flavio + '%';
+                const lulaBarWidth = state.lula + '%';
+                const isPlWinner = state.flavio > state.lula;
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="font-medium text-gray-900">${state.nome}</div>
+                        <div class="text-xs text-gray-500">${state.uf}</div>
+                    </td>
+                    <td>${formatNumber(state.eleitores)}</td>
+                    <td style="width: 25%;">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="${isPlWinner ? 'font-bold text-pl' : ''}">${state.flavio.toFixed(1)}%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5">
+                            <div class="bg-blue-600 h-1.5 rounded-full" style="width: ${flavioBarWidth}; opacity: ${isPlWinner ? '1' : '0.5'}"></div>
+                        </div>
+                    </td>
+                    <td style="width: 25%;">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="${!isPlWinner ? 'font-bold text-pt' : ''}">${state.lula.toFixed(1)}%</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5">
+                            <div class="bg-red-600 h-1.5 rounded-full" style="width: ${lulaBarWidth}; opacity: ${!isPlWinner ? '1' : '0.5'}"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="${isPlWinner ? 'pill-pl' : 'pill-pt'}">
+                            Vitória ${isPlWinner ? 'PL' : 'PT'}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Inicialização Global após carregamento do DOM
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Configuração Global Chart.js
+            if (typeof Chart !== 'undefined') {
+                Chart.defaults.font.family = "'Inter', sans-serif";
+                Chart.defaults.color = '#6B7280';
+                Chart.defaults.scale.grid.color = '#F3F4F6';
+                Chart.defaults.plugins.tooltip.backgroundColor = '#1F2937';
+                Chart.defaults.plugins.tooltip.padding = 12;
+                Chart.defaults.plugins.tooltip.cornerRadius = 8;
+
+                // 2. Gráfico Histórico (2022 vs 2026)
+                const histElement = document.getElementById('historicalChart');
+                if (histElement) {
+                    const ctxHist = histElement.getContext('2d');
+                    historicalChartInstance = new Chart(ctxHist, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Jair 2022', 'Flávio 2026', 'Lula 2022', 'Lula 2026'],
+                            datasets: [{
+                                label: '% de Votos Válidos',
+                                data: [43.20, 47.03, 48.43, 45.16],
+                                backgroundColor: [
+                                    '#93C5FD', // PL 22 (muted)
+                                    '#1D4ED8', // PL 26 (destaque)
+                                    '#FCA5A5', // PT 22 (muted)
+                                    '#B91C1C'  // PT 26 (destaque)
+                                ],
+                                borderRadius: 6,
+                                barPercentage: 0.6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return context.parsed.y + '% dos votos válidos';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 60,
+                                    border: { display: false },
+                                    ticks: { callback: function (value) { return value + '%' } }
+                                },
+                                x: {
+                                    border: { display: false },
+                                    grid: { display: false }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // 3. Gráfico de Perfil de Renda
+                const incElement = document.getElementById('incomeChart');
+                if (incElement) {
+                    const ctxInc = incElement.getContext('2d');
+                    incomeChartInstance = new Chart(ctxInc, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Até 2 SM', '2 a 5 SM', 'Mais de 5 SM'],
+                            datasets: [
+                                {
+                                    label: 'Flávio (PL)',
+                                    data: [28, 47, 47],
+                                    backgroundColor: '#1976D2',
+                                    borderRadius: 4
+                                },
+                                {
+                                    label: 'Lula (PT)',
+                                    data: [50, 34, 37],
+                                    backgroundColor: '#D32F2F',
+                                    borderRadius: 4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            indexAxis: 'y',
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { usePointStyle: true, boxWidth: 8 }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            return context.dataset.label + ': ' + context.parsed.x + '%';
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    beginAtZero: true,
+                                    max: 60,
+                                    border: { display: false },
+                                    ticks: { callback: function (value) { return value + '%' } }
+                                },
+                                y: {
+                                    border: { display: false },
+                                    grid: { display: false }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            // 4. Renderizar Mapa Interativo do Brasil
+            renderBrazilMap('all');
+
+            // 5. Preencher Tabela de Resultados por Estado
+            renderTable(eleicoesData);
+
+            // 6. Funcionalidade de Busca de Estados
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const filtered = eleicoesData.filter(d =>
+                        d.nome.toLowerCase().includes(term) || d.uf.toLowerCase().includes(term)
+                    );
+                    renderTable(filtered);
+                });
+            }
+
+            // 7. Preencher Destaques na Aba de Geolocalização
+            const plList = document.getElementById('pl-strongholds');
+            const ptList = document.getElementById('pt-strongholds');
+
+            if (plList && ptList) {
+                plList.innerHTML = '';
+                ptList.innerHTML = '';
+                const topPl = [...eleicoesData].sort((a, b) => b.flavio - a.flavio).slice(0, 4);
+                const topPt = [...eleicoesData].sort((a, b) => b.lula - a.lula).slice(0, 4);
+
+                topPl.forEach(state => {
+                    const li = document.createElement('li');
+                    li.className = "flex justify-between items-center bg-white p-3 rounded border border-gray-100 shadow-sm";
+                    li.innerHTML = `
+                        <span class="font-medium">${state.nome} (${state.uf})</span>
+                        <span class="text-pl font-bold">${state.flavio.toFixed(1)}%</span>
+                    `;
+                    plList.appendChild(li);
+                });
+
+                topPt.forEach(state => {
+                    const li = document.createElement('li');
+                    li.className = "flex justify-between items-center bg-white p-3 rounded border border-gray-100 shadow-sm";
+                    li.innerHTML = `
+                        <span class="font-medium">${state.nome} (${state.uf})</span>
+                        <span class="text-pt font-bold">${state.lula.toFixed(1)}%</span>
+                    `;
+                    ptList.appendChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
