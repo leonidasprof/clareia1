@@ -5,7 +5,7 @@ async function getResponse(message) {
     const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer SUA_CHAVE_GROQ", // Exemplo: em produção, a chamada deve sair de um servidor
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -23,9 +23,9 @@ async function getResponse(message) {
     console.warn("Erro no Groq, tentando Gemini:", err);
 
     // Se Groq falhar, tenta Gemini
-    const geminiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc", {
+    const geminiResponse = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-goog-api-key": "SUA_CHAVE_GEMINI" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: message }] }]
       })

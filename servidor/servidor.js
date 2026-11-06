@@ -1,8 +1,21 @@
 const http = require('http');
+const path = require('path');
 
-const TELEGRAM_TOKEN = '8720113757:AAG4h0Qs3-4AMl24Nv-faI0ZETn4meAU6jY';
-const GEMINI_API_KEY = 'AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc';
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+// Carrega o .env local, quando existir (Node.js 20.12 ou superior)
+try {
+    process.loadEnvFile(path.join(__dirname, '..', '.env'));
+} catch {
+    // Sem .env: as variáveis precisam estar definidas no ambiente
+}
+
+const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+if (!TELEGRAM_TOKEN || !GEMINI_API_KEY) {
+    console.error('Defina TELEGRAM_BOT_TOKEN e GEMINI_API_KEY no arquivo .env.');
+    process.exit(1);
+}
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(GEMINI_MODEL)}:generateContent`;
 
 const tgSessions = {};
 let tgOffset = 0;
@@ -31,8 +44,8 @@ async function handleTelegramMessage(chatId, text) {
     try {
         const response = await fetch(GEMINI_URL, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ 
+            headers: {'Content-Type': 'application/json', 'x-goog-api-key': GEMINI_API_KEY},
+            body: JSON.stringify({
                 contents: [{ role: "user", parts: [{ text: text }] }],
                 systemInstruction: { parts: [{ text: systemInstruction + ` (Estado atual do usuário: Passo ${tgSessions[chatId].step})` }] } 
             })

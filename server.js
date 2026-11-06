@@ -3,6 +3,15 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+// Carrega o .env local, quando existir (Node.js 20.12 ou superior)
+try {
+    process.loadEnvFile(path.join(__dirname, '.env'));
+} catch {
+    // Sem .env: o chat responde que a IA não está configurada
+}
+
+const chat = require('./api/chat');
+
 const app = express();
 const PORT = 3000;
 
@@ -51,6 +60,9 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
         url: `/uploads/${req.file.filename}` 
     });
 });
+
+// Rota 3: Chat da Clarinha (a mesma função usada na Vercel)
+app.post('/api/chat', express.json({ limit: '5mb' }), chat);
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando! Acesse a galeria em: http://localhost:${PORT}`);

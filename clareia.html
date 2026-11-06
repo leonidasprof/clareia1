@@ -344,13 +344,6 @@
                             </div>
                             <div class="text-3xl text-[#179cde]"><i class="fa-brands fa-telegram"></i></div>
                         </div>
-                        <div class="mt-2 pt-3 border-t border-[#179cde]/20 flex flex-col items-center">
-                            <p class="text-xs text-center text-gray-500 mb-2 font-medium">Ligue o Bot do Telegram clicando abaixo para ele funcionar.</p>
-                            <button id="toggle-tg-btn" onclick="toggleTelegramBot()" class="bg-[#179cde] text-white font-bold py-2 px-6 rounded-full hover:bg-blue-600 transition shadow-md w-full sm:w-auto">
-                                <i class="fa-solid fa-power-off mr-2"></i> Ativar Bot no Telegram
-                            </button>
-                            <p id="tg-status-text" class="text-xs font-bold text-gray-400 mt-2">Status: <span class="text-red-500">Desligado</span></p>
-                        </div>
                     </div>
                 </div>
 
@@ -411,8 +404,8 @@
                     
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
                         <div class="w-16 h-16 bg-[#179cde] text-white rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl font-bold shadow-lg shadow-[#179cde]/30 transform -rotate-3">1</div>
-                        <h3 class="font-bold text-xl text-gray-900 mb-3">Ligue o Bot</h3>
-                        <p class="text-gray-600">Não esqueça de clicar no botão <b>"Ativar Bot no Telegram"</b> ali em cima nesta mesma página para que ela ganhe vida!</p>
+                        <h3 class="font-bold text-xl text-gray-900 mb-3">Abra o Telegram</h3>
+                        <p class="text-gray-600">Abra o app no celular ou no computador. A Clarinha fica ligada o tempo todo, então não é preciso ativar nada!</p>
                     </div>
                     
                     <div class="bg-white p-8 rounded-3xl shadow-sm text-center border border-gray-100 hover:shadow-md transition-shadow relative z-10">
@@ -624,7 +617,7 @@
                     </div>
                     <div class="tool-card">
                         <div class="tool-icon-wrapper"><i class="fa-brands fa-telegram text-[#179cde] text-2xl"></i></div>
-                        <div class="tool-info"><div class="tool-header"><h3 class="tool-name">Telegram API</h3><span class="tool-badge">BOT</span></div><p class="tool-desc">Integração via Long-Polling para o bot oficial interagir em tempo real.</p></div>
+                        <div class="tool-info"><div class="tool-header"><h3 class="tool-name">Telegram API</h3><span class="tool-badge">BOT</span></div><p class="tool-desc">Integração via webhook para o bot oficial interagir em tempo real.</p></div>
                     </div>
                 </div>
             </div>
@@ -685,25 +678,12 @@
             revealObserver.observe(card);
         });
 
-        // ================= LOGICA DE API AUTOMÁTICA =================
-        
-        let apiKey = ""; // Mantém-se vazia para o Canvas (ambiente de testes) a fornecer
-        let model = "gemini-2.5-flash-preview-09-2025";
-        
-        // Magia: Se o código detetar que NÃO está a rodar no ambiente de testes do Google (Canvas),
-        // ele assume a sua chave oficial e usa o modelo compatível mais estável!
-        if (window.location.hostname !== 'localhost' && !window.location.hostname.includes('google') && !window.location.hostname.includes('usercontent')) {
-            apiKey = "AIzaSyCWEZOSbJXQamFNayZAjFJy_2SknE6x9vc";
-            model = "gemini-1.5-flash"; // Este modelo oficial nunca dá erro com chaves públicas.
-        }
+        // ================= CHAT COM A IA =================
+        // A chave do Gemini fica apenas no servidor (api/chat.js).
+        const apiUrl = '/api/chat';
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-        
-        // --- TELEGRAM BOT CONFIG ---
-        const TELEGRAM_TOKEN = '8720113757:AAG4h0Qs3-4AMl24Nv-faI0ZETn4meAU6jY';
-        let tgOffset = 0;
-        const tgSessions = {}; // Armazena histórico do Telegram
-        let tgPollingActive = false; // AGORA COMEÇA DESLIGADO POR DEFEITO!
+        // Limite de envio da hospedagem: 4,5 MB por requisição, já contando a conversão do arquivo.
+        const MAX_ANEXO_BYTES = 3 * 1024 * 1024;
 
         // --- VARIÁVEIS DOM ---
         const chatArea = document.getElementById('chat-area');
@@ -713,49 +693,10 @@
         const statusText = document.getElementById('status-text');
         const fileUpload = document.getElementById('file-upload');
         const clipBtn = document.getElementById('clip-btn');
-        const tgBtn = document.getElementById('toggle-tg-btn');
-        const tgStatusTxt = document.getElementById('tg-status-text');
         
         let isTyping = false;
         let webChatHistory = []; 
 
-        const systemInstruction = `
-            Você é a Clarinha, assistente jurídica da Clareia, em um chat do Telegram.
-            Sua missão é democratizar o acesso à informação processual, traduzindo o "juridiquês" para cidadãos comuns.
-
-            REGRAS DE OURO (MANDATÓRIAS):
-            1. NUNCA faça mais de uma pergunta na mesma mensagem.
-            2. NUNCA pule etapas. Avance apenas UM passo por vez e aguarde a resposta do usuário.
-            3. Seja sempre acolhedora e use emojis (ex: 🦉, ⚖️).
-
-            FLUXO RIGOROSO (siga a ordem, um passo por vez):
-            ETAPA 1: O usuário já informou o nome no início. Agradeça e pergunte APENAS a data de nascimento (ex: DD/MM/AAAA). NÃO pergunte mais nada, nem tente avançar antes dele responder a data.
-            ETAPA 2: Quando o usuário informar a data, adapte seu tom de voz de acordo com a idade (Jovem=descontraído, Adulto=amigável, Idoso=formal/paciente). Na MESMA mensagem, pergunte o número do processo OU peça para enviar uma foto/PDF. NÃO explique nada ainda.
-            ETAPA 3: 
-            - Se ele enviar um NÚMERO DE PROCESSO, OBRIGATORIAMENTE use o separador "|||" no meio da sua resposta, dessa exata forma: "Vou consultar no sistema... ⏳ ||| 🔍 Achei! O status é [Explicação Simples]".
-            - Se ele enviar um ARQUIVO (imagem ou pdf), APENAS leia o anexo e explique detalhadamente, de forma simples e acolhedora. NÃO use o "|||".
-
-            DICIONÁRIO DE EMOÇÕES:
-            Sempre dê previsibilidade para acalmar o usuário. Diga se ele precisa se preocupar, o tempo médio ou se está tudo certo.
-        `;
-
-        function formatHistoryForGemini(history) {
-            const formatted = [];
-            for (const msg of history) {
-                if (formatted.length === 0) {
-                    formatted.push({ role: msg.role, parts: [...msg.parts] });
-                } else {
-                    const lastMsg = formatted[formatted.length - 1];
-                    if (lastMsg.role === msg.role) {
-                        lastMsg.parts.push({ text: "\n" });
-                        lastMsg.parts.push(...msg.parts);
-                    } else {
-                        formatted.push({ role: msg.role, parts: [...msg.parts] });
-                    }
-                }
-            }
-            return formatted;
-        }
 
         function getCurrentTime() {
             const now = new Date();
@@ -822,17 +763,22 @@
                     }
                     return await response.json();
                 } catch (e) {
-                    if (i === retries - 1) throw e;
+                    // Erros 4xx não melhoram com novas tentativas.
+                    if (i === retries - 1 || (e.status >= 400 && e.status < 500)) throw e;
                     await new Promise(res => setTimeout(res, delays[i]));
                 }
             }
         }
 
         async function callGeminiAPI() {
-            const payload = { 
-                contents: formatHistoryForGemini(webChatHistory),
-                systemInstruction: { parts: [{ text: systemInstruction }] }
-            };
+            // Reenvia só o anexo mais recente, para respeitar o limite de envio.
+            let ultimoAnexo = -1;
+            webChatHistory.forEach((msg, i) => { if (msg.parts.some(p => p.inlineData)) ultimoAnexo = i; });
+            const contents = webChatHistory.map((msg, i) => i === ultimoAnexo ? msg : {
+                role: msg.role,
+                parts: msg.parts.map(p => p.inlineData ? { text: "[Documento enviado anteriormente]" } : p)
+            });
+            const payload = { contents };
 
             try {
                 const data = await fetchWithRetry(apiUrl, {
@@ -841,7 +787,7 @@
                     body: JSON.stringify(payload)
                 });
 
-                const modelText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Desculpe, tive um problema técnico ao processar sua mensagem.";
+                const modelText = data.text || "Desculpe, tive um problema técnico ao processar sua mensagem.";
                 
                 webChatHistory.push({ role: "model", parts: [{ text: modelText.replace('|||', '') }] });
                 
@@ -884,6 +830,12 @@
         fileUpload.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file || isTyping) return;
+
+            if (file.size > MAX_ANEXO_BYTES) {
+                alert("O arquivo é muito grande. Envie um PDF ou imagem de até 3 MB.");
+                fileUpload.value = "";
+                return;
+            }
             
             try {
                 const fileData = await fileToBase64(file);
@@ -961,131 +913,6 @@
             setTimeout(startOnboarding, 800);
         };
 
-        // ================= MOTOR DO TELEGRAM BOT (Manual Toggle) =================
-        const processedUpdates = new Set();
-        
-        function toggleTelegramBot() {
-            tgPollingActive = !tgPollingActive;
-            if (tgPollingActive) {
-                tgBtn.innerHTML = `<i class="fa-solid fa-tower-broadcast mr-2"></i> Bot LIGADO (Ativo nesta aba)`;
-                tgBtn.classList.remove('bg-[#179cde]', 'hover:bg-blue-600');
-                tgBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-                tgStatusTxt.innerHTML = `Status: <span class="text-green-500 font-bold">LIGADO E ESCUTANDO</span>`;
-                console.log("🚀 Motor do Telegram Iniciado!");
-                pollTelegram();
-            } else {
-                tgBtn.innerHTML = `<i class="fa-solid fa-power-off mr-2"></i> Ativar Bot no Telegram`;
-                tgBtn.classList.add('bg-[#179cde]', 'hover:bg-blue-600');
-                tgBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                tgStatusTxt.innerHTML = `Status: <span class="text-red-500 font-bold">DESLIGADO</span>`;
-                console.log("🛑 Motor do Telegram Desligado.");
-            }
-        }
-
-        async function pollTelegram() {
-            if (!tgPollingActive) return;
-
-            try {
-                const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/getUpdates?offset=${tgOffset}&timeout=20`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.ok && data.result.length > 0) {
-                        for (const update of data.result) {
-                            tgOffset = Math.max(tgOffset, update.update_id + 1);
-                            
-                            if (processedUpdates.has(update.update_id)) continue;
-                            processedUpdates.add(update.update_id);
-
-                            if (update.message) {
-                                // Ignora mensagens com mais de 60 segundos de idade
-                                const now = Math.floor(Date.now() / 1000);
-                                if (update.message.date < now - 60) {
-                                    console.log("⏳ Mensagem ignorada por ser muito antiga.");
-                                    continue;
-                                }
-
-                                console.log("📩 Nova mensagem de:", update.message.chat.first_name);
-                                if (update.message.text) {
-                                    await handleTelegramMessage(update.message.chat.id, update.message.text);
-                                }
-                                else if (update.message.document || update.message.photo) {
-                                    await sendTelegramMessage(update.message.chat.id, "🦉 Recebi seu arquivo! Como estou rodando em modo protótipo no navegador, ainda não consigo ler PDFs por aqui. Mas na versão web funciona super bem!");
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (e) {
-                // Erro de rede ou timeout normal
-            }
-            // Chama de novo só se continuar ativo
-            if(tgPollingActive) setTimeout(pollTelegram, 1500);
-        }
-
-        async function handleTelegramMessage(chatId, text) {
-            if (text === '/start') {
-                const greeting = "Olá! 🦉 Eu sou a Clarinha, a assistente jurídica da Clareia.\n\nPara começarmos de forma personalizada, como você prefere que eu te chame?";
-                tgSessions[chatId] = [
-                    { role: "user", parts: [{ text: "Oi" }] },
-                    { role: "model", parts: [{ text: greeting }] }
-                ];
-                await sendTelegramMessage(chatId, greeting);
-                return;
-            }
-
-            if (!tgSessions[chatId]) tgSessions[chatId] = []; 
-            
-            tgSessions[chatId].push({ role: "user", parts: [{ text: text }] });
-            fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendChatAction?chat_id=${chatId}&action=typing`).catch(()=>{});
-            
-            try {
-                const payload = { 
-                    contents: formatHistoryForGemini(tgSessions[chatId]),
-                    systemInstruction: { parts: [{ text: systemInstruction }] }
-                };
-                
-                const data = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (data.error) throw new Error(data.error.message);
-
-                const replyText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Erro interno.";
-                tgSessions[chatId].push({ role: "model", parts: [{ text: replyText.replace('|||', '') }] });
-                
-                if (replyText.includes('|||')) {
-                    const parts = replyText.split('|||');
-                    const waitMsg = parts[0].trim();
-                    const resultMsg = parts.slice(1).join('|||').trim(); 
-                    
-                    if (waitMsg) await sendTelegramMessage(chatId, waitMsg);
-                    fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendChatAction?chat_id=${chatId}&action=typing`).catch(()=>{});
-                    setTimeout(() => {
-                        if (resultMsg) sendTelegramMessage(chatId, resultMsg);
-                    }, 3500);
-                } else {
-                    await sendTelegramMessage(chatId, replyText);
-                }
-                
-            } catch(e) {
-                console.error("❌ Erro no Telegram Handle:", e);
-                await sendTelegramMessage(chatId, "Desculpe, meu cérebro deu um pequeno tilt na conexão. Pode tentar falar de novo? 🦉");
-            }
-        }
-
-        async function sendTelegramMessage(chatId, text) {
-            try {
-                await fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ chat_id: chatId, text: text })
-                });
-            } catch (e) {
-                // Drop silenciado
-            }
-        }
 
     </script>
 </body>
